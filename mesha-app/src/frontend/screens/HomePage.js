@@ -12,6 +12,8 @@ function HomePage() {
 
   const [userInfo, setUserInfo] = useState({
     email: '',
+    name: '',
+    level: '',
     uid: ''
   })
 
@@ -22,7 +24,9 @@ function HomePage() {
           // https://firebase.google.com/docs/reference/js/firebase.User
           setUserInfo({
             email: user.email,
-            uid: user.uid
+            uid: user.uid,
+            name: user.name,
+            level: user.level
           })
           // ...
           console.log("uid", user.uid)
