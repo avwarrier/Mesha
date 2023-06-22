@@ -38,9 +38,12 @@ const CompleteProfile = () => {
     useEffect(()=>{
         const getInfo = async() => {
             onAuthStateChanged(auth, (user) => {
+                console.log(user.displayName)
+                if(user.displayName != null){
                 const names = user.displayName.split(" ");
                 setFirstName(names[0]);
                 setLastName(names[1]);
+                }
                 setUserInfo({
                     email: user.email,
                     uid: user.uid,
