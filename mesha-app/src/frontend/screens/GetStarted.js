@@ -1,5 +1,5 @@
 import {React, useState} from 'react'
-import NavBarLogin from '../components/NavBarLogin'
+import NavBarLogin from '../components/Nav/NavBarLogin'
 import {motion as m } from "framer-motion"
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
 import { auth, registerWithEmailAndPassword, signInWithGoogle } from '../../backend/firebase'

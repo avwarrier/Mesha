@@ -1,5 +1,5 @@
 import {React} from 'react'
-import logoplaceholderimage from '../assets/logo-placeholder-image.png'
+import logoplaceholderimage from '../../assets/logo-placeholder-image.png'
 import { Link } from 'react-router-dom'
 
 const NavBarLogin = ({started}) => {

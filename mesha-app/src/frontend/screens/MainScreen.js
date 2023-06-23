@@ -1,6 +1,6 @@
 import React from 'react'
 import {motion as m } from "framer-motion"
-import NavBarLogin from '../components/NavBarLogin'
+import NavBarLogin from '../components/Nav/NavBarLogin'
 import { Link } from 'react-router-dom'
 
 const MainScreen = () => {

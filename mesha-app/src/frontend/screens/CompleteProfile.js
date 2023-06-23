@@ -1,5 +1,5 @@
 import {React, useEffect, useState} from 'react'
-import NavBarLogin from '../components/NavBarLogin'
+import NavBarLogin from '../components/Nav/NavBarLogin'
 import {motion as m } from "framer-motion"
 import { auth, db } from '../../backend/firebase'
 import { collection, doc, updateDoc } from "firebase/firestore";
