@@ -26,21 +26,58 @@ const Binder = () => {
 
     const addItem = (num) => {
         if(num == 10) {
-            setItems(oldItems => [...oldItems, 'class/project']);
+            setItems(oldItems => [...oldItems, {
+                type: 'class/project',
+                name: "default",
+                components: []
+            }]);
         } else if(num == 20) {
-            setItems(oldItems => [...oldItems, 'folder']);
+            setItems(oldItems => [...oldItems, {
+                type: 'folder',
+                name: "default",
+                components: []
+            }]);
         } else {
-            setItems(oldItems => [...oldItems, 'notebook']);
+            setItems(oldItems => [...oldItems, {
+                type: 'notebook',
+                name: "default",
+                components: []
+            }]);
         }
 
         console.log(items);
     }
 
+    const setName = (prevName, name) => {
+        let temp = [...items];
+        for(let i = 0; i < temp.length; i++) {
+            if(temp[i].name == prevName) {
+                temp[i].name = name;
+            }
+        }
+        setItems(temp);
+    }
+
+    const removeItem = (name) => {
+        setItems(items.filter(item => item.name !== name));
+    }
+
+    const setComponents = (name, comps) => {
+        let temp = [...items];
+        for(let i = 0; i < items.length; i++) {
+            if(temp[i].name == name) {
+                temp[i].components = comps;
+            }
+        }
+        console.log(temp);
+        setItems(temp);
+    }
+
     
 
   return (
-    <div className='bg-[#faefd2] drop-shadow-md h-[80vh] w-[270px] rounded-md flex flex-col items-center'>
-        <div className='mt-[20px] h-[50px]  w-[220px] flex items-center justify-between rounded-lg'>
+    <div className='bg-[#faefd2] drop-shadow-md h-[80vh] w-[300px] rounded-md flex flex-col items-center'>
+        <div className='mt-[20px] h-[50px]  w-[250px] flex items-center justify-between rounded-lg'>
             <p className='ml-[20px] text-[25px] font-thin'>Binder</p>
             <div onClick={handleClick} className='rounded-[3px] mr-[20px] h-[30px] w-[30px] flex justify-center items-center cursor-pointer transition eas-in-out delay-140 hover:bg-[#ece1c1] hover:shadow-sm'>
                 <AddIcon sx={{fontWeight: 'light'}}/>
@@ -79,15 +116,15 @@ const Binder = () => {
 
             
         </div>
-        <div className=''>
+        <div className='gap-[17px] flex flex-col w-[250px]'>
             {
                 items.map((item) => {
-                    if(item === 'class/project') {
-                        return <ClassProject />
-                    } else if (item === 'folder') {
-                        return <Folder />
+                    if(item.type === 'class/project') {
+                        return <ClassProject components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName}/>
+                    } else if (item.type === 'folder') {
+                        return <Folder components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName}/>
                     } else {
-                        return <Notebook />
+                        return <Notebook components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName}/>
                     }
                 })
             }
