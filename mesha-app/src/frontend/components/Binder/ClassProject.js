@@ -9,18 +9,22 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 
 
 const ClassProject = (props) => {
-    const [open, setOpen] = useState(false);
     const [items, setItems] = useState([]);
     
+    useEffect(() => {
+        setItems(props.components);
+    }, [])
+    
 
-    /*const addItem = (num) => {
+    const addItem = (num) => {
         let arr = [...items];
         if(items.length == 0) {
             if(num == 40) {
                 arr.push({
                     type: 'document',
                     name: 'default',
-                    num: num
+                    num: num,
+                    open: false
                 })
                 console.log(arr);
                 setItems(arr);
@@ -28,25 +32,34 @@ const ClassProject = (props) => {
                 setItems([{
                     type: 'folder',
                     name: 'default',
-                    num: num
+                    components: [],
+                    num: num,
+                    open: false
                 }]);
             } else if (num == 30) {
                 setItems([{
                     type: 'notebook',
                     name: 'default',
-                    num: num
+                    components: [],
+                    num: num,
+                    open: false
+
                 }]);
             } else if (num == 50) {
                 setItems([{
                     type: 'link',
                     name: 'default',
-                    num: num
+                    num: num,
+                    open: false
+
                 }]);
             } else {
                 setItems([{
                     type: 'note',
                     name: 'default',
-                    num: num
+                    num: num,
+                    open: false
+
                 }]);
             }
 
@@ -61,13 +74,17 @@ const ClassProject = (props) => {
                     temp.unshift({
                         type: 'document',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+                        
                     })
                 } else {
                     temp.push({
                         type: 'document',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+
                     })
                 }
             } else if(num == 20) {
@@ -75,14 +92,20 @@ const ClassProject = (props) => {
                     temp.unshift({
                         type: 'folder',
                         name: 'default',
-                        num: num
+                        components: [],
+                    num: num,
+                    open: false
+
                     })
                     console.log(temp);
                 } else {
                     temp.push({
                         type: 'folder',
                         name: 'default',
-                        num: num
+                        components: [],
+                    num: num,
+                    open: false
+
                     })
                 }
             } else if (num == 30) {
@@ -90,13 +113,19 @@ const ClassProject = (props) => {
                     temp.unshift({
                         type: 'notebook',
                         name: 'default',
-                        num: num
+                        components: [],
+                    num: num,
+                    open: false
+
                     })
                 } else {
                     temp.push({
                         type: 'notebook',
                         name: 'default',
-                        num: num
+                        components: [],
+                    num: num,
+                    open: false
+
                     })
                 }
             } else if (num == 50) {
@@ -104,13 +133,17 @@ const ClassProject = (props) => {
                     temp.unshift({
                         type: 'link',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+
                     })
                 } else {
                     temp.push({
                         type: 'link',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+
                     })
                 }
             } else {
@@ -118,13 +151,17 @@ const ClassProject = (props) => {
                     temp.unshift({
                         type: 'note',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+
                     })
                 } else {
                     temp.push({
                         type: 'note',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+
                     })
                 }
             }
@@ -142,7 +179,9 @@ const ClassProject = (props) => {
                     arr.splice(i, 0, {
                         type: 'document',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+
                     });
                     setItems(arr);
                     return;
@@ -150,7 +189,10 @@ const ClassProject = (props) => {
                     arr.splice(i, 0, {
                         type: 'folder',
                         name: 'default',
-                        num: num
+                        components: [],
+                    num: num,
+                    open: false
+
                     });
                     setItems(arr);
                     return;
@@ -158,7 +200,10 @@ const ClassProject = (props) => {
                     arr.splice(i, 0, {
                         type: 'notebook',
                         name: 'default',
-                        num: num
+                        components: [],
+                    num: num,
+                    open: false
+
                     });
                     setItems(arr);
                     return;
@@ -166,7 +211,9 @@ const ClassProject = (props) => {
                     arr.splice(i, 0, {
                         type: 'link',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+
                     });
                     setItems(arr);
                     return;
@@ -174,7 +221,9 @@ const ClassProject = (props) => {
                     arr.splice(i, 0, {
                         type: 'note',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+
                     });
                     setItems(arr);
                     return;
@@ -185,7 +234,9 @@ const ClassProject = (props) => {
                     arr.push({
                         type: 'document',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+
                     });
                     setItems(arr);
                     return;
@@ -193,7 +244,10 @@ const ClassProject = (props) => {
                     arr.push({
                         type: 'folder',
                         name: 'default',
-                        num: num
+                        components: [],
+                    num: num,
+                    open: false
+
                     });
                     setItems(arr);
                     return;
@@ -201,7 +255,10 @@ const ClassProject = (props) => {
                     arr.push({
                         type: 'notebook',
                         name: 'default',
-                        num: num
+                        components: [],
+                    num: num,
+                    open: false
+
                     });
                     setItems(arr);
                     return;
@@ -209,7 +266,9 @@ const ClassProject = (props) => {
                     arr.push({
                         type: 'link',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+
                     });
                     setItems(arr);
                     return;
@@ -217,7 +276,9 @@ const ClassProject = (props) => {
                     arr.push({
                         type: 'note',
                         name: 'default',
-                        num: num
+                    num: num,
+                    open: false
+
                     });
                     setItems(arr);
                     return;
@@ -230,72 +291,11 @@ const ClassProject = (props) => {
         console.log(items);
     }
 
-    const addName = (num, name) => {
-        if(items.length == 1) {
-            let temp = [...items];
-            temp[0].name = name;
-            setItems(temp);
-            return;
-        }
-        if(items.length == 2) {
-            let temp = [...items];
-            if(temp[0].name == 'default') {
-                temp[0].name = name;
-            } else {
-                temp[1].name = name;
-            }
-        }
-        let temp = [...items];
-        for(let i = 0; i < temp.length; i++) {
-            if(temp[i].num > num) {
-                temp[i-1].name = name;
-                setItems(temp);
-                return;
-            } else if (i == temp.length-1) {
-                temp[i].name = name;
-                setItems(temp);
-            }
-        }
-        console.log(items);
-        console.log(name);
-    } */
+    
 
-    useEffect(() => {
-        setItems(props.components);
-    }, [])
+    
 
-    const addItem = (num) => {
-        if(num == 40) {
-            setItems(oldItems => [...oldItems, {
-                type: 'document',
-                name: 'default'
-            }]);
-        } else if(num == 20) {
-            setItems(oldItems => [...oldItems, {
-                type: 'folder',
-                name: 'default',
-                components: []
-            }]);
-        } else if (num == 30) {
-            setItems(oldItems => [...oldItems, {
-                type: 'notebook',
-                name: 'default',
-                components: []
-            }]);
-        } else if (num == 50) {
-            setItems(oldItems => [...oldItems, {
-                type: 'link',
-                name: 'default'
-            }]);
-        } else {
-            setItems(oldItems => [...oldItems, {
-                type: 'note',
-                name: 'default'
-            }]);
-        }
-
-        console.log(items);
-    }
+    
 
 
     const setName = (prevName, name) => {
@@ -320,28 +320,48 @@ const ClassProject = (props) => {
         props.setComponents(props.name, items);
     }
 
+    const setPropOpen = (name, open) => {
+        let temp = [...items];
+        for(let i = 0; i < items.length; i++) {
+            if(temp[i].name == name) {
+                temp[i].open = open;
+            }
+        }
+        console.log(temp);
+        setItems(temp);
+        props.setComponents(props.name, items);
+    }
+
 
     const removeItem = (name) => {
-        setItems(items.filter(item => item.name !== name));
+        let temp = [...items];
+        for(let i = 0; i < items.length; i++) {
+            if(temp[i].name == name) {
+                temp.splice(i, 1);
+            }
+        }
+        setItems(temp);
+        console.log(temp);
+        props.setComponents(props.name, temp);
     }
 
   return (
-    <div className={!open ? 'bg-[#ece1c1] rounded-sm ' : 'bg-[#ece1c1] rounded-sm  flex flex-col'}>
-        <ClassProjectItem open={open} setOpen={setOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
-        {open && 
+    <div className={!props.open ? 'bg-[#ece1c1] rounded-sm ' : 'bg-[#ece1c1] rounded-sm  flex flex-col overflow-auto '}>
+        <ClassProjectItem open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
+        {props.open && 
             <div className={items.length > 0 ? 'ml-[20px] mt-[5px] mb-[10px]' : 'ml-[20px] '}>
                 {
                     items.map((item) => {
                         if (item.type === 'folder') {
-                            return <Folder components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name}/>
+                            return <Folder setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name}/>
                         } else if (item.type === 'notebook') {
-                            return <Notebook components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name}/>
+                            return <Notebook setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name}/>
                         } else if (item.type === 'document') {
-                            return <Document removeItem={removeItem} setName={setName} name={item.name}/>
+                            return <Document setPropOpen={setPropOpen} open={item.open} removeItem={removeItem} setName={setName} name={item.name}/>
                         } else if (item.type === 'link') {
-                            return <Link removeItem={removeItem} setName={setName} name={item.name}/>
+                            return <Link setPropOpen={setPropOpen} open={item.open} removeItem={removeItem} setName={setName} name={item.name}/>
                         } else {
-                            return <Note removeItem={removeItem} setName={setName} name={item.name}/>
+                            return <Note setPropOpen={setPropOpen} open={item.open} removeItem={removeItem} setName={setName} name={item.name}/>
                         }
                     })
                 }

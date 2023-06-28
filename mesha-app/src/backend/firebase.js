@@ -42,7 +42,8 @@ const signInWithGoogle = async () => {
           name: user.displayName,
           authProvider: "google",
           email: user.email,
-          level: 'default'
+          level: 'default',
+          items: []
         });
       }
     } catch (err) {
@@ -60,7 +61,8 @@ const signInWithGoogle = async () => {
         name,
         authProvider: "local",
         email,
-        level: 'default'
+        level: 'default',
+        items: []
       });
       navigate('/completeprofile');
     } catch (err) {

@@ -8,7 +8,6 @@ import Link from './BinderProps/DocItems/Link';
 const Folder = (props) => {
 
     
-    const [open, setOpen] = useState(false);
     const [items, setItems] = useState([]);
 
     useEffect(() => {
@@ -16,35 +15,277 @@ const Folder = (props) => {
     }, [])
 
     const addItem = (num) => {
-        if(num == 40) {
-            setItems(oldItems => [...oldItems, {
-                type: 'document',
-                name: 'default',
-            }]);
-        } else if(num == 20) {
-            setItems(oldItems => [...oldItems, {
-                type: 'folder',
-                name: 'default',
-                components: []
-            }]);
-        } else if (num == 30) {
-            setItems(oldItems => [...oldItems, {
-                type: 'notebook',
-                name: 'default',
-                components: []
-            }]);
-        } else if (num == 50) {
-            setItems(oldItems => [...oldItems, {
-                type: 'link',
-                name: 'default'
-            }]);
-        } else {
-            setItems(oldItems => [...oldItems, {
-                type: 'note',
-                name: 'default'
-            }]);
-        }
+        let arr = [...items];
+        if(items.length == 0) {
+            if(num == 40) {
+                arr.push({
+                    type: 'document',
+                    name: 'default',
+                    num: num,
+                    open: false
+                })
+                console.log(arr);
+                setItems(arr);
+            } else if(num == 20) {
+                setItems([{
+                    type: 'folder',
+                    name: 'default',
+                    components: [],
+                    num: num,
+                    open: false
+                }]);
+            } else if (num == 30) {
+                setItems([{
+                    type: 'notebook',
+                    name: 'default',
+                    components: [],
+                    num: num,
+                    open: false
 
+                }]);
+            } else if (num == 50) {
+                setItems([{
+                    type: 'link',
+                    name: 'default',
+                    num: num,
+                    open: false
+
+                }]);
+            } else {
+                setItems([{
+                    type: 'note',
+                    name: 'default',
+                    num: num,
+                    open: false
+
+                }]);
+            }
+
+            console.log(items);
+            return;
+    
+        }
+        if(items.length == 1) {
+            let temp = [...items];
+            if(num == 40) {
+                if(num < items[0].num) {
+                    temp.unshift({
+                        type: 'document',
+                        name: 'default',
+                    num: num,
+                    open: false
+                        
+                    })
+                } else {
+                    temp.push({
+                        type: 'document',
+                        name: 'default',
+                    num: num,
+                    open: false
+
+                    })
+                }
+            } else if(num == 20) {
+                if(num < items[0].num) {
+                    temp.unshift({
+                        type: 'folder',
+                        name: 'default',
+                        components: [],
+                    num: num,
+                    open: false
+
+                    })
+                    console.log(temp);
+                } else {
+                    temp.push({
+                        type: 'folder',
+                        name: 'default',
+                        components: [],
+                    num: num,
+                    open: false
+
+                    })
+                }
+            } else if (num == 30) {
+                if(num < items[0].num) {
+                    temp.unshift({
+                        type: 'notebook',
+                        name: 'default',
+                        components: [],
+                    num: num,
+                    open: false
+
+                    })
+                } else {
+                    temp.push({
+                        type: 'notebook',
+                        name: 'default',
+                        components: [],
+                    num: num,
+                    open: false
+
+                    })
+                }
+            } else if (num == 50) {
+                if(num < items[0].num) {
+                    temp.unshift({
+                        type: 'link',
+                        name: 'default',
+                    num: num,
+                    open: false
+
+                    })
+                } else {
+                    temp.push({
+                        type: 'link',
+                        name: 'default',
+                    num: num,
+                    open: false
+
+                    })
+                }
+            } else {
+                if(num < items[0].num) {
+                    temp.unshift({
+                        type: 'note',
+                        name: 'default',
+                    num: num,
+                    open: false
+
+                    })
+                } else {
+                    temp.push({
+                        type: 'note',
+                        name: 'default',
+                    num: num,
+                    open: false
+
+                    })
+                }
+            }
+
+            console.log("yee yee yee " + temp);
+            setItems(temp);
+
+            return;
+    
+        }
+        console.log("starting for")
+        for(let i = 0; i < arr.length; i++) {
+            if(num < arr[i].num) {
+                if(num == 40) {
+                    arr.splice(i, 0, {
+                        type: 'document',
+                        name: 'default',
+                    num: num,
+                    open: false
+
+                    });
+                    setItems(arr);
+                    return;
+                } else if(num == 20) {
+                    arr.splice(i, 0, {
+                        type: 'folder',
+                        name: 'default',
+                        components: [],
+                    num: num,
+                    open: false
+
+                    });
+                    setItems(arr);
+                    return;
+                } else if (num == 30) {
+                    arr.splice(i, 0, {
+                        type: 'notebook',
+                        name: 'default',
+                        components: [],
+                    num: num,
+                    open: false
+
+                    });
+                    setItems(arr);
+                    return;
+                } else if (num == 50) {
+                    arr.splice(i, 0, {
+                        type: 'link',
+                        name: 'default',
+                    num: num,
+                    open: false
+
+                    });
+                    setItems(arr);
+                    return;
+                } else {
+                    arr.splice(i, 0, {
+                        type: 'note',
+                        name: 'default',
+                    num: num,
+                    open: false
+
+                    });
+                    setItems(arr);
+                    return;
+                }
+                
+            } else if(i == arr.length - 1) {
+                if(num == 40) {
+                    arr.push({
+                        type: 'document',
+                        name: 'default',
+                    num: num,
+                    open: false
+
+                    });
+                    setItems(arr);
+                    return;
+                } else if(num == 20) {
+                    arr.push({
+                        type: 'folder',
+                        name: 'default',
+                        components: [],
+                    num: num,
+                    open: false
+
+                    });
+                    setItems(arr);
+                    return;
+                } else if (num == 30) {
+                    arr.push({
+                        type: 'notebook',
+                        name: 'default',
+                        components: [],
+                    num: num,
+                    open: false
+
+                    });
+                    setItems(arr);
+                    return;
+                } else if (num == 50) {
+                    arr.push({
+                        type: 'link',
+                        name: 'default',
+                    num: num,
+                    open: false
+
+                    });
+                    setItems(arr);
+                    return;
+                } else {
+                    arr.push({
+                        type: 'note',
+                        name: 'default',
+                    num: num,
+                    open: false
+
+                    });
+                    setItems(arr);
+                    return;
+                }
+            }
+        }
+        
+        
+        console.log(arr);
         console.log(items);
     }
 
@@ -72,28 +313,48 @@ const Folder = (props) => {
         props.setComponents(props.name, items);
     }
 
+    const setPropOpen = (name, open) => {
+        let temp = [...items];
+        for(let i = 0; i < items.length; i++) {
+            if(temp[i].name == name) {
+                temp[i].open = open;
+            }
+        }
+        console.log(temp);
+        setItems(temp);
+        props.setComponents(props.name, items);
+    }
+
 
     const removeItem = (name) => {
-        setItems(items.filter(item => item.name !== name));
+        let temp = [...items];
+        for(let i = 0; i < items.length; i++) {
+            if(temp[i].name == name) {
+                temp.splice(i, 1);
+            }
+        }
+        setItems(temp);
+        console.log(temp);
+        props.setComponents(props.name, temp);
     }
 
   return (
     <div className='flex flex-col'>
-        <FolderItem open={open} setOpen={setOpen} addItem={addItem} removeItem={props.removeItem} name={props.name} setName={props.setName}/>
-        {open && 
+        <FolderItem open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} name={props.name} setName={props.setName}/>
+        {props.open && 
             <div className={items.length > 0 ? 'ml-[20px] my-[0px]' : "ml-[20px]"}>
                 {
                     items.map((item) => {
                         if (item.type === 'folder') {
-                            return <Folder components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name}/>
+                            return <Folder setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name}/>
                         } else if (item.type === 'notebook') {
-                            return <Notebook components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name}/>
+                            return <Notebook setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name}/>
                         } else if (item.type === 'document') {
-                            return <Document removeItem={removeItem} setName={setName} name={item.name}/>
+                            return <Document setPropOpen={setPropOpen} open={item.open} removeItem={removeItem} setName={setName} name={item.name}/>
                         } else if (item.type === 'link') {
-                            return <Link removeItem={removeItem} setName={setName} name={item.name}/>
+                            return <Link setPropOpen={setPropOpen} open={item.open} removeItem={removeItem} setName={setName} name={item.name}/>
                         } else {
-                            return <Note removeItem={removeItem} setName={setName} name={item.name}/>
+                            return <Note setPropOpen={setPropOpen} open={item.open} removeItem={removeItem} setName={setName} name={item.name}/>
                         }
                     })
                 }

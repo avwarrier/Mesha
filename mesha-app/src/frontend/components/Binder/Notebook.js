@@ -3,7 +3,7 @@ import NotebookItem from './BinderProps/NotebookItem'
 import Note from './BinderProps/DocItems/Note';
 
 const Notebook = (props) => {
-    const [open, setOpen] = useState(false);
+
     const [items, setItems] = useState([]);
 
     useEffect(() => {
@@ -32,19 +32,38 @@ const Notebook = (props) => {
         props.setComponents(props.name, items);
     }
 
+    const setPropOpen = (name, open) => {
+        let temp = [...items];
+        for(let i = 0; i < items.length; i++) {
+            if(temp[i].name == name) {
+                temp[i].open = open;
+            }
+        }
+        console.log(temp);
+        setItems(temp);
+        props.setComponents(props.name, items);
+    }
+
 
     const removeItem = (name) => {
-        setItems(items.filter(item => item.name !== name));
+        let temp = [...items];
+        for(let i = 0; i < items.length; i++) {
+            if(temp[i].name == name) {
+                temp.splice(i, 1);
+            }
+        }
+        setItems(temp);
+        props.setComponents(props.name, temp);
     }
 
   return (
     <div className='flex flex-col'>
-        <NotebookItem open={open} setOpen={setOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
-        {open && 
+        <NotebookItem open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
+        {props.open && 
             <div className={items.length > 0 ? 'ml-[20px] my-[5px]' : "ml-[20px]"}>
                 {
                     items.map((item) => {
-                        return <Note removeItem={removeItem} setName={setName} name={item.name}/>
+                        return <Note setPropOpen={setPropOpen} open={item.open} removeItem={removeItem} setName={setName} name={item.name}/>
                     })
                 }
             </div>  

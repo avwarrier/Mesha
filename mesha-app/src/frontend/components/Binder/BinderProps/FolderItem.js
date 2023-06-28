@@ -24,6 +24,27 @@ const FolderItem = (props) => {
     const [prevName, setPrevName] = useState('default');
     const [displayName, setDisplayName] = useState('');
 
+    const ref = useRef(null);
+    const { onClickOutside } = props;
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+            onClickOutside && onClickOutside();
+            console.log('jejej')
+            console.log(onEdit)
+            if(onEdit) {
+                props.removeItem('default');
+                console.log('done');
+            }
+        }
+        };
+        document.addEventListener('click', handleClickOutside, true);
+        return () => {
+        document.removeEventListener('click', handleClickOutside, true);
+        };
+    }, [ onClickOutside, onEdit ]);
+
     useEffect(() => {
         
             if (itemInput.current) {
@@ -80,7 +101,7 @@ const FolderItem = (props) => {
         }
         props.setName(prevName, categoryName);
             setPrevName(categoryName);
-            if(openAfterEdit) props.setOpen(true);
+            if(openAfterEdit) props.setOpen(categoryName, true);
           setOpenAfterEdit(true);
           setOnEdit(false);
         }
@@ -95,22 +116,22 @@ const FolderItem = (props) => {
         }
         props.setName(prevName, categoryName);
         setPrevName(categoryName);
-        if(openAfterEdit) props.setOpen(true);
+        if(openAfterEdit) props.setOpen(categoryName, true);
       setOpenAfterEdit(true);
       setOnEdit(false);
     }
 
   return (
-    <div style={{}}  className={onEdit ? 'my-[0px] rounded-sm h-[35px]  flex items-center justify-between px-[10px] ' : 'my-[0px] rounded-sm h-[35px]  flex items-center justify-between px-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab]'}>
+    <div ref={ref} style={{}}  className={onEdit ? 'my-[0px] rounded-sm h-[35px]  flex items-center justify-between px-[10px] ' : 'my-[0px] rounded-sm h-[35px]  flex items-center justify-between px-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab]'}>
         <div className='flex items-center'>
-            <FolderIcon onClick={() => props.setOpen(!props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#6a8099"}}/>
+            <FolderIcon onClick={() => props.setOpen(categoryName, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#6a8099"}}/>
             {
                 onEdit ? 
                 <input ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
                     setDisplayName(e.target.value)
                 }} className={!untitled ? 'bg-[#faefd2] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : 'bg-[#faefd2] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
                 :
-                <p onClick={() => props.setOpen(!props.open)} className={!props.open ? ' flex items-center ml-[5px]  w-[130px] ' : ' flex items-center w-[130px] ml-[5px] underline '}>{displayName}</p>
+                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  ' : ' flex items-center  ml-[5px] underline '}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
@@ -136,7 +157,7 @@ const FolderItem = (props) => {
                   }
             >
                 <MenuItem onClick={() => {
-                    props.setOpen(false);
+                    props.setOpen(categoryName, false);
                     setOnEdit(true)
                     }} className='flex items-center gap-[10px] h-[30px]'>
                   <EditSharpIcon sx={{fontSize: '20x'}}/>
@@ -170,7 +191,7 @@ const FolderItem = (props) => {
             >
                 <MenuItem onClick={() => {
                     props.addItem(20)
-                        props.setOpen(true);
+                        props.setOpen(categoryName, true);
                         returnEdit(false);
                     }} className='flex items-center gap-[10px] h-[30px]'>
                   <CreateNewFolderIcon sx={{color: "#6a8099"}}/>
@@ -178,7 +199,7 @@ const FolderItem = (props) => {
                 </MenuItem>
                 <MenuItem onClick={() => {
                     props.addItem(30)
-                        props.setOpen(true);
+                        props.setOpen(categoryName, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <EditNoteIcon sx={{color: "#333"}}/>
@@ -186,7 +207,7 @@ const FolderItem = (props) => {
                 </MenuItem>
                 <MenuItem onClick={() => {
                     props.addItem(40)
-                        props.setOpen(true);
+                        props.setOpen(categoryName, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <img className='h-[18px] items-center justify-center flex' src={docsLogo}/>
@@ -194,7 +215,7 @@ const FolderItem = (props) => {
                 </MenuItem>
                 <MenuItem onClick={() => {
                     props.addItem(50)
-                        props.setOpen(true);
+                        props.setOpen(categoryName, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <LinkIcon sx={{color: "#c41a0e"}}/>
@@ -202,7 +223,7 @@ const FolderItem = (props) => {
                 </MenuItem>
                 <MenuItem onClick={() => {
                     props.addItem(60)
-                        props.setOpen(true);
+                        props.setOpen(categoryName, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <NotesIcon sx={{color: "#222"}}/>

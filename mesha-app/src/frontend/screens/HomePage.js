@@ -17,11 +17,15 @@ function HomePage() {
     email: '',
     name: '',
     level: '',
-    uid: ''
+    uid: '',
+    items: []
   })
+
+  const [userEmail, setUserEmail] = useState('');
 
   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {
+      console.log('erytime')
         if (user) {
           // User is signed in, see docs for a list of available properties
           // https://firebase.google.com/docs/reference/js/firebase.User
@@ -29,8 +33,10 @@ function HomePage() {
             email: user.email,
             uid: user.uid,
             name: user.name,
-            level: user.level
+            level: user.level,
+            items: user.items
           })
+          setUserEmail(user.email);
           // ...
           console.log("uid", user.uid)
         } else {
@@ -39,8 +45,10 @@ function HomePage() {
           console.log("user is logged out")
         }
       });
+      
      
 }, [])
+
   
 
   return (

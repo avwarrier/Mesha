@@ -16,7 +16,6 @@ import NotesIcon from '@mui/icons-material/Notes';
 import LinkIcon from '@mui/icons-material/Link';
 
 const ClassProjectItem = (props) => {
-
     const [openAfterEdit, setOpenAfterEdit] = useState(false);
 
     const [onEdit, setOnEdit] = useState(false);
@@ -24,9 +23,31 @@ const ClassProjectItem = (props) => {
     const [categoryName, setName] = useState('');
     const [prevName, setPrevName] = useState('default');
     const [displayName, setDisplayName] = useState('');
+    const ref = useRef(null);
+    const { onClickOutside } = props;
 
     useEffect(() => {
-        
+        const handleClickOutside = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+            onClickOutside && onClickOutside();
+            console.log('jejej')
+            console.log(onEdit)
+                if(onEdit) {
+                    props.removeItem('default');
+                    console.log('done');
+                }
+        }
+        };
+        document.addEventListener('click', handleClickOutside, true);
+        return () => {
+        document.removeEventListener('click', handleClickOutside, true);
+        };
+    }, [ onClickOutside, onEdit ]);
+
+    
+
+    useEffect(() => {
+        console.log(onEdit)
             if (itemInput.current) {
             itemInput.current.focus();
         }
@@ -84,7 +105,7 @@ const ClassProjectItem = (props) => {
             props.setName(prevName, categoryName);
             setPrevName(categoryName);
           setOnEdit(false);
-          if(openAfterEdit) props.setOpen(true);
+          if(openAfterEdit) props.setOpen(categoryName, true);
           setOpenAfterEdit(true);
         }
     };
@@ -98,16 +119,16 @@ const ClassProjectItem = (props) => {
         }
         props.setName(prevName, categoryName);
             setPrevName(categoryName);
-            if(openAfterEdit) props.setOpen(true);
+            if(openAfterEdit) props.setOpen(categoryName, true);
           setOpenAfterEdit(true);
           setOnEdit(false);
     }
 
 
   return (
-    <div  className={onEdit ? ' rounded-sm h-[35px] w-[250px]  flex items-center justify-between p-[10px] bg-[#ece1c1]' : ' rounded-sm h-[35px] w-[250px] flex items-center justify-between p-[10px] bg-[#ece1c1] cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab] '}>
+    <div ref={ref} className={onEdit ? ' rounded-sm h-[35px] w-[250px]  flex items-center justify-between p-[10px] bg-[#ece1c1]' : ' rounded-sm h-[35px] w-[250px] flex items-center justify-between p-[10px] bg-[#ece1c1] cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab] '}>
         <div className='flex items-center'>
-            <SchoolIcon sx={{color: "#4a6a8f"}} onClick={() => props.setOpen(!props.open)}/>
+            <SchoolIcon sx={{color: "#4a6a8f"}} onClick={() => props.setOpen(categoryName, !props.open)}/>
             {
                 onEdit ? 
                 <input ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
@@ -115,7 +136,7 @@ const ClassProjectItem = (props) => {
                     if(untitled) setUntitled(false);
                 }} className={!untitled ? 'bg-[#faefd2] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]' : 'bg-[#faefd2] outline-none border-[1.5px] border-red-500 placeholder:text-red-700 rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]'}/>
                 :
-                <p onClick={() => props.setOpen(!props.open)} className={!props.open ? ' flex items-center  ml-[10px] w-[130px] ' : ' flex items-center ml-[10px] underline w-[130px]'}>{displayName}</p>
+                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center  ml-[10px] w-[130px] ' : ' flex items-center ml-[10px] underline w-[130px]'}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
@@ -141,7 +162,7 @@ const ClassProjectItem = (props) => {
                   }
             >
                 <MenuItem onClick={() => {
-                    props.setOpen(false);
+                    props.setOpen(categoryName, false);
                     setOnEdit(true)
                     }} className='flex items-center gap-[10px] h-[30px]'>
                   <EditSharpIcon sx={{fontSize: '20x'}}/>
@@ -177,7 +198,7 @@ const ClassProjectItem = (props) => {
             >
                 <MenuItem onClick={() => {
                     props.addItem(20)
-                        props.setOpen(true);
+                        props.setOpen(categoryName, true);
                         returnEdit(false);
                     }} className='flex items-center gap-[10px] h-[30px]'>
                   <CreateNewFolderIcon sx={{color: "#6a8099"}}/>
@@ -185,7 +206,7 @@ const ClassProjectItem = (props) => {
                 </MenuItem>
                 <MenuItem onClick={() => {
                     props.addItem(30)
-                        props.setOpen(true);
+                        props.setOpen(categoryName, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <EditNoteIcon sx={{color: "#333"}}/>
@@ -193,7 +214,7 @@ const ClassProjectItem = (props) => {
                 </MenuItem>
                 <MenuItem onClick={() => {
                     props.addItem(40)
-                        props.setOpen(true);
+                        props.setOpen(categoryName, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <img className='h-[18px] items-center justify-center flex' src={docsLogo}/>
@@ -201,7 +222,7 @@ const ClassProjectItem = (props) => {
                 </MenuItem>
                 <MenuItem onClick={() => {
                     props.addItem(50)
-                        props.setOpen(true);
+                        props.setOpen(categoryName, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <LinkIcon sx={{color: "#c41a0e"}}/>
@@ -209,7 +230,7 @@ const ClassProjectItem = (props) => {
                 </MenuItem>
                 <MenuItem onClick={() => {
                     props.addItem(60)
-                        props.setOpen(true);
+                        props.setOpen(categoryName, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <NotesIcon sx={{color: "#222"}}/>

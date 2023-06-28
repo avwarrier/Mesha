@@ -20,6 +20,27 @@ const Note = (props) => {
     const [prevName, setPrevName] = useState('default');
     const [displayName, setDisplayName] = useState('');
 
+    const ref = useRef(null);
+    const { onClickOutside } = props;
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+            onClickOutside && onClickOutside();
+            console.log('jejej')
+            console.log(onEdit)
+            if(onEdit) {
+                props.removeItem('default');
+                console.log('done');
+            };
+        }
+        };
+        document.addEventListener('click', handleClickOutside, true);
+        return () => {
+        document.removeEventListener('click', handleClickOutside, true);
+        };
+    }, [ onClickOutside, onEdit ]);
+
     useEffect(() => {
         
             if (itemInput.current) {
@@ -42,7 +63,6 @@ const Note = (props) => {
         }
     }, []);
     
-    const [open, setOpen] = useState(false);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const opener = Boolean(anchorEl);
@@ -67,22 +87,22 @@ const Note = (props) => {
             }
             props.setName(prevName, categoryName);
             setPrevName(categoryName);
-            setOpen(true);
+            props.setPropOpen(categoryName, true);
           setOnEdit(false);
         }
     };
 
   return (
-    <div  className={onEdit ? 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px] ' : (!open ?  'w-[100%] rounded-xl h-[30px]  flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab]' : 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 bg-[#d1c7ab]')}>
+    <div ref={ref}  className={onEdit ? 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px] ' : (!props.open ?  'w-[100%] rounded-xl h-[30px]  flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab]' : 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 bg-[#d1c7ab]')}>
         <div className='flex items-center'>
-        <NotesIcon onClick={() => setOpen(!open)} sx={{fontSize: '20px', marginRight: '2px', color: "#222"}}/>
+        <NotesIcon onClick={() => props.setPropOpen(categoryName, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#222"}}/>
             {
                 onEdit ? 
                 <input ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
                     setDisplayName(e.target.value)
                 }} className={!untitled ? 'bg-[#faefd2] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : 'bg-[#faefd2] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
                 :
-                <p onClick={() => setOpen(!open)} className={!open ? ' flex items-center ml-[5px]  w-[110px] ' : ' flex items-center w-[110px] ml-[5px]  '}>{displayName}</p>
+                <p onClick={() => props.setPropOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  ' : ' flex items-center  ml-[5px]  '}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>

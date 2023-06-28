@@ -22,6 +22,27 @@ const NotebookItem = (props) => {
     const [prevName, setPrevName] = useState('default');
     const [displayName, setDisplayName] = useState('');
 
+    const ref = useRef(null);
+    const { onClickOutside } = props;
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+            onClickOutside && onClickOutside();
+            console.log('jejej')
+            console.log(onEdit)
+            if(onEdit) {
+                props.removeItem('default');
+                console.log('done');
+            };
+        }
+        };
+        document.addEventListener('click', handleClickOutside, true);
+        return () => {
+        document.removeEventListener('click', handleClickOutside, true);
+        };
+    }, [ onClickOutside, onEdit ]);
+
     useEffect(() => {
         
             if (itemInput.current) {
@@ -71,7 +92,7 @@ const NotebookItem = (props) => {
             props.setName(prevName, categoryName);
             setPrevName(categoryName);
           setOnEdit(false);
-          if(openAfterEdit) props.setOpen(true);
+          if(openAfterEdit) props.setOpen(categoryName, true);
           setOpenAfterEdit(true);
         }
     };
@@ -88,21 +109,21 @@ const NotebookItem = (props) => {
         props.setName(prevName, categoryName);
         setPrevName(categoryName);
       setOnEdit(false);
-      if(openAfterEdit) props.setOpen(true);
+      if(openAfterEdit) props.setOpen(categoryName, true);
       setOpenAfterEdit(true);
     }
 
   return (
-    <div  className={onEdit ? 'my-[0px] rounded-sm h-[35px] flex items-center justify-between p-[10px] ' : 'my-[0px] rounded-sm h-[35px] flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab]'}>
+    <div ref={ref}  className={onEdit ? 'my-[0px] rounded-sm h-[35px] flex items-center justify-between p-[10px] ' : 'my-[0px] rounded-sm h-[35px] flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab]'}>
         <div className='flex items-center'>
-            <EditNoteIcon onClick={() => props.setOpen(!props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#333"}}/>
+            <EditNoteIcon onClick={() => props.setOpen(categoryName, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#333"}}/>
             {
                 onEdit ? 
                 <input ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
                     setDisplayName(e.target.value)
                 }} className={!untitled ? 'bg-[#faefd2] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : 'bg-[#faefd2] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
                 :
-                <p onClick={() => props.setOpen(!props.open)} className={!props.open ? ' flex items-center ml-[5px]  w-[130px] ' : ' flex items-center w-[130px] ml-[5px] underline '}>{displayName}</p>
+                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  ' : ' flex items-center ml-[5px] underline '}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
@@ -128,7 +149,7 @@ const NotebookItem = (props) => {
                   }
             >
                 <MenuItem onClick={() => {
-                    props.setOpen(false);
+                    props.setOpen(categoryName, false);
                     setOnEdit(true)
                     }} className='flex items-center gap-[10px] h-[30px]'>
                   <EditSharpIcon sx={{fontSize: '20x'}}/>
@@ -144,7 +165,7 @@ const NotebookItem = (props) => {
             <div className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#ece1c1] hover:drop-shadow-lg'>
                 <AddIcon onClick={() => {
                     props.addItem();
-                    props.setOpen(true);
+                    props.setOpen(categoryName, true);
                     returnEdit();
                 }} sx={{fontSize: "15px"}}/>
             </div>
