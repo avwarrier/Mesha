@@ -1,5 +1,5 @@
-import {React, useState, useEffect, useRef, useCallback} from 'react'
-import FolderIcon from '@mui/icons-material/Folder';
+import {React, useState, useEffect, useRef} from 'react'
+
 import AddIcon from '@mui/icons-material/Add';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
 import Menu from '@mui/material/Menu';
@@ -15,7 +15,7 @@ import docsLogo from '../../../assets/docsLogo.png'
 import NotesIcon from '@mui/icons-material/Notes';
 import LinkIcon from '@mui/icons-material/Link';
 
-const FolderItem = (props) => {
+const ClassProjectItem = (props) => {
     const [openAfterEdit, setOpenAfterEdit] = useState(false);
 
     const [onEdit, setOnEdit] = useState(false);
@@ -23,7 +23,6 @@ const FolderItem = (props) => {
     const [categoryName, setName] = useState('');
     const [prevName, setPrevName] = useState('default');
     const [displayName, setDisplayName] = useState('');
-
     const ref = useRef(null);
     const { onClickOutside } = props;
 
@@ -31,12 +30,10 @@ const FolderItem = (props) => {
         const handleClickOutside = (event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             onClickOutside && onClickOutside();
-            console.log('jejej')
-            console.log(onEdit)
-            if(onEdit) {
-                props.removeItem('default');
-                console.log('done');
-            }
+                if(onEdit) {
+                    props.removeItem('default');
+                    console.log('done');
+                }
         }
         };
         document.addEventListener('click', handleClickOutside, true);
@@ -45,8 +42,10 @@ const FolderItem = (props) => {
         };
     }, [ onClickOutside, onEdit ]);
 
+    
+
     useEffect(() => {
-        
+        console.log(onEdit)
             if (itemInput.current) {
             itemInput.current.focus();
         }
@@ -59,18 +58,18 @@ const FolderItem = (props) => {
         } else {
             setOnEdit(false);
             setName(props.name);
-            if(props.name.length >= 14) {
-                setDisplayName(props.name.substring(0, 11) + '...');
+            if(props.name.length >= 17) {
+                setDisplayName(props.name.substring(0, 14) + '...');
             } else {
                 setDisplayName(props.name);
             }
         }
-    }, []);
+    }, [props.name]);
 
     
 
     const [anchorEl, setAnchorEl] = useState(null);
-    const opener = Boolean(anchorEl);
+    const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -86,74 +85,78 @@ const FolderItem = (props) => {
     const handleCloses = () => {
         setAnchorEls(null);
     };
-
     const [untitled, setUntitled] = useState(false);
+    
 
     const handleKeyDown = event => {
         console.log('User pressed: ', event.key);
     
         if (event.key === 'Enter') {
-            if(categoryName.length >= 14) {
-                setDisplayName(categoryName.substring(0, 11) + '...');
+            console.log(categoryName)
+            if(categoryName.length >= 17) {
+                setDisplayName(categoryName.substring(0, 14) + '...');
             } else if(categoryName == '') {
                 setUntitled(true);
                 return;
             } else {
                 setDisplayName(categoryName);
             }
-        props.setName(prevName, categoryName);
+            
+            props.setName(prevName, categoryName);
             setPrevName(categoryName);
-            if(openAfterEdit) props.setOpen(categoryName, true);
-          setOpenAfterEdit(true);
           setOnEdit(false);
+          if(openAfterEdit) props.setOpen(categoryName, true);
+          setOpenAfterEdit(true);
         }
     };
 
     const returnEdit = () => {
-        if(categoryName.length >= 14) {
-            setDisplayName(categoryName.substring(0, 11) + '...');
+        if(categoryName.length >= 17) {
+            setDisplayName(categoryName.substring(0, 14) + '...');
         } else if(categoryName == '') {
             setUntitled(true);
                 return;
         }
         props.setName(prevName, categoryName);
-        setPrevName(categoryName);
-        if(openAfterEdit) props.setOpen(categoryName, true);
-      setOpenAfterEdit(true);
-      setOnEdit(false);
+            setPrevName(categoryName);
+            if(openAfterEdit) props.setOpen(categoryName, true);
+          setOpenAfterEdit(true);
+          setOnEdit(false);
     }
 
+
   return (
-    <div ref={ref} style={{}}  className={onEdit ? 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px] ' : 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab]'}>
+    <div ref={ref} className={onEdit ? 'shadow-sm rounded-lg h-[40px] w-[250px]  flex items-center justify-between p-[10px] bg-[#f1f1f1]' : 'shadow-sm rounded-lg h-[40px] w-[250px] flex items-center justify-between p-[10px] bg-[#f1f1f1] cursor-pointer transition eas-in-out delay-90 hover:bg-[#dadada] '}>
         <div className='flex items-center'>
-            <FolderIcon onClick={() => props.setOpen(categoryName, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#6a8099"}}/>
+            <SchoolIcon sx={{color: "#4a6a8f"}} onClick={() => props.setOpen(categoryName, !props.open)}/>
             {
                 onEdit ? 
                 <input ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
                     setDisplayName(e.target.value)
-                }} className={!untitled ? 'bg-[#faefd2] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : 'bg-[#faefd2] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
+                    if(untitled) setUntitled(false);
+                }} className={!untitled ? 'bg-[#ffffff] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]' : 'bg-[#ffffff] outline-none border-[1.5px] border-red-500 placeholder:text-red-700 rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]'}/>
                 :
-                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  ' : ' flex items-center  ml-[5px] underline '}>{displayName}</p>
+                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center  ml-[10px] w-[130px] ' : ' flex items-center ml-[10px] underline w-[130px]'}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
-            
-                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#ece1c1] hover:drop-shadow-lg'>
+
+                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                     <MoreVertIcon sx={{fontSize: "15px"}} />
                 </div>
-            
+                
                 <Menu
                 MenuListProps={{
                     'aria-labelledby': 'fade-button',
                   }}
                 anchorEl={anchorEl}
-                open={opener}
+                open={open}
                 onClose={handleClose}
                 onClick={handleClose}
                 TransitionComponent={Fade}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#f3e8ca"}, 
+                      { backgroundColor: "#ffffff"}, 
                       
                     }
                   }
@@ -165,14 +168,19 @@ const FolderItem = (props) => {
                   <EditSharpIcon sx={{fontSize: '20x'}}/>
                   <p className=' font-light'>edit</p>
                 </MenuItem>
-                <MenuItem onClick={() => props.removeItem(categoryName)} className='flex items-center gap-[10px] h-[30px]'>
+                <MenuItem onClick={() => {
+                    console.log(categoryName);
+                    props.removeItem(categoryName)
+                }} className='flex items-center gap-[10px] h-[30px]'>
                   <DeleteIcon sx={{fontSize: '20px'}}/>
                   <p className=' font-light'>delete</p>
                 </MenuItem>
                 
             </Menu>
-
-            <div onClick={handleClicks} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#ece1c1] hover:drop-shadow-lg'>
+            
+            
+            
+            <div onClick={handleClicks} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                 <AddIcon sx={{fontSize: "15px"}}/>
             </div>
             <Menu
@@ -186,7 +194,7 @@ const FolderItem = (props) => {
                 TransitionComponent={Fade}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#f3e8ca"}, 
+                      { backgroundColor: "#ffffff"}, 
                       
                     }
                   }
@@ -238,4 +246,4 @@ const FolderItem = (props) => {
   )
 }
 
-export default FolderItem
+export default ClassProjectItem

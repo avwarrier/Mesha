@@ -60,8 +60,8 @@ const ClassProjectItem = (props) => {
         } else {
             setOnEdit(false);
             setName(props.name);
-            if(props.name.length >= 12) {
-                setDisplayName(props.name.substring(0, 9) + '...');
+            if(props.name.length >= 17) {
+                setDisplayName(props.name.substring(0, 14) + '...');
             } else {
                 setDisplayName(props.name);
             }
@@ -100,6 +100,8 @@ const ClassProjectItem = (props) => {
             } else if(categoryName == '') {
                 setUntitled(true);
                 return;
+            } else {
+                setDisplayName(categoryName);
             }
             
             props.setName(prevName, categoryName);
@@ -126,7 +128,7 @@ const ClassProjectItem = (props) => {
 
 
   return (
-    <div ref={ref} className={onEdit ? ' rounded-sm h-[35px] w-[250px]  flex items-center justify-between p-[10px] bg-[#ece1c1]' : ' rounded-sm h-[35px] w-[250px] flex items-center justify-between p-[10px] bg-[#ece1c1] cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab] '}>
+    <div ref={ref} className={onEdit ? 'shadow-sm rounded-lg h-[40px] w-[250px]  flex items-center justify-between p-[10px] bg-[#ece1c1]' : 'shadow-sm rounded-lg h-[40px] w-[250px] flex items-center justify-between p-[10px] bg-[#ece1c1] cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab] '}>
         <div className='flex items-center'>
             <SchoolIcon sx={{color: "#4a6a8f"}} onClick={() => props.setOpen(categoryName, !props.open)}/>
             {

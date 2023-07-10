@@ -84,6 +84,8 @@ const Note = (props) => {
             } else if(categoryName == '') {
                 setUntitled(true);
                 return;
+            } else {
+                setDisplayName(categoryName);
             }
             props.setName(prevName, categoryName);
             setPrevName(categoryName);

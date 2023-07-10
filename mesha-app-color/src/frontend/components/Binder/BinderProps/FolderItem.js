@@ -1,4 +1,4 @@
-import {React, useState, useEffect, useRef} from 'react'
+import {React, useState, useEffect, useRef, useCallback} from 'react'
 import FolderIcon from '@mui/icons-material/Folder';
 import AddIcon from '@mui/icons-material/Add';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
@@ -9,11 +9,13 @@ import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import SubjectIcon from '@mui/icons-material/Subject';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SchoolIcon from '@mui/icons-material/School';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import docsLogo from '../../../assets/docsLogo.png'
 import NotesIcon from '@mui/icons-material/Notes';
+import LinkIcon from '@mui/icons-material/Link';
 
-const NotebookItem = (props) => {
-
+const FolderItem = (props) => {
     const [openAfterEdit, setOpenAfterEdit] = useState(false);
 
     const [onEdit, setOnEdit] = useState(false);
@@ -29,12 +31,10 @@ const NotebookItem = (props) => {
         const handleClickOutside = (event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             onClickOutside && onClickOutside();
-            console.log('jejej')
-            console.log(onEdit)
             if(onEdit) {
                 props.removeItem('default');
                 console.log('done');
-            };
+            }
         }
         };
         document.addEventListener('click', handleClickOutside, true);
@@ -63,7 +63,7 @@ const NotebookItem = (props) => {
                 setDisplayName(props.name);
             }
         }
-    }, []);
+    }, [props.name]);
 
     
 
@@ -76,13 +76,21 @@ const NotebookItem = (props) => {
         setAnchorEl(null);
     };
 
+    const [anchorEls, setAnchorEls] = useState(null);
+    const opens = Boolean(anchorEls);
+    const handleClicks = (event) => {
+        setAnchorEls(event.currentTarget);
+    };
+    const handleCloses = () => {
+        setAnchorEls(null);
+    };
+
     const [untitled, setUntitled] = useState(false);
 
     const handleKeyDown = event => {
         console.log('User pressed: ', event.key);
     
         if (event.key === 'Enter') {
-
             if(categoryName.length >= 14) {
                 setDisplayName(categoryName.substring(0, 11) + '...');
             } else if(categoryName == '') {
@@ -91,15 +99,13 @@ const NotebookItem = (props) => {
             } else {
                 setDisplayName(categoryName);
             }
-            props.setName(prevName, categoryName);
+        props.setName(prevName, categoryName);
             setPrevName(categoryName);
-          setOnEdit(false);
-          if(openAfterEdit) props.setOpen(categoryName, true);
+            if(openAfterEdit) props.setOpen(categoryName, true);
           setOpenAfterEdit(true);
+          setOnEdit(false);
         }
     };
-
-    
 
     const returnEdit = () => {
         if(categoryName.length >= 14) {
@@ -110,27 +116,27 @@ const NotebookItem = (props) => {
         }
         props.setName(prevName, categoryName);
         setPrevName(categoryName);
-      setOnEdit(false);
-      if(openAfterEdit) props.setOpen(categoryName, true);
+        if(openAfterEdit) props.setOpen(categoryName, true);
       setOpenAfterEdit(true);
+      setOnEdit(false);
     }
 
   return (
-    <div ref={ref}  className={onEdit ? 'my-[0px] rounded-lg h-[35px] flex items-center justify-between p-[10px] ' : 'my-[0px] rounded-lg h-[35px] flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#d1c7ab]'}>
+    <div ref={ref} style={{}}  className={onEdit ? 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px] ' : 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#ececec]'}>
         <div className='flex items-center'>
-            <EditNoteIcon onClick={() => props.setOpen(categoryName, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#333"}}/>
+            <FolderIcon onClick={() => props.setOpen(categoryName, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#6a8099"}}/>
             {
                 onEdit ? 
                 <input ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
                     setDisplayName(e.target.value)
-                }} className={!untitled ? 'bg-[#faefd2] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : 'bg-[#faefd2] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
+                }} className={!untitled ? 'bg-[#ffffff] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : 'bg-[#ffffff] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
                 :
-                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  ' : ' flex items-center ml-[5px] underline '}>{displayName}</p>
+                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  ' : ' flex items-center  ml-[5px] underline '}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
             
-                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#ece1c1] hover:drop-shadow-lg'>
+                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                     <MoreVertIcon sx={{fontSize: "15px"}} />
                 </div>
             
@@ -145,7 +151,7 @@ const NotebookItem = (props) => {
                 TransitionComponent={Fade}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#f3e8ca"}, 
+                      { backgroundColor: "#ffffff"}, 
                       
                     }
                   }
@@ -164,16 +170,70 @@ const NotebookItem = (props) => {
                 
             </Menu>
 
-            <div className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#ece1c1] hover:drop-shadow-lg'>
-                <AddIcon onClick={() => {
-                    props.addItem();
-                    props.setOpen(categoryName, true);
-                    returnEdit();
-                }} sx={{fontSize: "15px"}}/>
+            <div onClick={handleClicks} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+                <AddIcon sx={{fontSize: "15px"}}/>
             </div>
+            <Menu
+                MenuListProps={{
+                    'aria-labelledby': 'fade-button',
+                  }}
+                anchorEl={anchorEls}
+                open={opens}
+                onClose={handleCloses}
+                onClick={handleCloses}
+                TransitionComponent={Fade}
+                sx={
+                    { "& .MuiMenu-paper": 
+                      { backgroundColor: "#ffffff"}, 
+                      
+                    }
+                  }
+            >
+                <MenuItem onClick={() => {
+                    props.addItem(20)
+                        props.setOpen(categoryName, true);
+                        returnEdit(false);
+                    }} className='flex items-center gap-[10px] h-[30px]'>
+                  <CreateNewFolderIcon sx={{color: "#6a8099"}}/>
+                  <p className=' font-light'>Folder</p>
+                </MenuItem>
+                <MenuItem onClick={() => {
+                    props.addItem(30)
+                        props.setOpen(categoryName, true);
+                        returnEdit(false);
+                    }}  className='flex items-center gap-[10px] h-[30px]'>
+                <EditNoteIcon sx={{color: "#333"}}/>
+                  <p className=' font-light'>Notebook</p>
+                </MenuItem>
+                <MenuItem onClick={() => {
+                    props.addItem(40)
+                        props.setOpen(categoryName, true);
+                        returnEdit(false);
+                    }}  className='flex items-center gap-[10px] h-[30px]'>
+                <img className='h-[18px] items-center justify-center flex' src={docsLogo}/>
+                  <p className=' font-light'>Document</p>
+                </MenuItem>
+                <MenuItem onClick={() => {
+                    props.addItem(50)
+                        props.setOpen(categoryName, true);
+                        returnEdit(false);
+                    }}  className='flex items-center gap-[10px] h-[30px]'>
+                <LinkIcon sx={{color: "#c41a0e"}}/>
+                  <p className=' font-light'>Link</p>
+                </MenuItem>
+                <MenuItem onClick={() => {
+                    props.addItem(60)
+                        props.setOpen(categoryName, true);
+                        returnEdit(false);
+                    }}  className='flex items-center gap-[10px] h-[30px]'>
+                <NotesIcon sx={{color: "#222"}}/>
+                  <p className=' font-light'>Note</p>
+                </MenuItem>
+                
+            </Menu>
         </div>
     </div>
   )
 }
 
-export default NotebookItem
+export default FolderItem
