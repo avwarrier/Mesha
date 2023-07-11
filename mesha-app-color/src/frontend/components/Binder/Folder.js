@@ -34,6 +34,21 @@ const Folder = (props) => {
         
         //checkOpen();
     }, [props.components])
+
+    useEffect(() => {
+        let temp = [...props.components];
+        console.log(temp);
+        for(let i = 0; i < temp.length; i++) {
+            if(temp[i].num >= 40) {
+                if(temp[i].id != props.docOpen) {
+                    temp[i].open = false;
+                }
+            }
+        }
+        
+        setItems(temp);
+        props.setComponents(props.name, temp);
+    }, [props.components, props.docOpen])
     
 
     const addItem = (num) => {
@@ -382,6 +397,7 @@ const Folder = (props) => {
                     });
                 }
             })
+
             props.setComponents(props.name, items);
     }
 
@@ -410,9 +426,11 @@ const Folder = (props) => {
                     if(prevName == 'default') {
                         updateDB(temp[i].id, temp[i]);
                         props.setCentralInfo(temp[i].id, temp[i].name)
+                        props.setDocOpen(temp[i].id);
                     } else {
                         changeName(temp[i].name, temp[i].id);
                         props.setCentralInfo(temp[i].id, temp[i].name);
+                        props.setDocOpen(temp[i].id);
                         switchOpen(temp[i].id);
                     }
                     
@@ -464,6 +482,7 @@ const Folder = (props) => {
                 temp[i].open = open;
                 changeOpen(temp[i].id)
                 props.setCentralInfo(id, temp[i].name);
+                props.setDocOpen(id);
             }
         }
         console.log(temp);
@@ -493,6 +512,8 @@ const Folder = (props) => {
         let temp = [...items];
         for(let i = 0; i < items.length; i++) {
             if(temp[i].id == id) {
+                props.setCentralInfo('yee', 'yee');
+                props.setDocOpen('none');
                 temp.splice(i, 1);
                 delDoc(id);
                 break;
@@ -511,9 +532,9 @@ const Folder = (props) => {
                 {
                     items.map((item) => {
                         if (item.type === 'folder') {
-                            return <Folder userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Folder docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'notebook') {
-                            return <Notebook userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Notebook docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'document') {
                             return <Document setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else if (item.type === 'link') {

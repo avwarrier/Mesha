@@ -29,13 +29,15 @@ const LinkAdd = (props) => {
             setEdit(true);
             return;
         }
+
+        setLink(props.link.name);
         
-        if(link.length >= 32) {
-            setDisplayLink(props.link.name.substring(0, 28) + '...');
-            setLink(props.link.name);
+        
+        if(props.link.name.length >= 37) {
+            setDisplayLink(props.link.name.substring(0, 34) + '...');
+            
         } else {
             setDisplayLink(props.link.name);
-            setLink(props.link.name);
         }
     }, [props.link])
 
@@ -43,8 +45,8 @@ const LinkAdd = (props) => {
     
         if (event.key === 'Enter') {
 
-            if(link.length >= 32) {
-                setDisplayLink(link.substring(0, 28) + '...');
+            if(link.length >= 36) {
+                setDisplayLink(link.substring(0, 33) + '...');
             } else if(link == '') {
                 setEdit(true);
                 return;
@@ -59,7 +61,7 @@ const LinkAdd = (props) => {
     
 
   return (
-    <div ref={ref} className={edit ? 'bg-[#ffffff] w-[300px] h-[33px] flex items-center rounded-2xl px-[15px] hover:shadow-md' : 'w-[80%] h-[33px] flex items-center rounded-2xl px-[15px] hover:shadow-md'}>
+    <div ref={ref} className={edit ? 'bg-[#ffffff] w-[390px] h-[33px] flex items-center rounded-2xl px-[15px] hover:shadow-md' : 'w-[390px] h-[33px] flex items-center rounded-2xl px-[15px] hover:shadow-md'}>
         {edit ? <AddLinkOutlinedIcon  sx={{fontSize: '22px', marginRight: "10px", color: "#3a4754"}}/> : <LinkIcon  sx={{fontSize: '22px', marginRight: "10px", color: "#3a4754"}}/>}
         {edit ? 
             <input ref={itemInput} className='outline-none px-[5px] h-[25px] w-[100%] bg-[#ffffff] placeholder:text-[#6d6b69] placeholder:font-light border-b-[1.5px] border-[#4a6a8f]' onKeyDown={onEnter} value={link} onChange={(e) => {
@@ -67,10 +69,10 @@ const LinkAdd = (props) => {
                 setDisplayLink(e.target.value)
             }} placeholder='add link'/>
         :
-            <a href={link} target='_blank' className='px-[5px] h-[25px] w-[190px] text-[#4a6a8f] underline cursor-pointer'>{displayLink}</a>
+            <a href={link} target='_blank' className='px-[5px] h-[25px] w-[380px] text-[#4a6a8f] underline cursor-pointer'>{displayLink}</a>
         }
         {!edit &&
-            <div onClick={() => props.deleteLink(props.link.id)} className='transition eas-in-out delay-90 hover:bg-[#dadada] hover:drop-shadow-lg items-center justify-center flex cursor-pointer p-[2px] rounded-md ml-[40px]'>
+            <div onClick={() => props.deleteLink(props.link.id)} className='transition eas-in-out delay-90 hover:bg-[#dadada] hover:drop-shadow-lg items-center justify-center flex cursor-pointer p-[2px] rounded-md ml-[20px]'>
                 <DeleteOutlinedIcon sx={{fontSize: "20px", color: "#3a4754"}}/>
             </div>
         }

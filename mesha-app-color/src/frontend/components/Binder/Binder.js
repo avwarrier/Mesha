@@ -20,6 +20,7 @@ const Binder = (props) => {
 
     const [userEmail, setUserEmail] = useState('');
     const [loading, setLoading] = useState(false);
+    const [docOpen, setDocOpen] = useState('');
 
     useEffect(() => {
         
@@ -319,7 +320,7 @@ const Binder = (props) => {
     
 
   return (
-    <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[300px] rounded-md flex flex-col '>
+    <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[300px] rounded-md flex flex-col overflow-auto'>
         <div className='mt-[20px] h-[50px] ml-[25px]  w-[250px] flex items-center justify-between rounded-lg'>
             <p className='ml-[20px] text-[25px] font-thin'>Binder</p>
             <div onClick={handleClick} className='rounded-[3px] mr-[20px] h-[30px] w-[30px] flex justify-center items-center cursor-pointer transition eas-in-out delay-140 hover:bg-[#eaeaea] hover:shadow-sm'>
@@ -385,11 +386,11 @@ const Binder = (props) => {
             {
                 items.map((item) => {
                     if(item.type === 'class/project') {
-                        return <ClassProject userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <ClassProject docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else if (item.type === 'folder') {
-                        return <Folder userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <Folder docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else {
-                        return <Notebook userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <Notebook docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     }
                 })
             }

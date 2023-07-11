@@ -68,13 +68,34 @@ const CentralDisplay = (props) => {
   const [comments, setComments] = useState([]);
   
 
+  
+
   const setDueDate = async(newValue) => {
+    console.log(newValue);
+    newValue = Object.assign({}, newValue);
+    let hour = newValue.$H;
+    let am = 'am'
+    let minute = newValue.$m;
+    if(hour >= 12) {
+      hour -= 12;
+      am = 'pm'
+    } else if(hour == 0) {
+      hour = 12;
+    }
+    if(minute < 10) {
+      minute = minute.toString();
+      minute = '0' + minute;
+    }
+    let val = {
+      date: `${newValue.$M+1}/${newValue.$D}/${newValue.$y.toString().substring(2)}`,
+      time: `${hour}:${minute}${am}`
+    }
     const userRef = doc(db, "users", props.userEmail, "openItems", props.centralInfo.id);
         await updateDoc(userRef, {
-            dueDate: newValue,
+            dueDate: val,
         });
     
-    setValue(newValue)
+    setValue(val)
   }
 
   const switchChange = async(event) => {
@@ -232,12 +253,12 @@ const CentralDisplay = (props) => {
                   label={<div className=''>{
                     value == null ? <p className=' text-[15px] border-[1.5px] border-[#e6e6e6] w-[80px] h-[30px] rounded-md flex items-center justify-center hover:border-[#cacaca] mr-[20px]'>pick date</p>
                     :
-                    <p className='mt-[20px] font-normal text-[15px] '>{value.format("M/D/YY")}</p>
+                    <p className='mt-[20px] font-normal text-[15px] '>{value.date}</p>
                   }
                       {
                         value != null &&
-                        <p className='text-[14px]'>{`${
-                          value.format('h:mma')
+                        <p className='text-[14px] ml-[5px]'>{`${
+                          value.time
                         }`}</p>
                       }</div>}
                   value={value}

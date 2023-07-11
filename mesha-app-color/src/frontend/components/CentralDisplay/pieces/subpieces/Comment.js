@@ -9,6 +9,7 @@ const Comment = (props) => {
     const [desc, setDesc] = useState('');
     const [displayComment, setDisplayComment] = useState('');
     const itemInput = useRef(null);
+    const [showInfo, setShowInfo] = useState(false);
 
     
 
@@ -56,7 +57,7 @@ const Comment = (props) => {
       }
 
   return (
-    <div className='w-[95%] m-auto bg-[#ffffff] shadow-md rounded-md flex flex-col justify-between mb-[10px]'>
+    <div onMouseLeave={() => setShowInfo(false)} onMouseEnter={() => setShowInfo(true)} className='w-[95%] m-auto bg-[#ffffff] shadow-md rounded-md flex flex-col justify-between mb-[10px]'>
         {
             onEdit ? 
                 <textarea onFocus={handleFocus} ref={itemInput} value={desc} onChange={(e) => {
@@ -67,9 +68,13 @@ const Comment = (props) => {
                 <p className='w-[100%] outline-none rounded-md p-[5px] text-[13px] break-words'>{displayComment}</p>
         }
         <div className='flex gap-[10px] ml-[10px] items-center mb-[5px]'>
-            <p className='text-[12px] text-[#000]'>{props.comment.date}</p>
-            <p className='text-[13px] text-[#000] font-light'>{props.comment.time}</p>
-            <div className='gap-[0px] flex justify-center items-center'>
+
+            <div className='flex items-center justify-center gap-[8px]'>
+                <p className={showInfo ? 'text-[12px] text-[#000]' : 'text-[12px] text-[#fff]'}>{props.comment.date}</p>
+                <p className={showInfo ? 'text-[13px] text-[#000] font-light' : 'text-[13px] text-[#fff] font-light'}>{props.comment.time}</p>
+            </div>
+
+            <div className={'gap-[0px] flex justify-center items-center'}>
             
                 <div onClick={() => setEdit(true)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg ml-[20px]'>
                     <EditSharpIcon sx={{fontSize: "15px"}} />
