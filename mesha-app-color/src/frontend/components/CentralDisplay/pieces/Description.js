@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { auth, db } from '../../../../backend/firebase'
 import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc } from "firebase/firestore";
 import EditIcon from '@mui/icons-material/Edit';
+import TextField from '@mui/material/TextField';
 
 const Description = (props) => {
 
@@ -11,24 +12,35 @@ const Description = (props) => {
     const divref = useRef(null);
     const { onClickOutside } = props;
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+            onClickOutside && onClickOutside();
+              let saved = localStorage.getItem("notes");
+              saved = saved.substring(1, saved.length-1);
+              callCheck(saved);
+              //localStorage.setItem("notes", JSON.stringify(e.target.value));
+            
+        }
+        };
+        document.addEventListener('click', handleClickOutside, true);
+        return () => {
+        document.removeEventListener('click', handleClickOutside, true);
+        };
+    }, [ onClickOutside ]);
+
     
 
-    const callCheck = async () => {
-      console.log(notes)
+    const callCheck = async (saved) => {
+      console.log(saved)
       const userRef = doc(db, "users", props.userEmail, "openItems", props.id);
       await updateDoc(userRef, {
-          description: notes,
+          description: saved,
       });
       
     }
 
-    useEffect(() => {
-      console.log(edit)
-          if (ref.current) {
-          ref.current.focus();
-          
-      }
-  }, [edit]);
+    
 
    useEffect(() => {
       console.log(props.notes)
@@ -45,25 +57,23 @@ const Description = (props) => {
       }
   };
 
+  const handleFocus = (e) => {
+    const target = e.target;
+    
+    target.selectionStart = notes.length;
+    target.selectionEnd = notes.length;
+  }
+
 
   return (
-    edit ? 
       <div ref={divref} className=' w-[400px] h-[27vh] mt-[47vh] absolute'>
         <textarea ref={ref} value={notes} onChange={(e) => {
             setNotes(e.target.value);
-        }} onKeyDown={handleKeyDown} placeholder='Notes' className='h-[100%] w-[100%] p-[10px] resize-none outline-none bg-[#eaeaea] placeholder:text-[#6d6b69] placeholder:font-light rounded-md border-b-[2px] border-[#4a6a8f]'/>
-
+            localStorage.setItem("notes", JSON.stringify(e.target.value));
+        }}  placeholder='Notes' className='h-[100%] w-[100%] p-[10px] resize-none outline-none bg-[#eaeaea] placeholder:text-[#6d6b69] placeholder:font-light rounded-md border-b-[2px] border-[#4a6a8f] whitespace-pre-line'/>
       </div>
-    :
-      <div ref={ref} className=' w-[400px] h-[27vh] mt-[47vh] absolute'>
-        <div onClick={() => setEdit(true)} className='absolute mt-[5px] ml-[370px] cursor-pointer'>
-        <EditIcon sx={{fontSize: "18px"}}/>
-        </div>
-        <div className='h-[100%] w-[100%] p-[10px] resize-none outline-none bg-[#eaeaea] rounded-md border-b-[2px] border-[#4a6a8f]'>
-          {notes}
-        </div>
-
-      </div>
+      
+      
   )
 }
 

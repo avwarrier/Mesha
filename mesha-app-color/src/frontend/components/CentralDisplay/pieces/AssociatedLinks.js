@@ -1,36 +1,66 @@
 import {React, useEffect, useState} from 'react'
 import LinkAdd from './subpieces/LinkAdd'
+import { v4 as uuid } from 'uuid';
+import { auth, db } from '../../../../backend/firebase'
+import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc } from "firebase/firestore";
+import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
 
 const AssociatedLinks = (props) => {
 
-    const [links, setLinks] = useState(['default']);
+    const [links, setLinks] = useState([]);
 
     useEffect(() => {
-            let temp = [...props.links];
-            temp.push('default');
-            setLinks(temp);
+        setLinks(props.links);
     }, [props.links])
 
-    const addLink = (link) => {
-        let temp = [...links];
-        temp[temp.length-1] = link;
-        temp.push('default');
-        setLinks(temp);
+    const callCheck = async (saved) => {
+        console.log('heroo')
+        const userRef = doc(db, "users", props.userEmail, "openItems", props.id);
+        await updateDoc(userRef, {
+            links: saved,
+        });
+      }
 
+    const addLink = () => {
+        let temp = [...links];
+        let myid = uuid();
+        temp.push({
+            name: 'default',
+            id: myid,
+        })
+        setLinks(temp);
+        
+    }
+
+    const setLink = (id, link) => {
+        let temp = [...links];
+        for(let i = 0; i < temp.length; i++) {
+            
+            if(temp[i].id == id) {
+
+                temp[i].name = link;
+                break;
+            }
+        }
+        setLinks(temp);
+        callCheck(temp);
+        console.log(temp);
+        
     }
     
 
-    const deleteLink = (link) => {
+    const deleteLink = (id) => {
         let temp = [...links];
-        console.log(link + " jsdijidjfidjf")
         for(let i = 0; i < temp.length; i++) {
-            if(temp[i] == link) {
+            if(temp[i].id == id) {
                 temp.splice(i, 1);
                 break;
             }
         }
         console.log(temp);
         setLinks(temp);
+        
+        callCheck(temp);
     }
 
   return (
@@ -38,9 +68,17 @@ const AssociatedLinks = (props) => {
         {
             links.map(link => {
                 console.log(link);
-                return <LinkAdd link={link} addLink={addLink} deleteLink={deleteLink}/>
+                return <LinkAdd id={link.id} link={link} addLink={setLink} deleteLink={deleteLink}/>
             })
         }
+            {
+            
+            <div onClick={() => addLink()} className='bg-[#ffffff] w-[10%] h-[30px] items-center px-[15px] rounded-md cursor-pointer border-[1.5px] flex  justify-center ml-[5px] mt-[2px]'>
+                <AddLinkOutlinedIcon  sx={{fontSize: '22px', color: "#3a4754"}}/>
+        
+            </div>
+            
+            }
     </div>
   )
 }

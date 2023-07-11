@@ -30,9 +30,13 @@ const NotebookItem = (props) => {
         if (ref.current && !ref.current.contains(event.target)) {
             onClickOutside && onClickOutside();
             if(onEdit) {
-                props.removeItem('default');
+                if(categoryName != '') {
+                    setOnEdit(false);
+                } else {
+                props.removeItem(prevName);
                 console.log('done');
-            };
+                }
+            }
         }
         };
         document.addEventListener('click', handleClickOutside, true);

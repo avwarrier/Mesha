@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
+import autosize from 'autosize';
 
 const Comment = (props) => {
 
     const [onEdit, setEdit] = useState(true);
     const [desc, setDesc] = useState('');
-    const [prev, setPrev] = useState('');
     const [displayComment, setDisplayComment] = useState('');
     const itemInput = useRef(null);
 
@@ -24,13 +24,11 @@ const Comment = (props) => {
         if(props.comment.name == 'default') {
             setDesc('');
             setDisplayComment('')
-            setPrev('default');
             console.log('truedat')
             setEdit(true);
         } else {
             setDesc(props.comment.name);
             setDisplayComment(props.comment.name)
-            setPrev(props.comment.name)
             setEdit(false)
         }
     }, [props.comment])
@@ -38,30 +36,35 @@ const Comment = (props) => {
     const onEnter = (event) => {
         if (event.key === 'Enter') {
 
-            if(desc.length >= 100) {
-                setDisplayComment(desc.substring(0, 96) + '...');
-            } else if(desc == '') {
+            if(desc == '') {
                 setEdit(true);
                 return;
             } else {
                 setDisplayComment(desc);
             }
-            props.setComment(prev, desc);
-            setPrev(desc);
+            props.setComment(props.id, desc);
             setEdit(false);
         }
     }
 
+    const handleFocus = (e) => {
+        const target = e.target;
+        
+        target.selectionStart = desc.length;
+        target.selectionEnd = desc.length;
+        autosize(target);
+      }
+
   return (
-    <div className='w-[95%] m-auto bg-[#ffffff] shadow-md h-[85px] rounded-md flex flex-col justify-between mb-[10px]'>
+    <div className='w-[95%] m-auto bg-[#ffffff] shadow-md rounded-md flex flex-col justify-between mb-[10px]'>
         {
             onEdit ? 
-                <textarea ref={itemInput} value={desc} onChange={(e) => {
+                <textarea onFocus={handleFocus} ref={itemInput} value={desc} onChange={(e) => {
                     setDesc(e.target.value);
                     setDisplayComment(e.target.value)
-                }} onKeyDown={onEnter} placeholder='comment' className='outline-none h-[73%] rounded-md  resize-none w-[100%] p-[5px] text-[13px] placeholder:font-light placeholder:text-[#6d6b69]'/>
+                }} onKeyDown={onEnter} placeholder='comment' className='outline-none  rounded-md  resize-none w-[100%] p-[5px] text-[13px] placeholder:font-light placeholder:text-[#6d6b69]'/>
             :
-                <p className=' outline-none h-[72%] rounded-md  w-[100%] p-[5px] text-[13px]'>{displayComment}</p>
+                <p className='w-[100%] outline-none rounded-md p-[5px] text-[13px] break-words'>{displayComment}</p>
         }
         <div className='flex gap-[10px] ml-[10px] items-center mb-[5px]'>
             <p className='text-[12px] text-[#000]'>{props.comment.date}</p>

@@ -6,9 +6,57 @@ import Comments from './pieces/Comments';
 import "quill/dist/quill.snow.css"
 import Quill from "quill"
 import { auth, db } from '../../../backend/firebase'
-import { collection, doc, setDoc, getDocs, collectionGroup, getDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs, collectionGroup, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import NotificationsPausedOutlinedIcon from '@mui/icons-material/NotificationsPausedOutlined';
+import Tooltip from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+
+
+
+function ButtonField(props) {
+  const {
+    setOpen,
+    label,
+    id,
+    disabled,
+    InputProps: { ref } = {},
+    inputProps: { 'aria-label': ariaLabel } = {},
+  } = props;
+
+  return (
+    <div
+      className='font-light cursor-pointer rounded-md w-[50px] flex items-center justify-center h-[30px]'
+      id={id}
+      ref={ref}
+      aria-label={ariaLabel}
+      onClick={() => setOpen?.((prev) => !prev)}
+    >
+      {label ?? 'Pick a date'}
+    </div>
+  );
+}
+
+function ButtonDatePicker(props) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <MobileDateTimePicker
+      slots={{ field: ButtonField, ...props.slots }}
+      slotProps={{ field: { setOpen } }}
+      {...props}
+      open={open}
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
+    />
+  );
+}
 
 const CentralDisplay = (props) => {
   const [type, setType] = useState('');
@@ -18,6 +66,78 @@ const CentralDisplay = (props) => {
   const [time, setTime] = useState('');
   const [links, setLinks] = useState([]);
   const [comments, setComments] = useState([]);
+  
+
+  const setDueDate = async(newValue) => {
+    const userRef = doc(db, "users", props.userEmail, "openItems", props.centralInfo.id);
+        await updateDoc(userRef, {
+            dueDate: newValue,
+        });
+    
+    setValue(newValue)
+  }
+
+  const switchChange = async(event) => {
+    setOnDue(event.target.checked);
+    const userRef = doc(db, "users", props.userEmail, "openItems", props.centralInfo.id);
+    if(event.target.checked == false) {
+      await updateDoc(userRef, {
+        dueDate: null,
+    });
+    }
+    setValue(null);
+  }
+
+  const IOSSwitch = styled((props) => (
+    <Switch checked={onDue} onChange={switchChange} focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+  ))(({ theme }) => ({
+    width: 36,
+    height: 20,
+    padding: 0,
+    '& .MuiSwitch-switchBase': {
+      padding: 0,
+      margin: 2,
+      transitionDuration: '300ms',
+      '&.Mui-checked': {
+        transform: 'translateX(16px)',
+        color: '#a2b7ce',
+        '& + .MuiSwitch-track': {
+          backgroundColor: theme.palette.mode === 'dark' ? '#839ab5' : '#839ab5',
+          opacity: 1,
+          border: 0,
+        },
+        '&.Mui-disabled + .MuiSwitch-track': {
+          opacity: 0.5,
+        },
+      },
+      '&.Mui-focusVisible .MuiSwitch-thumb': {
+        color: '#33cf4d',
+        border: '6px solid #fff',
+      },
+      '&.Mui-disabled .MuiSwitch-thumb': {
+        color:
+          theme.palette.mode === 'light'
+            ? theme.palette.grey[100]
+            : theme.palette.grey[600],
+      },
+      '&.Mui-disabled + .MuiSwitch-track': {
+        opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+      },
+    },
+    '& .MuiSwitch-thumb': {
+      boxSizing: 'border-box',
+      width: 16,
+      height: 16,
+    },
+    '& .MuiSwitch-track': {
+      borderRadius: 26 / 2,
+      backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
+      opacity: 1,
+      transition: theme.transitions.create(['background-color'], {
+        duration: 500,
+      }),
+    },
+  }));
 
   useEffect(() => {
     const checkOpen = async () => {
@@ -37,6 +157,7 @@ const CentralDisplay = (props) => {
           setTime(docSnap.data().time);
           setLinks(docSnap.data().links);
           setComments(docSnap.data().comments);
+          setValue(docSnap.data().dueDate)
           localStorage.setItem("id", JSON.stringify(props.centralInfo.id));
           localStorage.setItem("name", JSON.stringify(props.centralInfo.name));
         } else {
@@ -71,7 +192,10 @@ const CentralDisplay = (props) => {
 
   useEffect(() => {
     new Quill("#container", { theme: "snow", modules: {toolbar: TOOLBAR_OPTIONS } })
-  }, [])
+  }, [props.centralInfo])
+
+  const [value, setValue] = useState(null);
+  const [onDue, setOnDue] = useState(false);
 
 
   return (
@@ -80,9 +204,9 @@ const CentralDisplay = (props) => {
             <input onKeyDown={handleEnter} value={name} onChange={(e) => {
               
               setName(e.target.value)
-            }} className='h-[40px] bg-[#ffffff] border-[#b8b8b8] border-[1px] w-[300px] outline-none rounded-md  px-[15px] text-[23px] mt-[10px] mb-[10px] ml-[22.75px] font-light' />
+            }} className='h-[40px] bg-[#ffffff] border-[#b8b8b8] border-[1px] w-[300px] outline-none rounded-md px-[15px] text-[23px] mt-[10px] mb-[10px] ml-[22.75px] font-light' />
             <div className='w-[93%] h-[60vh] ml-[22.75px]'>
-              <div id='container' className='resize-none outline-none bg-[#ffffff]   rounded-b-md  ' />
+              <div id='container' className='resize-none outline-none bg-[#a2b7ce]   rounded-b-md  ' />
             </div>
       </div>
     :
@@ -96,19 +220,47 @@ const CentralDisplay = (props) => {
       :
         <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[680px] rounded-md flex'>
           <div className='h-[100%] w-[70%] flex flex-col items-center py-[20px]'>
-            <div className='flex  w-[90%] h-[100px] items-center justify-center gap-[120px]'>
-              <Tag type={type} name={name}/>
-              <div className='flex flex-col mt-[10px]'>
-              <p className='text-[16px]'>{date}</p>
-              <p className='text-[13px]'>{time}</p>
+            <div className='flex  w-[90%] h-[100px] items-center justify-between'>
+              <Tag date={date} time={time} type={type} name={name}/>
+              <div className='flex flex-col mt-[0px]'>
+              <div className={'flex items-center justify-center gap-[10px]'}>
+              <div className=''>
+              {
+                onDue ?
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <ButtonDatePicker
+                  label={<div className=''>{
+                    value == null ? <p className=' text-[15px] border-[1.5px] border-[#e6e6e6] w-[80px] h-[30px] rounded-md flex items-center justify-center hover:border-[#cacaca] mr-[20px]'>pick date</p>
+                    :
+                    <p className='mt-[20px] font-normal text-[15px] '>{value.format("M/D/YY")}</p>
+                  }
+                      {
+                        value != null &&
+                        <p className='text-[14px]'>{`${
+                          value.format('h:mma')
+                        }`}</p>
+                      }</div>}
+                  value={value}
+                  onChange={(newValue) => setDueDate(newValue)}
+                />
+              </LocalizationProvider>
+              :
+              <div className='font-light border-[1.5px] border-[#e6e6e6] rounded-md w-[50px] flex items-center justify-center h-[30px] text-[15px]'>
+                due?
+              </div>
+              }
+              </div>
+                <IOSSwitch />
+              </div>
+              
               </div>
             </div>
 
-            <AssociatedLinks links={links} setLinks={setLinks}/>
+            <AssociatedLinks userEmail={props.userEmail} id={props.centralInfo.id} links={links} setLinks={setLinks}/>
             <Description notes={notes} setNotes={setNotes} userEmail={props.userEmail} id={props.centralInfo.id}/>
           </div>
-          <div className=' w-[30%] h-[100%] flex items-center justify-center mr-[10px]'>
-            <Comments comments={comments} setComments={setComments}/>
+          <div className=' w-[200px] h-[100%] flex items-center justify-center mr-[10px]'>
+            <Comments id={props.centralInfo.id} userEmail={props.userEmail} comments={comments} setComments={setComments}/>
           </div>
       </div>
   )

@@ -27,8 +27,12 @@ const Document = (props) => {
         if (ref.current && !ref.current.contains(event.target)) {
             onClickOutside && onClickOutside();
             if(onEdit) {
+                if(categoryName != '') {
+                    setOnEdit(false);
+                } else {
                 props.removeItem(props.id);
                 console.log('done');
+                }
             };
         }
         };

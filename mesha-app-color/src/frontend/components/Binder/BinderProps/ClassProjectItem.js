@@ -30,10 +30,14 @@ const ClassProjectItem = (props) => {
         const handleClickOutside = (event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             onClickOutside && onClickOutside();
-                if(onEdit) {
-                    props.removeItem('default');
-                    console.log('done');
+            if(onEdit) {
+                if(categoryName != '') {
+                    setOnEdit(false);
+                } else {
+                props.removeItem(prevName);
+                console.log('done');
                 }
+            }
         }
         };
         document.addEventListener('click', handleClickOutside, true);

@@ -355,7 +355,7 @@ const ClassProject = (props) => {
             } else {
                 minute = today.getMinutes();
             }
-            let time = hour + ":" + minute + " " + am;
+            let time = hour + ":" + minute + "" + am;
         const userRef = doc(db, "users", props.userEmail, "openItems", id);
         await setDoc(userRef, {
             name: object.name,
@@ -366,7 +366,8 @@ const ClassProject = (props) => {
             description: '',
             type: object.type,
             open: true,
-            id: id
+            id: id,
+            dueDate: null
           });
           switchOpen(id);
     }

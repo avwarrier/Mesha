@@ -8,7 +8,7 @@ const LinkAdd = (props) => {
  
     const [link, setLink] = useState('');
     const [displayLink, setDisplayLink] = useState('');
-    const [edit, setEdit] = useState(true);
+    const [edit, setEdit] = useState(false);
     const ref = useRef(null);
     const itemInput = useRef(null);
 
@@ -22,19 +22,20 @@ const LinkAdd = (props) => {
     }, [edit]);
 
     useEffect(() => {
-        if(props.link == 'default') {
-            console.log("hello worlds")
+        if(props.link.name == 'default') {
+            console.log(props.link.name)
             setDisplayLink('');
             setLink('')
             setEdit(true);
             return;
         }
-        if(link.length >= 30) {
-            setDisplayLink(props.link.substring(0, 26) + '...');
-            setLink(props.link);
+        
+        if(link.length >= 32) {
+            setDisplayLink(props.link.name.substring(0, 28) + '...');
+            setLink(props.link.name);
         } else {
-            setDisplayLink(props.link);
-            setLink(props.link);
+            setDisplayLink(props.link.name);
+            setLink(props.link.name);
         }
     }, [props.link])
 
@@ -42,32 +43,34 @@ const LinkAdd = (props) => {
     
         if (event.key === 'Enter') {
 
-            if(link.length >= 30) {
-                setDisplayLink(link.substring(0, 26) + '...');
+            if(link.length >= 32) {
+                setDisplayLink(link.substring(0, 28) + '...');
             } else if(link == '') {
                 setEdit(true);
                 return;
             } else {
                 setDisplayLink(link);
             }
-            props.addLink(link);
+            props.addLink(props.id, link);
             setEdit(false);
         }
     }
 
+    
+
   return (
-    <div ref={ref} className={edit ? 'bg-[#ffffff] w-[100%] h-[33px] flex items-center rounded-2xl px-[15px]' : 'w-[100%] h-[33px] flex items-center rounded-2xl px-[15px]'}>
+    <div ref={ref} className={edit ? 'bg-[#ffffff] w-[300px] h-[33px] flex items-center rounded-2xl px-[15px] hover:shadow-md' : 'w-[80%] h-[33px] flex items-center rounded-2xl px-[15px] hover:shadow-md'}>
         {edit ? <AddLinkOutlinedIcon  sx={{fontSize: '22px', marginRight: "10px", color: "#3a4754"}}/> : <LinkIcon  sx={{fontSize: '22px', marginRight: "10px", color: "#3a4754"}}/>}
         {edit ? 
-            <input ref={itemInput} className='outline-none px-[5px] h-[25px] w-[70%] bg-[#ffffff] placeholder:text-[#6d6b69] placeholder:font-light border-b-[1.5px] border-[#4a6a8f]' onKeyDown={onEnter} value={link} onChange={(e) => {
+            <input ref={itemInput} className='outline-none px-[5px] h-[25px] w-[100%] bg-[#ffffff] placeholder:text-[#6d6b69] placeholder:font-light border-b-[1.5px] border-[#4a6a8f]' onKeyDown={onEnter} value={link} onChange={(e) => {
                 setLink(e.target.value);
                 setDisplayLink(e.target.value)
             }} placeholder='add link'/>
         :
-            <a href={link} target='_blank' className='px-[5px] h-[25px] w-[70%] text-[#4a6a8f] underline cursor-pointer'>{displayLink}</a>
+            <a href={link} target='_blank' className='px-[5px] h-[25px] w-[190px] text-[#4a6a8f] underline cursor-pointer'>{displayLink}</a>
         }
         {!edit &&
-            <div onClick={() => props.deleteLink(link)} className='transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg items-center justify-center flex cursor-pointer p-[2px] rounded-md'>
+            <div onClick={() => props.deleteLink(props.link.id)} className='transition eas-in-out delay-90 hover:bg-[#dadada] hover:drop-shadow-lg items-center justify-center flex cursor-pointer p-[2px] rounded-md ml-[40px]'>
                 <DeleteOutlinedIcon sx={{fontSize: "20px", color: "#3a4754"}}/>
             </div>
         }

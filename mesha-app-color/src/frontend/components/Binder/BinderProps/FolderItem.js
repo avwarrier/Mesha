@@ -31,9 +31,11 @@ const FolderItem = (props) => {
         const handleClickOutside = (event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             onClickOutside && onClickOutside();
-            if(onEdit) {
-                props.removeItem('default');
-                console.log('done');
+            if(categoryName != '') {
+                setOnEdit(false);
+            } else {
+            props.removeItem(prevName);
+            console.log('done');
             }
         }
         };

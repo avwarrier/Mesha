@@ -27,10 +27,12 @@ const Note = (props) => {
         const handleClickOutside = (event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             onClickOutside && onClickOutside();
-            if(onEdit) {
-                props.removeItem(props.id);
-                console.log('done');
-            };
+            if(categoryName != '') {
+                setOnEdit(false);
+            } else {
+            props.removeItem(props.id);
+            console.log('done');
+            }
         }
         };
         document.addEventListener('click', handleClickOutside, true);

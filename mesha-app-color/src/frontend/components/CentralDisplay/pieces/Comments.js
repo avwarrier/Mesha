@@ -1,6 +1,9 @@
 import {React, useEffect, useState} from 'react'
 import Comment from './subpieces/Comment';
 import AddIcon from '@mui/icons-material/Add';
+import { v4 as uuid } from 'uuid';
+import { auth, db } from '../../../../backend/firebase'
+import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc } from "firebase/firestore";
 
 const Comments = (props) => {
 
@@ -17,16 +20,49 @@ const Comments = (props) => {
         console.log(temp);
     }
 
-    const setComment = (prev, desc) => {
+    const callCheck = async (saved) => {
+        console.log('heroo')
+        const userRef = doc(db, "users", props.userEmail, "openItems", props.id);
+        await updateDoc(userRef, {
+            comments: saved,
+        });
+      }
+
+    const setComment = (id, desc) => {
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        let today = new Date();
+        let date = today.getMonth()-1 + "/" + today.getDate() + "/" + today.getFullYear()
+        let hour = today.getHours();
+        let am = 'am';
+        if(hour > 12) {
+            hour -= 12;
+            am = 'pm';
+        } else if (hour == 0) {
+            hour = 12;
+        }
+        let minute = '';
+        if(today.getMinutes() < 10) {
+            minute = '0' + today.getMinutes();
+        } else {
+            minute = today.getMinutes();
+        }
+        let time = hour + ":" + minute + am;
         let temp = [...comments];
         console.log(temp);
         for(let i = 0; i < temp.length; i++) {
-            if(temp[i].name == prev) {
+            
+            if(temp[i].id == id) {
+                console.log('j')
                 temp[i].name = desc;
-                return;
+                temp[i].date = date;
+                temp[i].time = time;
+                break;
             }
         }
         setComments(temp);
+        callCheck(temp);
         console.log(temp);
     }
 
@@ -48,17 +84,20 @@ const Comments = (props) => {
             }
         }
         setComments(temp);
+        callCheck(temp);
     }
+
+    
 
 
   return (
-    <div className='w-[100%] rounded-md flex flex-col h-[76vh] bg-[#f5f5f5] items-center justify-between'>
-        <div className='w-[100%] flex flex-col items-center mt-[10px]'>
+    <div className='w-[200px] rounded-md flex flex-col h-[76vh] bg-[#f5f5f5] items-center justify-between'>
+        <div className='w-[200px] flex flex-col items-center mt-[10px]'>
             <p className='font-light text-[17px] underline'>Comments/Progress</p>
             <div className='overflow-auto h-[58vh] mt-[10px] w-[100%]'>
             {
                 comments.map(comment => {
-                    return <Comment setComment={setComment} deleteComment={deleteComment} comment={comment}/>
+                    return <Comment id={comment.id} setComment={setComment} deleteComment={deleteComment} comment={comment}/>
                 })
             }
             </div>
@@ -68,10 +107,12 @@ const Comments = (props) => {
             "July", "August", "September", "October", "November", "December"
             ];
             let today = new Date();
-            let date = monthNames[today.getMonth()] + " " + today.getDate() + ", " + today.getFullYear()
+            let date = today.getMonth()-1 + "/" + today.getDate() + "/" + today.getFullYear()
             let hour = today.getHours();
+            let am = 'am';
             if(hour > 12) {
                 hour -= 12;
+                am = 'pm';
             } else if (hour == 0) {
                 hour = 12;
             }
@@ -81,9 +122,11 @@ const Comments = (props) => {
             } else {
                 minute = today.getMinutes();
             }
-            let time = hour + ":" + minute;
+            let time = hour + ":" + minute + am;
+            let id = uuid();
             addComment({
                 name: 'default',
+                id: id,
                 date: date,
                 time: time,
             })
