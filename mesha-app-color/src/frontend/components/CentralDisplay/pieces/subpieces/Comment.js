@@ -76,13 +76,13 @@ const Comment = (props) => {
 
             <div className={'gap-[0px] flex justify-center items-center'}>
             
-                <div onClick={() => setEdit(true)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg ml-[20px]'>
+                <div onClick={() => setEdit(true)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg ml-[20px]'>
                     <EditSharpIcon sx={{fontSize: "15px"}} />
                 </div>
             
                 
 
-            <div onClick={() => props.deleteComment(desc)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+            <div onClick={() => props.deleteComment(desc)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                 <DeleteIcon sx={{fontSize: "15px"}}/>
             </div>
         </div>

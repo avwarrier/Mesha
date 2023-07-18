@@ -98,7 +98,7 @@ const Document = (props) => {
     };
 
   return (
-    <div ref={ref}  className={onEdit ? 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px] ' : (!props.open ?  'w-[100%] rounded-xl h-[30px]  flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#ececec]' : 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 bg-[#dadada]')}>
+    <div ref={ref}  className={onEdit ? 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px] ' : (!props.open ?  'w-[100%] rounded-xl h-[30px]  flex items-center justify-between p-[10px]  cursor-pointer  hover:bg-[#ececec]' : 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px]  cursor-pointer  bg-[#dadada]')}>
         <div className='flex items-center'>
             <img onClick={() => props.setPropOpen(props.id, !props.open)} className='mr-[2px] h-[18px] items-center justify-center flex' src={docsLogo}/>
             {
@@ -112,13 +112,13 @@ const Document = (props) => {
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
             
-                <div onClick={() => setOnEdit(true)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+                <div onClick={() => setOnEdit(true)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                     <EditSharpIcon sx={{fontSize: "15px"}} />
                 </div>
             
                 
 
-            <div onClick={() => props.removeItem(props.id)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+            <div onClick={() => props.removeItem(props.id)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                 <DeleteIcon sx={{fontSize: "15px"}}/>
             </div>
         </div>

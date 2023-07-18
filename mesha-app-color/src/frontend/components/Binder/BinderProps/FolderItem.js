@@ -31,11 +31,13 @@ const FolderItem = (props) => {
         const handleClickOutside = (event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             onClickOutside && onClickOutside();
-            if(categoryName != '') {
-                setOnEdit(false);
-            } else {
-            props.removeItem(prevName);
-            console.log('done');
+            if(onEdit) {
+                if(categoryName != '') {
+                    setOnEdit(false);
+                } else {
+                props.removeItem(prevName);
+                console.log('done');
+                }
             }
         }
         };
@@ -124,7 +126,7 @@ const FolderItem = (props) => {
     }
 
   return (
-    <div ref={ref} style={{}}  className={onEdit ? 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px] ' : 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#ececec]'}>
+    <div ref={ref} style={{}}  className={onEdit ? 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px] ' : 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px]  cursor-pointer  hover:bg-[#ececec]'}>
         <div className='flex items-center'>
             <FolderIcon onClick={() => props.setOpen(categoryName, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#6a8099"}}/>
             {
@@ -133,16 +135,17 @@ const FolderItem = (props) => {
                     setDisplayName(e.target.value)
                 }} className={!untitled ? 'bg-[#ffffff] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : 'bg-[#ffffff] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
                 :
-                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  ' : ' flex items-center  ml-[5px] underline '}>{displayName}</p>
+                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  select-none' : ' flex items-center  ml-[5px] underline select-none'}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
             
-                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                     <MoreVertIcon sx={{fontSize: "15px"}} />
                 </div>
             
                 <Menu
+                elevation={3}
                 MenuListProps={{
                     'aria-labelledby': 'fade-button',
                   }}
@@ -153,29 +156,30 @@ const FolderItem = (props) => {
                 TransitionComponent={Fade}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#ffffff"}, 
+                      { backgroundColor: "#ffffff", borderRadius: "10px", width: "110px", paddingX: "5px"}, 
                       
                     }
                   }
             >
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px",}} onClick={() => {
                     props.setOpen(categoryName, false);
                     setOnEdit(true)
                     }} className='flex items-center gap-[10px] h-[30px]'>
                   <EditSharpIcon sx={{fontSize: '20x'}}/>
                   <p className=' font-light'>edit</p>
                 </MenuItem>
-                <MenuItem onClick={() => props.removeItem(categoryName)} className='flex items-center gap-[10px] h-[30px]'>
+                <MenuItem sx={{borderRadius: "5px",}} onClick={() => props.removeItem(categoryName)} className='flex items-center gap-[10px] h-[30px]'>
                   <DeleteIcon sx={{fontSize: '20px'}}/>
                   <p className=' font-light'>delete</p>
                 </MenuItem>
                 
             </Menu>
 
-            <div onClick={handleClicks} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+            <div onClick={handleClicks} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                 <AddIcon sx={{fontSize: "15px"}}/>
             </div>
             <Menu
+            elevation={3}
                 MenuListProps={{
                     'aria-labelledby': 'fade-button',
                   }}
@@ -186,12 +190,12 @@ const FolderItem = (props) => {
                 TransitionComponent={Fade}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#ffffff"}, 
+                      { backgroundColor: "#ffffff", borderRadius: "10px", width: "140px", paddingX: "5px"}, 
                       
                     }
                   }
             >
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(20)
                         props.setOpen(categoryName, true);
                         returnEdit(false);
@@ -199,7 +203,7 @@ const FolderItem = (props) => {
                   <CreateNewFolderIcon sx={{color: "#6a8099"}}/>
                   <p className=' font-light'>Folder</p>
                 </MenuItem>
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(30)
                         props.setOpen(categoryName, true);
                         returnEdit(false);
@@ -207,7 +211,7 @@ const FolderItem = (props) => {
                 <EditNoteIcon sx={{color: "#333"}}/>
                   <p className=' font-light'>Notebook</p>
                 </MenuItem>
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(40)
                         props.setOpen(categoryName, true);
                         returnEdit(false);
@@ -215,7 +219,7 @@ const FolderItem = (props) => {
                 <img className='h-[18px] items-center justify-center flex' src={docsLogo}/>
                   <p className=' font-light'>Document</p>
                 </MenuItem>
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(50)
                         props.setOpen(categoryName, true);
                         returnEdit(false);
@@ -223,7 +227,7 @@ const FolderItem = (props) => {
                 <LinkIcon sx={{color: "#c41a0e"}}/>
                   <p className=' font-light'>Link</p>
                 </MenuItem>
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(60)
                         props.setOpen(categoryName, true);
                         returnEdit(false);

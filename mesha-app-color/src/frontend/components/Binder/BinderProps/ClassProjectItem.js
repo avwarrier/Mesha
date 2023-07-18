@@ -130,7 +130,7 @@ const ClassProjectItem = (props) => {
 
 
   return (
-    <div ref={ref} className={onEdit ? 'shadow-sm rounded-lg h-[40px] w-[250px]  flex items-center justify-between p-[10px] bg-[#f1f1f1]' : 'shadow-sm rounded-lg h-[40px] w-[250px] flex items-center justify-between p-[10px] bg-[#f1f1f1] cursor-pointer transition eas-in-out delay-90 hover:bg-[#dadada] '}>
+    <div ref={ref} className={onEdit ? 'shadow-sm rounded-lg h-[40px] w-[250px]  flex items-center justify-between p-[10px] bg-[#f1f1f1]' : 'shadow-sm rounded-lg h-[40px] w-[250px] flex items-center justify-between p-[10px] bg-[#f1f1f1] cursor-pointer  hover:bg-[#dadada] '}>
         <div className='flex items-center'>
             <SchoolIcon sx={{color: "#4a6a8f"}} onClick={() => props.setOpen(categoryName, !props.open)}/>
             {
@@ -140,16 +140,17 @@ const ClassProjectItem = (props) => {
                     if(untitled) setUntitled(false);
                 }} className={!untitled ? 'bg-[#ffffff] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]' : 'bg-[#ffffff] outline-none border-[1.5px] border-red-500 placeholder:text-red-700 rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]'}/>
                 :
-                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center  ml-[10px] w-[130px] ' : ' flex items-center ml-[10px] underline w-[130px]'}>{displayName}</p>
+                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center  ml-[10px] w-[130px] select-none' : ' flex items-center ml-[10px] underline w-[130px] select-none'}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
 
-                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                     <MoreVertIcon sx={{fontSize: "15px"}} />
                 </div>
                 
                 <Menu
+                elevation={3}
                 MenuListProps={{
                     'aria-labelledby': 'fade-button',
                   }}
@@ -160,19 +161,19 @@ const ClassProjectItem = (props) => {
                 TransitionComponent={Fade}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#ffffff"}, 
+                      { backgroundColor: "#ffffff", borderRadius: "10px", width: "110px", paddingX: "5px"}, 
                       
                     }
                   }
             >
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px",}} onClick={() => {
                     props.setOpen(categoryName, false);
                     setOnEdit(true)
                     }} className='flex items-center gap-[10px] h-[30px]'>
                   <EditSharpIcon sx={{fontSize: '20x'}}/>
                   <p className=' font-light'>edit</p>
                 </MenuItem>
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px",}} onClick={() => {
                     console.log(categoryName);
                     props.removeItem(categoryName)
                 }} className='flex items-center gap-[10px] h-[30px]'>
@@ -184,10 +185,11 @@ const ClassProjectItem = (props) => {
             
             
             
-            <div onClick={handleClicks} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+            <div onClick={handleClicks} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                 <AddIcon sx={{fontSize: "15px"}}/>
             </div>
             <Menu
+            elevation={3}
                 MenuListProps={{
                     'aria-labelledby': 'fade-button',
                   }}
@@ -198,12 +200,12 @@ const ClassProjectItem = (props) => {
                 TransitionComponent={Fade}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#ffffff"}, 
+                      { backgroundColor: "#ffffff", borderRadius: "10px", width: "140px", paddingX: "5px"}, 
                       
                     }
                   }
             >
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(20)
                         props.setOpen(categoryName, true);
                         returnEdit(false);
@@ -211,7 +213,7 @@ const ClassProjectItem = (props) => {
                   <CreateNewFolderIcon sx={{color: "#6a8099"}}/>
                   <p className=' font-light'>Folder</p>
                 </MenuItem>
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(30)
                         props.setOpen(categoryName, true);
                         returnEdit(false);
@@ -219,7 +221,7 @@ const ClassProjectItem = (props) => {
                 <EditNoteIcon sx={{color: "#333"}}/>
                   <p className=' font-light'>Notebook</p>
                 </MenuItem>
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(40)
                         props.setOpen(categoryName, true);
                         returnEdit(false);
@@ -227,7 +229,7 @@ const ClassProjectItem = (props) => {
                 <img className='h-[18px] items-center justify-center flex' src={docsLogo}/>
                   <p className=' font-light'>Document</p>
                 </MenuItem>
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(50)
                         props.setOpen(categoryName, true);
                         returnEdit(false);
@@ -235,7 +237,7 @@ const ClassProjectItem = (props) => {
                 <LinkIcon sx={{color: "#c41a0e"}}/>
                   <p className=' font-light'>Link</p>
                 </MenuItem>
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(60)
                         props.setOpen(categoryName, true);
                         returnEdit(false);

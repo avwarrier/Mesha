@@ -323,11 +323,12 @@ const Binder = (props) => {
     <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[300px] rounded-md flex flex-col overflow-auto'>
         <div className='mt-[20px] h-[50px] ml-[25px]  w-[250px] flex items-center justify-between rounded-lg'>
             <p className='ml-[20px] text-[25px] font-thin'>Binder</p>
-            <div onClick={handleClick} className='rounded-[3px] mr-[20px] h-[30px] w-[30px] flex justify-center items-center cursor-pointer transition eas-in-out delay-140 hover:bg-[#eaeaea] hover:shadow-sm'>
+            <div onClick={handleClick} className='rounded-[3px] mr-[20px] h-[30px] w-[30px] flex justify-center items-center cursor-pointer  hover:bg-[#eaeaea] hover:shadow-sm'>
                 <AddIcon sx={{fontWeight: 'light'}}/>
 
             </div>
             <Menu
+            elevation={3}
                 MenuListProps={{
                     'aria-labelledby': 'fade-button',
                   }}
@@ -338,20 +339,20 @@ const Binder = (props) => {
                 TransitionComponent={Fade}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#ffffff"}, 
+                      { backgroundColor: "#ffffff", borderRadius: "10px", width: "170px", paddingX: "5px"}, 
                       
                     }
                   }
             >
-                <MenuItem onClick={() => addItem(10)} className='flex items-center gap-[10px] h-[30px]'>
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => addItem(10)} className='flex items-center gap-[10px] h-[30px]'>
                   <SchoolIcon sx={{color: "#4a6a8f"}}/>
                   <p className=' font-light'>Class/Project</p>
                 </MenuItem>
-                <MenuItem onClick={() => addItem(20)} className='flex items-center gap-[10px] h-[30px]'>
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => addItem(20)} className='flex items-center gap-[10px] h-[30px]'>
                   <CreateNewFolderIcon sx={{color: "#6a8099"}}/>
                   <p className=' font-light'>Folder</p>
                 </MenuItem>
-                <MenuItem onClick={() => addItem(30)} className='flex items-center gap-[10px] h-[30px]'>
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => addItem(30)} className='flex items-center gap-[10px] h-[30px]'>
                 <EditNoteIcon sx={{color: "#333"}}/>
                   <p className=' font-light'>Notebook</p>
                 </MenuItem>
@@ -386,11 +387,11 @@ const Binder = (props) => {
             {
                 items.map((item) => {
                     if(item.type === 'class/project') {
-                        return <ClassProject docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <ClassProject dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else if (item.type === 'folder') {
-                        return <Folder docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <Folder dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else {
-                        return <Notebook docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <Notebook dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     }
                 })
             }

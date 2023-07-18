@@ -118,7 +118,7 @@ const NotebookItem = (props) => {
     }
 
   return (
-    <div ref={ref}  className={onEdit ? 'my-[0px] rounded-lg h-[35px] flex items-center justify-between p-[10px] ' : 'my-[0px] rounded-lg h-[35px] flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#ececec]'}>
+    <div ref={ref}  className={onEdit ? 'my-[0px] rounded-lg h-[35px] flex items-center justify-between p-[10px] ' : 'my-[0px] rounded-lg h-[35px] flex items-center justify-between p-[10px]  cursor-pointer  hover:bg-[#ececec]'}>
         <div className='flex items-center'>
             <EditNoteIcon onClick={() => props.setOpen(categoryName, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#333"}}/>
             {
@@ -127,16 +127,17 @@ const NotebookItem = (props) => {
                     setDisplayName(e.target.value)
                 }} className={!untitled ? 'bg-[#ffffff] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : 'bg-[#ffffff] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
                 :
-                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  ' : ' flex items-center ml-[5px] underline '}>{displayName}</p>
+                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  select-none' : ' flex items-center ml-[5px] underline select-none'}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
             
-                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                     <MoreVertIcon sx={{fontSize: "15px"}} />
                 </div>
             
                 <Menu
+                elevation={3}
                 MenuListProps={{
                     'aria-labelledby': 'fade-button',
                   }}
@@ -147,26 +148,26 @@ const NotebookItem = (props) => {
                 TransitionComponent={Fade}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#ffffff"}, 
+                      { backgroundColor: "#ffffff", borderRadius: "10px", width: "110px", paddingX: "5px"}, 
                       
                     }
                   }
             >
-                <MenuItem onClick={() => {
+                <MenuItem sx={{borderRadius: "5px",}} onClick={() => {
                     props.setOpen(categoryName, false);
                     setOnEdit(true)
                     }} className='flex items-center gap-[10px] h-[30px]'>
                   <EditSharpIcon sx={{fontSize: '20x'}}/>
                   <p className=' font-light'>edit</p>
                 </MenuItem>
-                <MenuItem onClick={() => props.removeItem(categoryName)} className='flex items-center gap-[10px] h-[30px]'>
+                <MenuItem sx={{borderRadius: "5px",}} onClick={() => props.removeItem(categoryName)} className='flex items-center gap-[10px] h-[30px]'>
                   <DeleteIcon sx={{fontSize: '20px'}}/>
                   <p className=' font-light'>delete</p>
                 </MenuItem>
                 
             </Menu>
 
-            <div className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+            <div className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                 <AddIcon onClick={() => {
                     props.addItem();
                     props.setOpen(categoryName, true);

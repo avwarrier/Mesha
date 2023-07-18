@@ -1,76 +1,79 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
+import "quill/dist/quill.bubble.css"
+import Quill from "quill"
+import './styledesc.css'
 import { auth, db } from '../../../../backend/firebase'
-import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc } from "firebase/firestore";
-import EditIcon from '@mui/icons-material/Edit';
-import TextField from '@mui/material/TextField';
+import { collection, doc, setDoc, getDoc, collectionGroup, updateDoc, deleteDoc } from "firebase/firestore";
 
 const Description = (props) => {
 
-    const [edit, setEdit] = useState(false);
+    
     const [notes, setNotes] = useState('');
     const ref = useRef(null);
     const divref = useRef(null);
-    const { onClickOutside } = props;
+    const [editing, setEditing] = useState(true);
+    
+    const [quill, setQuill] = useState();
+
+    const wrapperRef = useCallback((wrapper) => {
+      if(wrapper == null) return;
+      wrapper.innerHTML = '';
+      const editor = document.createElement('div');
+      wrapper.append(editor)
+      const q = new Quill(editor, { theme: "bubble"})
+      setQuill(q);
+      
+    }, [])
+
+    
+    
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
-        if (ref.current && !ref.current.contains(event.target)) {
-            onClickOutside && onClickOutside();
-              let saved = localStorage.getItem("notes");
-              saved = saved.substring(1, saved.length-1);
-              callCheck(saved);
-              //localStorage.setItem("notes", JSON.stringify(e.target.value));
-            
-        }
-        };
-        document.addEventListener('click', handleClickOutside, true);
-        return () => {
-        document.removeEventListener('click', handleClickOutside, true);
-        };
-    }, [ onClickOutside ]);
-
-    
-
-    const callCheck = async (saved) => {
-      console.log(saved)
-      const userRef = doc(db, "users", props.userEmail, "openItems", props.id);
-      await updateDoc(userRef, {
-          description: saved,
-      });
-      
-    }
-
-    
-
-   useEffect(() => {
-      console.log(props.notes)
-      setNotes(props.notes);
-      
-    }, [props.notes])
-
-    const handleKeyDown = event => {
-  
-      if (event.key === 'Enter') {
-          
-        callCheck();
-        setEdit(false);
+      if(quill == null || props.userEmail == null) return;
+      const handler = async (delta, oldDelta, source) => {
+          if(source !== 'user') return;
+          setEditing(false);
+          let x = quill.getContents().ops;
+          const userRef = doc(db, "users", props.userEmail, "openItems", props.id);
+          await updateDoc(userRef, {
+              description: x,
+          });
       }
-  };
 
-  const handleFocus = (e) => {
-    const target = e.target;
-    
-    target.selectionStart = notes.length;
-    target.selectionEnd = notes.length;
-  }
+      quill.on('text-change', handler)
+
+      return () => {
+          quill.off('text-change', handler)
+      }
+    }, [quill, props.id])
+
+    useEffect(() => {
+      
+      if(quill == null || props.userEmail == '') {
+          
+          return;
+            
+      }
+      const getStuff = async () => {
+          const docRef = doc(db, "users", props.userEmail, "openItems", props.id);
+          const docSnap = await getDoc(docRef);
+          if(docSnap._document == null) return;
+          console.log(docSnap.data().description)
+          quill.setContents(docSnap.data().description);
+      }
+
+      getStuff();
+      
+    }, [quill, props.id])
 
 
   return (
       <div ref={divref} className=' w-[400px] h-[27vh] mt-[47vh] absolute'>
-        <textarea ref={ref} value={notes} onChange={(e) => {
-            setNotes(e.target.value);
-            localStorage.setItem("notes", JSON.stringify(e.target.value));
-        }}  placeholder='Notes' className='h-[100%] w-[100%] p-[10px] resize-none outline-none bg-[#eaeaea] placeholder:text-[#6d6b69] placeholder:font-light rounded-md border-b-[2px] border-[#4a6a8f] whitespace-pre-line'/>
+        {
+          quill == null && <p className='absolute ml-[14px] mt-[7px] z-50 font-light'>notes</p>
+        }
+        <div  ref={wrapperRef} id='container2' className='resize-none outline-none rounded-b-md ' />
+        
       </div>
       
       
@@ -78,3 +81,7 @@ const Description = (props) => {
 }
 
 export default Description
+/*<textarea ref={ref} value={notes} onChange={(e) => {
+            setNotes(e.target.value);
+            localStorage.setItem("notes", JSON.stringify(e.target.value));
+        }}  placeholder='Notes' className='h-[100%] w-[100%] p-[10px] resize-none outline-none bg-[#eaeaea] placeholder:text-[#6d6b69] placeholder:font-light rounded-md border-b-[2px] border-[#4a6a8f] whitespace-pre-line'/>*/

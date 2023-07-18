@@ -27,11 +27,13 @@ const Note = (props) => {
         const handleClickOutside = (event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             onClickOutside && onClickOutside();
-            if(categoryName != '') {
-                setOnEdit(false);
-            } else {
-            props.removeItem(props.id);
-            console.log('done');
+            if(onEdit) {
+                if(categoryName != '') {
+                    setOnEdit(false);
+                } else {
+                props.removeItem(props.id);
+                console.log('done');
+                }
             }
         }
         };
@@ -95,7 +97,7 @@ const Note = (props) => {
     };
 
   return (
-    <div ref={ref}  className={onEdit ? 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px] ' : (!props.open ?  'w-[100%] rounded-xl h-[30px]  flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 hover:bg-[#ececec]' : 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px]  cursor-pointer transition eas-in-out delay-90 bg-[#dadada]')}>
+    <div ref={ref}  className={onEdit ? 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px] ' : (!props.open ?  'w-[100%] rounded-xl h-[30px]  flex items-center justify-between p-[10px]  cursor-pointer  hover:bg-[#ececec]' : 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px]  cursor-pointer  bg-[#dadada]')}>
         <div className='flex items-center'>
         <NotesIcon onClick={() => props.setPropOpen(props.id, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#222"}}/>
             {
@@ -109,13 +111,13 @@ const Note = (props) => {
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
             
-                <div onClick={() => setOnEdit(true)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+                <div onClick={() => setOnEdit(true)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                     <EditSharpIcon sx={{fontSize: "15px"}} />
                 </div>
             
                 
 
-            <div onClick={() => props.removeItem(props.id)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer transition eas-in-out delay-90 hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+            <div onClick={() => props.removeItem(props.id)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
                 <DeleteIcon sx={{fontSize: "15px"}}/>
             </div>
         </div>

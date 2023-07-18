@@ -88,7 +88,7 @@ const CompleteProfile = () => {
                         </Select>
                     </FormControl>
 
-                    <div onClick={updateDB}  initial={{opacity: 0}} animate={{opacity: 1}} className='bg-[#6a8099] h-[50px] w-[150px] flex items-center justify-center rounded-md cursor-pointer transition eas-in-out delay-90 hover:shadow-md hover:bg-[#4a6a8f]'>
+                    <div onClick={updateDB}  initial={{opacity: 0}} animate={{opacity: 1}} className='bg-[#6a8099] h-[50px] w-[150px] flex items-center justify-center rounded-md cursor-pointer  hover:shadow-md hover:bg-[#4a6a8f]'>
                         <p className='text-[#ffffff]'>Continue</p>
                     </div>
                 

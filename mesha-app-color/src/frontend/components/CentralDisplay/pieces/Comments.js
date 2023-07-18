@@ -130,7 +130,7 @@ const Comments = (props) => {
                 date: date,
                 time: time,
             })
-        }} className='w-[180px] h-[40px] bg-[#4a6a8f] rounded-3xl shadow-md flex items-center justify-center cursor-pointer transition eas-in-out delay-90 hover:bg-[#3a6391] mb-[10px] hover:shadow-lg'>
+        }} className='w-[180px] h-[40px] bg-[#4a6a8f] rounded-3xl shadow-md flex items-center justify-center cursor-pointer  hover:bg-[#3a6391] mb-[10px] hover:shadow-lg'>
             <AddIcon sx={{color: "#ffffff"}}/>
         </div>
         

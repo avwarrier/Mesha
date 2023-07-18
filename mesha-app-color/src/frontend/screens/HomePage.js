@@ -48,12 +48,14 @@ function HomePage() {
           setUserInfo({
             email: user.email,
             uid: user.uid,
-            name: user.name,
+            name: user.displayName,
             level: user.level,
             items: user.items
           })
           setUserEmail(user.email);
           // ...
+          localStorage.setItem("userEmail", user.email);
+          localStorage.setItem("letter", user.displayName);
           const saved = localStorage.getItem("name");
           const otherSaved = localStorage.getItem("id");
           console.log(otherSaved, "   ", saved);
@@ -73,17 +75,27 @@ function HomePage() {
      
 }, [])
 
-  
+const [chan, setChan] = useState({});
+const [dues, updateDues] = useState(false);
+const [dueChange, setDueChange] = useState(false);
+const [menuOpen, setMenuOpen] = useState(false);
+
+  /*{
+            menuOpen &&
+            <div className='absolute bg-red-500 w-[180px] h-[100px] z-50 ml-[calc(100vw-200px)] '></div>
+      }*/
 
   return (
     <div className="h-[100vh] bg-[#ffffff]">
-      <NavBar />
+      <NavBar menuOpen={menuOpen} setMenuOpen={setMenuOpen} userEmail={userEmail}/>
+      
       <div className="flex h-[calc(100vh-70px)] justify-center items-center gap-[20px]">
-          <Binder setCentralInfo={setCentralInfo}/>
-          <CentralDisplay centralInfo={centralInfo} userEmail={userEmail} setC={setC}/>
-          <NotesPanel />
+          <Binder updateDues={updateDues} dues={dues} chan={chan} setCentralInfo={setCentralInfo}/>
+          <CentralDisplay dueChange={dueChange} dues={dues} updateDues={updateDues} setChan={setChan} centralInfo={centralInfo} userEmail={userEmail} setC={setC}/>
+          <NotesPanel dueChange={dueChange} setDueChange={setDueChange} updateDues={updateDues} userEmail={userEmail} dues={dues}/>
 
       </div>
+      
     </div>
   );
 }

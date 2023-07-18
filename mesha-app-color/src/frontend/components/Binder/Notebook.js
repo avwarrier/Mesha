@@ -32,17 +32,36 @@ const Notebook = (props) => {
     }, [props.components])
 
     useEffect(() => {
+        
+        let temp = [...items];
+        for(let i = 0; i < temp.length; i++) {
+            if(temp[i].id == props.chan.id) {
+                temp[i].name = props.chan.name
+            }
+        }
+
+        setItems(temp);
+        props.setComponents(props.name, temp);
+    }, [props.chan])
+
+    useEffect(() => {
+        let saved = localStorage.getItem("structId");
+        if(saved != null) {
+            saved = saved.substring(1, saved.length-1)
+        }
         let temp = props.components;
         for(let i = 0; i < temp.length; i++) {
             if(temp[i].num >= 40) {
                 if(temp[i].id != props.docOpen) {
-                    temp[i].open = false;
+                    if(temp[i].id != saved) {
+                        temp[i].open = false;
+                    }
                 }
             }
         }
         setItems(temp);
         props.setComponents(props.name, temp);
-    }, [props.components, props.docOpen])
+    }, [props.docOpen])
 
     const addItem = (num) => {
         const myId = uuid();
@@ -125,6 +144,8 @@ const Notebook = (props) => {
           switchOpen(id);
     }
 
+
+
     const setName = (prevName, name) => {
         let temp = [...items];
         for(let i = 0; i < temp.length; i++) {
@@ -133,10 +154,12 @@ const Notebook = (props) => {
                     if(prevName == 'default') {
                         updateDB(temp[i].id, temp[i]);
                         props.setCentralInfo(temp[i].id, temp[i].name);
+                        localStorage.setItem("structId", JSON.stringify(temp[i].id));
                         props.setDocOpen(temp[i].id);
                     } else {
                         changeName(temp[i].name, temp[i].id);
                         props.setCentralInfo(temp[i].id, temp[i].name);
+                        localStorage.setItem("structId", JSON.stringify(temp[i].id));
                         props.setDocOpen(temp[i].id);
                         switchOpen(temp[i].id);
                     }
@@ -163,6 +186,7 @@ const Notebook = (props) => {
                 temp[i].open = open;
                 changeOpen(temp[i].id)
                 props.setCentralInfo(id, temp[i].name);
+                localStorage.setItem("structId", JSON.stringify(id));
                 props.setDocOpen(id);
             }
         }
@@ -172,21 +196,12 @@ const Notebook = (props) => {
     }
 
 
-    const removeItem = (name) => {
-        let temp = [...items];
-        for(let i = 0; i < items.length; i++) {
-            if(temp[i].name == name) {
-                temp.splice(i, 1);
-                break;
-            }
-        }
-        setItems(temp);
-        props.setComponents(props.name, temp);
-    }
+
 
     const delDoc = async (id) => {
         await deleteDoc(doc(db, "users", props.userEmail, "openItems", id));
     }
+
 
     const removeSubItem = (id) => {
         let temp = [...items];
@@ -195,6 +210,7 @@ const Notebook = (props) => {
                 props.setCentralInfo('yee', 'yee');
                 props.setDocOpen('none');
                 temp.splice(i, 1);
+                localStorage.setItem("descriptC", "blank");
                 delDoc(id);
                 break;
             }

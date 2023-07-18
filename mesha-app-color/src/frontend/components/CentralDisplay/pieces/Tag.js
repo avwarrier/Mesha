@@ -31,10 +31,10 @@ const Tag = (props) => {
 
   if(props.type == 'document') {
     return (
-        <div className='w-[220px] shadow-md h-[70%] rounded-lg flex items-center justify-center gap-[10px]'>
+      <BootstrapTooltip arrow  title={a} placement='bottom'><div className='w-[220px] shadow-md h-[70%] rounded-lg flex items-center justify-center gap-[10px]'>
             <img className='h-[40px] items-center justify-center flex' src={docsLogo}/>
-            <BootstrapTooltip arrow sx={{bgcolor: "#fff"}} title={a} placement='bottom'><p className='text-[20px] font-light mt-[8px]'>{name}</p></BootstrapTooltip>
-        </div>
+            <p className='text-[20px] font-light mt-[8px]'>{name}</p>
+        </div></BootstrapTooltip>
       )
   } else if(props.type == 'link') {
     return (

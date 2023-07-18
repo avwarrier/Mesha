@@ -36,19 +36,25 @@ const Folder = (props) => {
     }, [props.components])
 
     useEffect(() => {
+        let saved = localStorage.getItem("structId");
+        if(saved != null) {
+            saved = saved.substring(1, saved.length-1)
+        }
         let temp = [...props.components];
         console.log(temp);
         for(let i = 0; i < temp.length; i++) {
             if(temp[i].num >= 40) {
                 if(temp[i].id != props.docOpen) {
-                    temp[i].open = false;
+                    if(temp[i].id != saved) {
+                        temp[i].open = false;
+                    }
                 }
             }
         }
         
         setItems(temp);
         props.setComponents(props.name, temp);
-    }, [props.components, props.docOpen])
+    }, [props.docOpen])
     
 
     const addItem = (num) => {
@@ -417,6 +423,14 @@ const Folder = (props) => {
           switchOpen(id);
     }
 
+    const updateDue = async(name, id) => {
+        const dueRef = doc(db, "users", props.userEmail, "dueDateCollection", id);
+        await updateDoc(dueRef, {
+            name: name
+        })
+        props.updateDues(!props.dues);
+    }
+
     const setName = (prevName, name) => {
         let temp = [...items];
         for(let i = 0; i < temp.length; i++) {
@@ -426,10 +440,13 @@ const Folder = (props) => {
                     if(prevName == 'default') {
                         updateDB(temp[i].id, temp[i]);
                         props.setCentralInfo(temp[i].id, temp[i].name)
+                        localStorage.setItem("structId", JSON.stringify(temp[i].id));
                         props.setDocOpen(temp[i].id);
                     } else {
                         changeName(temp[i].name, temp[i].id);
+                        updateDue(temp[i].name, temp[i].id)
                         props.setCentralInfo(temp[i].id, temp[i].name);
+                        localStorage.setItem("structId", JSON.stringify(temp[i].id));
                         props.setDocOpen(temp[i].id);
                         switchOpen(temp[i].id);
                     }
@@ -482,6 +499,7 @@ const Folder = (props) => {
                 temp[i].open = open;
                 changeOpen(temp[i].id)
                 props.setCentralInfo(id, temp[i].name);
+                localStorage.setItem("structId", JSON.stringify(id));
                 props.setDocOpen(id);
             }
         }
@@ -508,6 +526,12 @@ const Folder = (props) => {
         await deleteDoc(doc(db, "users", props.userEmail, "openItems", id));
     }
 
+    const removeDue = async(id) => {
+        const dueRef = doc(db, "users", props.userEmail, "dueDateCollection", id);
+        await deleteDoc(dueRef);
+        props.updateDues(!props.dues);
+    }
+
     const removeSubItem = (id) => {
         let temp = [...items];
         for(let i = 0; i < items.length; i++) {
@@ -515,7 +539,9 @@ const Folder = (props) => {
                 props.setCentralInfo('yee', 'yee');
                 props.setDocOpen('none');
                 temp.splice(i, 1);
+                localStorage.setItem("descriptC", "blank");
                 delDoc(id);
+                removeDue(id);
                 break;
             }
         }
@@ -532,9 +558,9 @@ const Folder = (props) => {
                 {
                     items.map((item) => {
                         if (item.type === 'folder') {
-                            return <Folder docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Folder dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'notebook') {
-                            return <Notebook docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Notebook dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'document') {
                             return <Document setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else if (item.type === 'link') {
