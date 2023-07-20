@@ -18,6 +18,7 @@ import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import NoteScreen from './pieces/NoteScreen';
+import Skeleton from '@mui/material/Skeleton';
 
 
 
@@ -171,12 +172,15 @@ const CentralDisplay = (props) => {
     },
   }));
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const checkOpen = async () => {
       if(props.centralInfo.id == 'yee') {
         setType('blank');
       } else {
         console.log(props.centralInfo.id, "  ", props.userEmail)
+        //setLoading(true);
         const docRef = doc(db, "users", props.userEmail, "openItems", props.centralInfo.id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
@@ -204,6 +208,7 @@ const CentralDisplay = (props) => {
           // docSnap.data() will be undefined in this case
           console.log("No such document!");
         }
+        //setLoading(false);
       }
       
       
@@ -235,6 +240,36 @@ const CentralDisplay = (props) => {
 
 
   return (
+    loading ? 
+      <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[680px] rounded-md flex'>
+      <div className='h-[100%] w-[70%] flex flex-col items-center py-[20px]'>
+        <div className='flex  w-[90%] h-[100px] items-center justify-between'>
+        <div className='w-[220px]  h-[70%] rounded-lg flex items-center justify-center gap-[10px]'>
+        <Skeleton sx={{bgcolor: "#f5f5f5"}} variant="circular" width={32} height={32} />
+              <Skeleton sx={{marginLeft: "0px", bgcolor: "#f5f5f5"}} variant="rounded" width={110} height="25px" />
+        </div>
+          <div className='flex flex-col mt-[0px] '>
+          <div className={'flex items-center justify-center gap-[10px] '}>
+          <div className='flex flex-col justify-center items-end pt-[10px] h-[100px] mr-[20px] gap-[2px]'>
+            <Skeleton sx={{bgcolor: "#f5f5f5"}} variant="rounded" width={80} height="20px" />
+            <Skeleton sx={{bgcolor: "#f5f5f5"}} variant="rounded" width={40} height="20px" />
+          </div>
+          </div>
+          
+          </div>
+        </div>
+        <div className='h-[35%] w-[85%] ml-[30px] mt-[1%] flex flex-col gap-[5px] overflow-auto'>
+          <Skeleton sx={{bgcolor: "#f5f5f5"}} variant="rounded" width={300} height="20px" />
+          <Skeleton sx={{bgcolor: "#f5f5f5"}} variant="rounded" width={250} height="20px" />
+          <Skeleton sx={{marginTop: "5px", bgcolor: "#f5f5f5"}} variant="rounded" width={300} height="20px" />
+        </div>
+          <Skeleton sx={{bgcolor: "#f5f5f5", width: "400px", height: "43vh", marginTop: "37vh", position: "absolute"}} />
+      </div>
+      <div className=' w-[200px] h-[100%] flex items-center justify-center mr-[10px]'>
+        <Skeleton sx={{bgcolor: "#f5f5f5", width: "200px", height: "125vh", marginBottom: "8vh"}} />
+      </div>
+  </div>
+    :
     type == 'note' ?
         <NoteScreen setChan={props.setChan} userEmail={props.userEmail} id={props.centralInfo.id} name={name} handleEnter={handleEnter} setName={setName} />
     :

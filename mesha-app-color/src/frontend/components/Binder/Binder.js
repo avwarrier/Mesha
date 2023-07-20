@@ -1,4 +1,4 @@
-import {React, useEffect, useState} from 'react'
+import {React, useEffect, useState, useRef} from 'react'
 import AddIcon from '@mui/icons-material/Add';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,6 +14,7 @@ import { auth, db } from '../../../backend/firebase'
 import { collection, doc, updateDoc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import Skeleton from '@mui/material/Skeleton';
+import { v4 as uuid } from 'uuid';
 
 const Binder = (props) => {
 
@@ -21,6 +22,7 @@ const Binder = (props) => {
     const [userEmail, setUserEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [docOpen, setDocOpen] = useState('');
+    
 
     useEffect(() => {
         
@@ -68,6 +70,7 @@ const Binder = (props) => {
 
     const addItem = (num) => {
         let arr = [...items];
+        const myId = uuid();
         if(items.length == 0) {
             if(num == 10) {
                 arr.push({
@@ -75,7 +78,8 @@ const Binder = (props) => {
                     name: 'default',
                     components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
                 })
                 console.log(arr);
                 setItems(arr);
@@ -85,7 +89,8 @@ const Binder = (props) => {
                     name: 'default',
                     components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
                 }]);
             } else if (num == 30) {
                 setItems([{
@@ -93,7 +98,8 @@ const Binder = (props) => {
                     name: 'default',
                     components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                 }]);
             } 
@@ -111,7 +117,8 @@ const Binder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
                         
                     })
                 } else {
@@ -120,7 +127,8 @@ const Binder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     })
                 }
@@ -131,7 +139,8 @@ const Binder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     })
                     console.log(temp);
@@ -141,7 +150,8 @@ const Binder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     })
                 }
@@ -152,7 +162,8 @@ const Binder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     })
                 } else {
@@ -161,7 +172,8 @@ const Binder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     })
                 }
@@ -182,7 +194,8 @@ const Binder = (props) => {
                         name: 'default',
                     num: num,
                     components: [],
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -193,7 +206,8 @@ const Binder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -204,7 +218,8 @@ const Binder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -218,7 +233,8 @@ const Binder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -229,7 +245,8 @@ const Binder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -240,7 +257,8 @@ const Binder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -254,10 +272,10 @@ const Binder = (props) => {
         console.log(items);
     }
 
-    const setName = (prevName, name) => {
+    const setName = (id, prevName, name) => {
         let temp = [...items];
         for(let i = 0; i < temp.length; i++) {
-            if(temp[i].name == prevName) {
+            if(temp[i].id == id) {
                 temp[i].name = name;
             }
         }
@@ -268,27 +286,23 @@ const Binder = (props) => {
         
     }
 
-    const removeItem = (name) => {
-        console.log(name);
+    const removeItem = (id) => {
         let temp = [...items];
-        console.log(temp)
-        console.log(temp[0].name)
         for(let i = 0; i < items.length; i++) {
-            if(temp[i].name == name) {
-                console.log(i);
+            if(temp[i].id == id) {
+                childRef.current.childFunction1(id);
                 temp.splice(i,1);
                 break;
             }
         }
-        console.log(temp);
         setItems(temp);
         updateDB(temp);
     }
 
-    const setComponents = (name, comps) => {
+    const setComponents = (id, comps) => {
         let temp = [...items];
         for(let i = 0; i < items.length; i++) {
-            if(temp[i].name == name) {
+            if(temp[i].id == id) {
                 temp[i].components = comps;
             }
         }
@@ -297,10 +311,10 @@ const Binder = (props) => {
         updateDB(items);
     }
 
-    const setPropOpen = (name, open) => {
+    const setPropOpen = (id, open) => {
         let temp = [...items];
         for(let i = 0; i < items.length; i++) {
-            if(temp[i].name == name) {
+            if(temp[i].id == id) {
                 temp[i].open = open;
             }
         }
@@ -317,10 +331,12 @@ const Binder = (props) => {
         })
     }
 
+    const childRef = useRef(null);
+
     
 
   return (
-    <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[300px] rounded-md flex flex-col overflow-auto'>
+    <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[300px] rounded-md flex flex-col overflow-auto pb-[20px]'>
         <div className='mt-[20px] h-[50px] ml-[25px]  w-[250px] flex items-center justify-between rounded-lg'>
             <p className='ml-[20px] text-[25px] font-thin'>Binder</p>
             <div onClick={handleClick} className='rounded-[3px] mr-[20px] h-[30px] w-[30px] flex justify-center items-center cursor-pointer  hover:bg-[#eaeaea] hover:shadow-sm'>
@@ -387,11 +403,11 @@ const Binder = (props) => {
             {
                 items.map((item) => {
                     if(item.type === 'class/project') {
-                        return <ClassProject dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <ClassProject ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else if (item.type === 'folder') {
-                        return <Folder dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <Folder ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else {
-                        return <Notebook dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <Notebook ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     }
                 })
             }

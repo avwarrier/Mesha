@@ -1,4 +1,4 @@
-import {React, useState, useEffect} from 'react'
+import {React, useState, useEffect, forwardRef, useImperativeHandle, useRef} from 'react'
 import NotebookItem from './BinderProps/NotebookItem'
 import Note from './BinderProps/DocItems/Note';
 import { v4 as uuid } from 'uuid';
@@ -6,9 +6,23 @@ import { auth, db } from '../../../backend/firebase'
 import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
-const Notebook = (props) => {
+const Notebook = forwardRef((props, ref) => {
 
     const [items, setItems] = useState([]);
+
+
+    useImperativeHandle(ref, () => ({
+        childFunction1(id) {
+            if(id != props.id) return;
+            let temp = [...items]
+            for(let i = 0; i < items.length; i++) {
+                    props.setCentralInfo('yee', 'yee');
+                    props.setDocOpen('none');
+                    delDoc(temp[i].id);
+                
+            }
+        },
+      }));
 
     useEffect(() => {
         setItems(props.components);
@@ -41,7 +55,7 @@ const Notebook = (props) => {
         }
 
         setItems(temp);
-        props.setComponents(props.name, temp);
+        props.setComponents(props.id, temp);
     }, [props.chan])
 
     useEffect(() => {
@@ -60,7 +74,7 @@ const Notebook = (props) => {
             }
         }
         setItems(temp);
-        props.setComponents(props.name, temp);
+        props.setComponents(props.id, temp);
     }, [props.docOpen])
 
     const addItem = (num) => {
@@ -126,7 +140,7 @@ const Notebook = (props) => {
                     });
                 }
             })
-            props.setComponents(props.name, items);
+            props.setComponents(props.id, items);
     }
 
     const changeName = async (paramName, id) => {
@@ -146,7 +160,7 @@ const Notebook = (props) => {
 
 
 
-    const setName = (prevName, name) => {
+    const setName = (id, prevName, name) => {
         let temp = [...items];
         for(let i = 0; i < temp.length; i++) {
             if(temp[i].name == prevName) {
@@ -167,7 +181,7 @@ const Notebook = (props) => {
             }
         }
         setItems(temp);
-        props.setComponents(props.name, items);
+        props.setComponents(props.id, items);
     }
 
     const setPropOpen = (id, open) => {
@@ -192,7 +206,7 @@ const Notebook = (props) => {
         }
         console.log(temp);
         setItems(temp);
-        props.setComponents(props.name, items);
+        props.setComponents(props.id, items);
     }
 
 
@@ -217,12 +231,12 @@ const Notebook = (props) => {
         }
         setItems(temp);
         console.log(temp);
-        props.setComponents(props.name, temp);
+        props.setComponents(props.id, temp);
     }
 
   return (
     <div className='flex flex-col'>
-        <NotebookItem open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
+        <NotebookItem id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
         {props.open && 
             <div className={items.length > 0 ? 'ml-[20px] my-[5px]' : "ml-[20px]"}>
                 {
@@ -234,6 +248,6 @@ const Notebook = (props) => {
         }
     </div>
   )
-}
+})
 
 export default Notebook

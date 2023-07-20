@@ -1,4 +1,4 @@
-import {React, useState, useEffect, useId} from 'react'
+import {React, useState, useEffect, useId, forwardRef, useImperativeHandle, useRef} from 'react'
 import ClassProjectItem from './BinderProps/ClassProjectItem'
 import Folder from './Folder';
 import Notebook from './Notebook';
@@ -8,12 +8,31 @@ import Link from './BinderProps/DocItems/Link';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { v4 as uuid } from 'uuid';
 import { auth, db } from '../../../backend/firebase'
-import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 
-const ClassProject = (props) => {
+const ClassProject = forwardRef((props, ref) => {
     const [items, setItems] = useState([]);
+
+    const childRef = useRef(null);
+
+    useImperativeHandle(ref, () => ({
+        childFunction1(id) {
+            if(id != props.id) return;
+            let temp = [...items]
+            for(let i = 0; i < items.length; i++) {
+                if(temp[i].num >= 40) {
+                    props.setCentralInfo('yee', 'yee');
+                    props.setDocOpen('none');
+                    delDoc(temp[i].id);
+                    removeDue(temp[i].id);
+                } else {
+                    childRef.current.childFunction1(temp[i].id);
+                }
+            }
+        },
+      }));
     
     useEffect(() => {
         setItems(props.components);
@@ -36,6 +55,7 @@ const ClassProject = (props) => {
         //checkOpen();
     }, [props.components])
 
+
     useEffect(() => {
         let saved = localStorage.getItem("structId");
         if(saved != null) {
@@ -53,7 +73,7 @@ const ClassProject = (props) => {
             }
         }
         setItems(temp);
-        props.setComponents(props.name, temp);
+        props.setComponents(props.id, temp);
     }, [props.docOpen])
     
 
@@ -77,7 +97,8 @@ const ClassProject = (props) => {
                     name: 'default',
                     components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
                 }]);
             } else if (num == 30) {
                 setItems([{
@@ -85,7 +106,8 @@ const ClassProject = (props) => {
                     name: 'default',
                     components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                 }]);
             } else if (num == 50) {
@@ -136,13 +158,15 @@ const ClassProject = (props) => {
                     })
                 }
             } else if(num == 20) {
+                const myId = uuid();
                 if(num < items[0].num) {
                     temp.unshift({
                         type: 'folder',
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     })
                     console.log(temp);
@@ -152,11 +176,13 @@ const ClassProject = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     })
                 }
             } else if (num == 30) {
+                const myId = uuid();
                 if(num < items[0].num) {
                     temp.unshift({
                         type: 'notebook',
@@ -247,7 +273,8 @@ const ClassProject = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -258,7 +285,8 @@ const ClassProject = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -306,7 +334,8 @@ const ClassProject = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -317,7 +346,8 @@ const ClassProject = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -404,7 +434,7 @@ const ClassProject = (props) => {
                 }
             })
 
-            props.setComponents(props.name, items);
+            props.setComponents(props.id, items);
     }
 
     
@@ -425,16 +455,23 @@ const ClassProject = (props) => {
 
     const updateDue = async(name, id) => {
         const dueRef = doc(db, "users", props.userEmail, "dueDateCollection", id);
-        await updateDoc(dueRef, {
-            name: name
-        })
-        props.updateDues(!props.dues);
+        const docSnap = await getDoc(dueRef);
+        if (docSnap.exists()) {
+            await updateDoc(dueRef, {
+                name: name
+            })
+            props.updateDues(!props.dues);
+          } else {
+            return;
+          }
+          
+        
     }
 
-    const setName = (prevName, name) => {
+    const setName = (id, prevName, name) => {
         let temp = [...items];
         for(let i = 0; i < temp.length; i++) {
-            if(temp[i].name == prevName) {
+            if(temp[i].id == id) {
                 temp[i].name = name;
                 if(temp[i].num >= 40) {
                     if(prevName == 'default') {
@@ -456,31 +493,31 @@ const ClassProject = (props) => {
             }
         }
         setItems(temp);
-        props.setComponents(props.name, items);
+        props.setComponents(props.id, items);
     }
 
-    const setComponents = (name, comps) => {
+    const setComponents = (id, comps) => {
         let temp = [...items];
         for(let i = 0; i < items.length; i++) {
-            if(temp[i].name == name) {
+            if(temp[i].id == id) {
                 temp[i].components = comps;
             }
         }
         setItems(temp);
-        props.setComponents(props.name, items);
+        props.setComponents(props.id, items);
     }
 
-    const setOgOpen = (name, open) => {
+    const setOgOpen = (id, open) => {
         let temp = [...items];
         
         for(let i = 0; i < items.length; i++) {
-            if(temp[i].name == name) {
+            if(temp[i].id == id) {
                 temp[i].open = open;
             }
         }
         console.log(temp);
         setItems(temp);
-        props.setComponents(props.name, items);
+        props.setComponents(props.id, items);
     }
 
     const setPropOpen = (id, open) => {
@@ -506,21 +543,22 @@ const ClassProject = (props) => {
         }
         console.log(temp);
         setItems(temp);
-        props.setComponents(props.name, items);
+        props.setComponents(props.id, items);
     }
 
 
-    const removeItem = (name) => {
+    const removeItem = (id) => {
         let temp = [...items];
         for(let i = 0; i < items.length; i++) {
-            if(temp[i].name == name) {
+            if(temp[i].id == id) {
+                childRef.current.childFunction1(id);
                 temp.splice(i, 1);
                 break;
             }
         }
         setItems(temp);
         console.log(temp);
-        props.setComponents(props.name, temp);
+        props.setComponents(props.id, temp);
     }
 
     const delDoc = async (id) => {
@@ -547,22 +585,22 @@ const ClassProject = (props) => {
         }
         setItems(temp);
         console.log(temp);
-        props.setComponents(props.name, temp);
+        props.setComponents(props.id, temp);
     }
 
     
 
   return (
     <div className={!props.open ? 'bg-[#eaeaea] rounded-lg ' : 'bg-[#f1f1f1] rounded-lg  flex flex-col overflow-auto '}>
-        <ClassProjectItem open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
+        <ClassProjectItem id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
         {props.open && 
             <div className={items.length > 0 ? 'ml-[20px] mt-[5px] mb-[10px]' : 'ml-[20px] '}>
                 {
                     items.map((item) => {
                         if (item.type === 'folder') {
-                            return <Folder chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Folder dues={props.dues} updateDues={props.updateDues} ref={childRef} id={item.id} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'notebook') {
-                            return <Notebook chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Notebook  ref={childRef} id={item.id} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'document') {
                             return <Document setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else if (item.type === 'link') {
@@ -576,6 +614,6 @@ const ClassProject = (props) => {
         }
     </div>
   )
-}
+})
 
 export default ClassProject

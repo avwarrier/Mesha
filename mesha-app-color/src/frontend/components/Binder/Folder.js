@@ -1,4 +1,4 @@
-import {React, useEffect, useState} from 'react'
+import {React, useEffect, useState, forwardRef, useImperativeHandle, useRef} from 'react'
 import FolderItem from './BinderProps/FolderItem'
 import Notebook from './Notebook';
 import Note from './BinderProps/DocItems/Note';
@@ -6,13 +6,32 @@ import Document from './BinderProps/DocItems/Document';
 import Link from './BinderProps/DocItems/Link';
 import { v4 as uuid } from 'uuid';
 import { auth, db } from '../../../backend/firebase'
-import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
-const Folder = (props) => {
+const Folder = forwardRef((props, ref) => {
 
     
     const [items, setItems] = useState([]);
+
+    const childRef = useRef(null);
+
+    useImperativeHandle(ref, () => ({
+        childFunction1(id) {
+            if(id != props.id) return;
+            let temp = [...items]
+            for(let i = 0; i < items.length; i++) {
+                if(temp[i].num >= 40) {
+                    props.setCentralInfo('yee', 'yee');
+                    props.setDocOpen('none');
+                    delDoc(temp[i].id);
+                    removeDue(temp[i].id);
+                } else {
+                    childRef.current.childFunction1(temp[i].id);
+                }
+            }
+        },
+      }));
 
     useEffect(() => {
         setItems(props.components);
@@ -53,7 +72,7 @@ const Folder = (props) => {
         }
         
         setItems(temp);
-        props.setComponents(props.name, temp);
+        props.setComponents(props.id, temp);
     }, [props.docOpen])
     
 
@@ -77,7 +96,8 @@ const Folder = (props) => {
                     name: 'default',
                     components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
                 }]);
             } else if (num == 30) {
                 setItems([{
@@ -85,7 +105,8 @@ const Folder = (props) => {
                     name: 'default',
                     components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                 }]);
             } else if (num == 50) {
@@ -136,13 +157,15 @@ const Folder = (props) => {
                     })
                 }
             } else if(num == 20) {
+                const myId = uuid();
                 if(num < items[0].num) {
                     temp.unshift({
                         type: 'folder',
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     })
                     console.log(temp);
@@ -152,11 +175,13 @@ const Folder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     })
                 }
             } else if (num == 30) {
+                const myId = uuid();
                 if(num < items[0].num) {
                     temp.unshift({
                         type: 'notebook',
@@ -247,7 +272,8 @@ const Folder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -258,7 +284,8 @@ const Folder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -306,7 +333,8 @@ const Folder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -317,7 +345,8 @@ const Folder = (props) => {
                         name: 'default',
                         components: [],
                     num: num,
-                    open: false
+                    open: false,
+                    id: myId
 
                     });
                     setItems(arr);
@@ -404,7 +433,7 @@ const Folder = (props) => {
                 }
             })
 
-            props.setComponents(props.name, items);
+            props.setComponents(props.id, items);
     }
 
     
@@ -425,16 +454,23 @@ const Folder = (props) => {
 
     const updateDue = async(name, id) => {
         const dueRef = doc(db, "users", props.userEmail, "dueDateCollection", id);
-        await updateDoc(dueRef, {
-            name: name
-        })
-        props.updateDues(!props.dues);
+        const docSnap = await getDoc(dueRef);
+        if (docSnap.exists()) {
+            await updateDoc(dueRef, {
+                name: name
+            })
+            props.updateDues(!props.dues);
+          } else {
+            return;
+          }
+          
+        
     }
 
-    const setName = (prevName, name) => {
+    const setName = (id, prevName, name) => {
         let temp = [...items];
         for(let i = 0; i < temp.length; i++) {
-            if(temp[i].name == prevName) {
+            if(temp[i].id == id) {
                 temp[i].name = name;
                 if(temp[i].num >= 40) {
                     if(prevName == 'default') {
@@ -442,6 +478,7 @@ const Folder = (props) => {
                         props.setCentralInfo(temp[i].id, temp[i].name)
                         localStorage.setItem("structId", JSON.stringify(temp[i].id));
                         props.setDocOpen(temp[i].id);
+                        
                     } else {
                         changeName(temp[i].name, temp[i].id);
                         updateDue(temp[i].name, temp[i].id)
@@ -455,31 +492,31 @@ const Folder = (props) => {
             }
         }
         setItems(temp);
-        props.setComponents(props.name, items);
+        props.setComponents(props.id, items);
     }
 
-    const setComponents = (name, comps) => {
+    const setComponents = (id, comps) => {
         let temp = [...items];
         for(let i = 0; i < items.length; i++) {
-            if(temp[i].name == name) {
+            if(temp[i].id == id) {
                 temp[i].components = comps;
             }
         }
         setItems(temp);
-        props.setComponents(props.name, items);
+        props.setComponents(props.id, items);
     }
 
-    const setOgOpen = (name, open) => {
+    const setOgOpen = (id, open) => {
         let temp = [...items];
         
         for(let i = 0; i < items.length; i++) {
-            if(temp[i].name == name) {
+            if(temp[i].id == id) {
                 temp[i].open = open;
             }
         }
         console.log(temp);
         setItems(temp);
-        props.setComponents(props.name, items);
+        props.setComponents(props.id, items);
     }
 
     const setPropOpen = (id, open) => {
@@ -505,27 +542,28 @@ const Folder = (props) => {
         }
         console.log(temp);
         setItems(temp);
-        props.setComponents(props.name, items);
+        props.setComponents(props.id, items);
     }
 
 
-    const removeItem = (name) => {
+    const removeItem = (id) => {
         let temp = [...items];
         for(let i = 0; i < items.length; i++) {
-            if(temp[i].name == name) {
+            if(temp[i].id == id) {
+                childRef.current.childFunction1(id);
                 temp.splice(i, 1);
                 break;
             }
         }
         setItems(temp);
         console.log(temp);
-        props.setComponents(props.name, temp);
+        props.setComponents(props.id, temp);
     }
 
     const delDoc = async (id) => {
         await deleteDoc(doc(db, "users", props.userEmail, "openItems", id));
     }
-
+    
     const removeDue = async(id) => {
         const dueRef = doc(db, "users", props.userEmail, "dueDateCollection", id);
         await deleteDoc(dueRef);
@@ -539,7 +577,6 @@ const Folder = (props) => {
                 props.setCentralInfo('yee', 'yee');
                 props.setDocOpen('none');
                 temp.splice(i, 1);
-                localStorage.setItem("descriptC", "blank");
                 delDoc(id);
                 removeDue(id);
                 break;
@@ -547,20 +584,20 @@ const Folder = (props) => {
         }
         setItems(temp);
         console.log(temp);
-        props.setComponents(props.name, temp);
+        props.setComponents(props.id, temp);
     }
 
   return (
     <div className='flex flex-col'>
-        <FolderItem open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} name={props.name} setName={props.setName}/>
+        <FolderItem id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} name={props.name} setName={props.setName}/>
         {props.open && 
             <div className={items.length > 0 ? 'ml-[20px] my-[0px]' : "ml-[20px]"}>
                 {
                     items.map((item) => {
                         if (item.type === 'folder') {
-                            return <Folder dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Folder ref={childRef} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'notebook') {
-                            return <Notebook dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Notebook ref={childRef} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'document') {
                             return <Document setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else if (item.type === 'link') {
@@ -574,6 +611,6 @@ const Folder = (props) => {
         }
     </div>
   )
-}
+})
 
 export default Folder

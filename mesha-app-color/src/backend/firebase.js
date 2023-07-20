@@ -64,10 +64,11 @@ const signInWithGoogle = async () => {
         level: 'default',
         items: []
       });
+      
       navigate('/completeprofile');
     } catch (err) {
       console.error(err);
-      alert(err.message);
+      alert(err)
     }
   };
 

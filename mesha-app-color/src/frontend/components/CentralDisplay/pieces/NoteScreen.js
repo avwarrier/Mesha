@@ -77,7 +77,7 @@ const NoteScreen = (props) => {
       }, [quill, props.id])
 
       useEffect(() => {
-        if(quill == null || props.userEmail == '') {
+        if(quill == null || props.userEmail == '' || props.id == 'yee') {
             
             return;
               

@@ -4,10 +4,12 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import DueDate from './DueDate';
 import { auth, db } from '../../../backend/firebase'
 import { collection, doc, setDoc, getDocs, collectionGroup, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import Skeleton from '@mui/material/Skeleton';
 
 const DueDatePanel = (props) => {
     const [dueDates, setDueDates] = useState([]);
     const [open, setOpen] = useState();
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const saved = (localStorage.getItem("dueOpen") == 'true')
@@ -19,6 +21,7 @@ const DueDatePanel = (props) => {
         const checkOpen = async () => {
             console.log(props.userEmail == '')
             if(props.userEmail == '') return;
+            //setLoading(true);
             const colRef = collection(db, "users", props.userEmail, "dueDateCollection");
             const docsSnap = await getDocs(colRef);
             let temp = [];
@@ -301,6 +304,7 @@ const DueDatePanel = (props) => {
                 
             })
             setDueDates(temp);
+            //setLoading(false);
             
             
         }
@@ -338,6 +342,22 @@ const DueDatePanel = (props) => {
         {
             open && 
                 
+                    loading ? 
+                    <div className='flex flex-col gap-[5px]'>
+                        <div className='flex items-center justify-center gap-[10px]'>
+                            <Skeleton sx={{}} variant="circular" width={26} height={26} />
+                                <Skeleton sx={{marginLeft: "0px",}} variant="rounded" width={150} height="20px" />
+                        </div>
+                        <div className='flex items-center justify-center gap-[10px]'>
+                        <Skeleton sx={{}} variant="circular" width={26} height={26} />
+                                <Skeleton sx={{marginLeft: "0px",}} variant="rounded" width={150} height="20px" />
+                        </div>
+                        <div className='flex items-center justify-center gap-[10px]'>
+                        <Skeleton sx={{}} variant="circular" width={26} height={26} />
+                                <Skeleton sx={{marginLeft: "0px",}} variant="rounded" width={150} height="20px" />
+                        </div>
+                    </div>
+                    :
                     dueDates.map((dueDate) => {
                         return <DueDate removeDueDate={removeDueDate} dueDate={dueDate} />
                     })

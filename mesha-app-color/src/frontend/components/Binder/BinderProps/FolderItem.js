@@ -35,7 +35,7 @@ const FolderItem = (props) => {
                 if(categoryName != '') {
                     setOnEdit(false);
                 } else {
-                props.removeItem(prevName);
+                props.removeItem(props.id);
                 console.log('done');
                 }
             }
@@ -103,9 +103,9 @@ const FolderItem = (props) => {
             } else {
                 setDisplayName(categoryName);
             }
-        props.setName(prevName, categoryName);
+        props.setName(props.id, '', categoryName);
             setPrevName(categoryName);
-            if(openAfterEdit) props.setOpen(categoryName, true);
+            if(openAfterEdit) props.setOpen(props.id, true);
           setOpenAfterEdit(true);
           setOnEdit(false);
         }
@@ -118,9 +118,9 @@ const FolderItem = (props) => {
             setUntitled(true);
                 return;
         }
-        props.setName(prevName, categoryName);
+        props.setName(props.id, '', categoryName);
         setPrevName(categoryName);
-        if(openAfterEdit) props.setOpen(categoryName, true);
+        if(openAfterEdit) props.setOpen(props.id, true);
       setOpenAfterEdit(true);
       setOnEdit(false);
     }
@@ -128,14 +128,14 @@ const FolderItem = (props) => {
   return (
     <div ref={ref} style={{}}  className={onEdit ? 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px] ' : 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px]  cursor-pointer  hover:bg-[#ececec]'}>
         <div className='flex items-center'>
-            <FolderIcon onClick={() => props.setOpen(categoryName, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#6a8099"}}/>
+            <FolderIcon onClick={() => props.setOpen(props.id, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#6a8099"}}/>
             {
                 onEdit ? 
                 <input ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
                     setDisplayName(e.target.value)
                 }} className={!untitled ? 'bg-[#ffffff] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : 'bg-[#ffffff] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
                 :
-                <p onClick={() => props.setOpen(categoryName, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  select-none' : ' flex items-center  ml-[5px] underline select-none'}>{displayName}</p>
+                <p onClick={() => props.setOpen(props.id, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  select-none' : ' flex items-center  ml-[5px] underline select-none'}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
@@ -162,13 +162,13 @@ const FolderItem = (props) => {
                   }
             >
                 <MenuItem sx={{borderRadius: "5px",}} onClick={() => {
-                    props.setOpen(categoryName, false);
+                    props.setOpen(props.id, false);
                     setOnEdit(true)
                     }} className='flex items-center gap-[10px] h-[30px]'>
                   <EditSharpIcon sx={{fontSize: '20x'}}/>
                   <p className=' font-light'>edit</p>
                 </MenuItem>
-                <MenuItem sx={{borderRadius: "5px",}} onClick={() => props.removeItem(categoryName)} className='flex items-center gap-[10px] h-[30px]'>
+                <MenuItem sx={{borderRadius: "5px",}} onClick={() => props.removeItem(props.id)} className='flex items-center gap-[10px] h-[30px]'>
                   <DeleteIcon sx={{fontSize: '20px'}}/>
                   <p className=' font-light'>delete</p>
                 </MenuItem>
@@ -197,7 +197,7 @@ const FolderItem = (props) => {
             >
                 <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(20)
-                        props.setOpen(categoryName, true);
+                        props.setOpen(props.id, true);
                         returnEdit(false);
                     }} className='flex items-center gap-[10px] h-[30px]'>
                   <CreateNewFolderIcon sx={{color: "#6a8099"}}/>
@@ -205,7 +205,7 @@ const FolderItem = (props) => {
                 </MenuItem>
                 <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(30)
-                        props.setOpen(categoryName, true);
+                        props.setOpen(props.id, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <EditNoteIcon sx={{color: "#333"}}/>
@@ -213,7 +213,7 @@ const FolderItem = (props) => {
                 </MenuItem>
                 <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(40)
-                        props.setOpen(categoryName, true);
+                        props.setOpen(props.id, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <img className='h-[18px] items-center justify-center flex' src={docsLogo}/>
@@ -221,7 +221,7 @@ const FolderItem = (props) => {
                 </MenuItem>
                 <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(50)
-                        props.setOpen(categoryName, true);
+                        props.setOpen(props.id, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <LinkIcon sx={{color: "#c41a0e"}}/>
@@ -229,7 +229,7 @@ const FolderItem = (props) => {
                 </MenuItem>
                 <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
                     props.addItem(60)
-                        props.setOpen(categoryName, true);
+                        props.setOpen(props.id, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <NotesIcon sx={{color: "#222"}}/>

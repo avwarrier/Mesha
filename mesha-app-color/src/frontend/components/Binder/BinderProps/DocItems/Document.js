@@ -90,7 +90,7 @@ const Document = (props) => {
             } else {
                 setDisplayName(categoryName);
             }
-            props.setName(prevName, categoryName);
+            props.setName(props.id, prevName, categoryName);
             setPrevName(categoryName);
             props.setPropOpen(props.id, true);
           setOnEdit(false);
