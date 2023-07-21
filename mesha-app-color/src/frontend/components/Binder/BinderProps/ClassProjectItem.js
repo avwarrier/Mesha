@@ -52,6 +52,7 @@ const ClassProjectItem = (props) => {
         console.log(onEdit)
             if (itemInput.current) {
             itemInput.current.focus();
+            itemInput.current.select();
         }
     }, [onEdit]);
 

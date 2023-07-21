@@ -61,7 +61,7 @@ const [anchorEl, setAnchorEl] = useState(null);
 
 
   return (
-    <div className='h-[70px] drop-shadow-md bg-[#ffffff] flex items-center justify-between'>
+    <div className='h-[70px] border-b-[1px] border-[#dbdbdb] bg-[#ffffff] flex items-center justify-between'>
         <div className='flex gap-[15px] items-center ml-[30px]'>
             <img alt='logo' className='h-[10.5vh]' src={logoplaceholderimage}/>
             <p className='text-[25px]'>Mesha</p>

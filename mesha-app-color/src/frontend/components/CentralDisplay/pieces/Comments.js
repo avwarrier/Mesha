@@ -4,6 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { v4 as uuid } from 'uuid';
 import { auth, db } from '../../../../backend/firebase'
 import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc } from "firebase/firestore";
+import './styleOther.css'
 
 const Comments = (props) => {
 
@@ -91,10 +92,10 @@ const Comments = (props) => {
 
 
   return (
-    <div className='w-[200px] rounded-md flex flex-col h-[76vh] bg-[#f5f5f5] items-center justify-between'>
+    <div className='w-[200px] rounded-md flex flex-col h-[calc(100vh-100px)] bg-[#f5f5f5] items-center justify-between'>
         <div className='w-[200px] flex flex-col items-center mt-[10px]'>
             <p className='font-light text-[17px] underline'>Comments/Progress</p>
-            <div className='overflow-auto h-[58vh] mt-[10px] w-[100%]'>
+            <div className='overflow-scroll no-scrollbar h-[calc(100vh-210px)] mt-[10px] w-[100%]'>
             {
                 comments.map(comment => {
                     return <Comment id={comment.id} setComment={setComment} deleteComment={deleteComment} comment={comment}/>

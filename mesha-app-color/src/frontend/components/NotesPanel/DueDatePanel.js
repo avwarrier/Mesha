@@ -5,10 +5,11 @@ import DueDate from './DueDate';
 import { auth, db } from '../../../backend/firebase'
 import { collection, doc, setDoc, getDocs, collectionGroup, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import Skeleton from '@mui/material/Skeleton';
+import {motion as m, AnimatePresence } from "framer-motion"
 
 const DueDatePanel = (props) => {
     const [dueDates, setDueDates] = useState([]);
-    const [open, setOpen] = useState();
+    const [open, setOpen] = useState(true);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -325,12 +326,12 @@ const DueDatePanel = (props) => {
       }
 
   return (
-    <div className=''>
+    <div className={open ? 'pb-[20px] w-[105%]' : 'w-[105%]'}>
         <div onClick={() => {
             setOpen(!open);
             localStorage.setItem("dueOpen", !open);
 
-        }} className=' w-[100%] h-[40px] flex items-center justify-center gap-[10px] hover:shadow-md rounded-md cursor-pointer mb-[5px]'>
+        }} className=' w-[100%] h-[40px] flex items-center justify-center gap-[10px] border-b-[2px]  hover:border-[#c5c5c5] rounded-md cursor-pointer mb-[5px]'>
             <p className='text-[22px] font-thin select-none'>Due Soon</p>
             {
                 open ?
@@ -339,10 +340,57 @@ const DueDatePanel = (props) => {
                 <KeyboardArrowRightIcon sx={{fontSize: '25px', marginTop: "3px"}} />
             }
         </div>
+        <AnimatePresence>
         {
-            open && 
+            open &&
+        
+            <m.div className='px-[10px]' initial={{
+              height: 0,
+              opacity: 0,
+            }}
+            animate={{
+              height: "auto",
+              opacity: 1,
+              transition: {
+                           height: {
+                                duration: 0.1,
+                          },
+                          opacity: {
+                                duration: 0.1,
+                                delay: 0,
+                           },
+                        },
+            }}
+            exit={{
+              height: 0,
+              opacity: 0,
+              transition: {
+                          height: {
+                               duration: 0.1,
+                           },
+                           opacity: {
+                               duration: 0.1,
+                           },
+                       },
+            }}>
+         
                 
-                    loading ? 
+                    {dueDates.map((dueDate) => {
+                        return <DueDate removeDueDate={removeDueDate} dueDate={dueDate} />
+                    })}
+            
+        
+        </m.div>
+        
+        }
+        </AnimatePresence>
+    </div>
+  )
+}
+
+export default DueDatePanel
+
+/*loading ? 
                     <div className='flex flex-col gap-[5px]'>
                         <div className='flex items-center justify-center gap-[10px]'>
                             <Skeleton sx={{}} variant="circular" width={26} height={26} />
@@ -356,15 +404,4 @@ const DueDatePanel = (props) => {
                         <Skeleton sx={{}} variant="circular" width={26} height={26} />
                                 <Skeleton sx={{marginLeft: "0px",}} variant="rounded" width={150} height="20px" />
                         </div>
-                    </div>
-                    :
-                    dueDates.map((dueDate) => {
-                        return <DueDate removeDueDate={removeDueDate} dueDate={dueDate} />
-                    })
-            
-        }
-    </div>
-  )
-}
-
-export default DueDatePanel
+                    </div>*/

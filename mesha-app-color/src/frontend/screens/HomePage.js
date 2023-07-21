@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Binder from "../components/Binder/Binder";
 import CentralDisplay from "../components/CentralDisplay/CentralDisplay";
 import NotesPanel from "../components/NotesPanel/NotesPanel";
+import Divider from '@mui/material/Divider';
 
 function HomePage() {
 
@@ -89,8 +90,9 @@ const [menuOpen, setMenuOpen] = useState(false);
     <div className="h-[100vh] bg-[#ffffff]">
       <NavBar menuOpen={menuOpen} setMenuOpen={setMenuOpen} userEmail={userEmail}/>
       
-      <div className="flex h-[calc(100vh-70px)] justify-center items-center gap-[20px]">
+      <div className="flex justify-center items-center gap-[5px]">
           <Binder updateDues={updateDues} dues={dues} chan={chan} setCentralInfo={setCentralInfo}/>
+          
           <CentralDisplay dueChange={dueChange} dues={dues} updateDues={updateDues} setChan={setChan} centralInfo={centralInfo} userEmail={userEmail} setC={setC}/>
           <NotesPanel dueChange={dueChange} setDueChange={setDueChange} updateDues={updateDues} userEmail={userEmail} dues={dues}/>
 

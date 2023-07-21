@@ -25,3 +25,13 @@
 *::-webkit-scrollbar-thumb:hover {
   background-color: #737373;
 }
+
+::-moz-selection {
+  background: #c5d2e0;
+}
+::-webkit-selection {
+  background: #c5d2e0;
+}
+::selection {
+  background: #c5d2e0;
+}

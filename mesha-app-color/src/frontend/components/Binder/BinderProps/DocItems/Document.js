@@ -46,6 +46,7 @@ const Document = (props) => {
         
             if (itemInput.current) {
             itemInput.current.focus();
+            itemInput.current.select();
         }
     }, [onEdit]);
 

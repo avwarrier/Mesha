@@ -31,14 +31,14 @@ const Tag = (props) => {
 
   if(props.type == 'document') {
     return (
-      <BootstrapTooltip arrow  title={a} placement='bottom'><div className='w-[220px] shadow-md h-[70%] rounded-lg flex items-center justify-center gap-[10px]'>
+      <BootstrapTooltip arrow  title={a} placement='bottom'><div className='w-[220px] shadow-md h-[70%] rounded-2xl flex items-center justify-center gap-[10px]'>
             <img className='h-[40px] items-center justify-center flex' src={docsLogo}/>
             <p className='text-[20px] font-light mt-[8px]'>{name}</p>
         </div></BootstrapTooltip>
       )
   } else if(props.type == 'link') {
     return (
-      <div className='w-[220px] shadow-md h-[70%] rounded-lg flex items-center justify-center gap-[10px]'>
+      <div className='w-[220px] shadow-md h-[70%] rounded-2xl flex items-center justify-center gap-[10px]'>
       <LinkIcon sx={{fontSize: '40px', color: "#c41a0e", marginTop: "10px"}}/>
       <p className='text-[20px] font-light mt-[8px]'>{name}</p>
   </div>

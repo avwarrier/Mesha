@@ -241,7 +241,7 @@ const CentralDisplay = (props) => {
 
   return (
     loading ? 
-      <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[680px] rounded-md flex'>
+      <div className='bg-[#ffffff] h-[80vh] w-[680px] rounded-md flex'>
       <div className='h-[100%] w-[70%] flex flex-col items-center py-[20px]'>
         <div className='flex  w-[90%] h-[100px] items-center justify-between'>
         <div className='w-[220px]  h-[70%] rounded-lg flex items-center justify-center gap-[10px]'>
@@ -274,16 +274,16 @@ const CentralDisplay = (props) => {
         <NoteScreen setChan={props.setChan} userEmail={props.userEmail} id={props.centralInfo.id} name={name} handleEnter={handleEnter} setName={setName} />
     :
       type == 'blank' ?
-        <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[680px] rounded-md flex justify-center items-center'>
+        <div className='bg-[#ffffff] h-[calc(100vh-70px)] w-[680px] rounded-md flex justify-center items-center'>
           <div className='flex flex-col justify-center items-center'>
             <NotificationsPausedOutlinedIcon sx={{color: "#777", fontSize: "40px"}}/>
             <p className='text-[25px] font-light text-[#888]'>no items selected...</p>
           </div>
       </div> 
       :
-        <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[680px] rounded-md flex'>
-          <div className='h-[100%] w-[70%] flex flex-col items-center py-[20px]'>
-            <div className='flex  w-[90%] h-[100px] items-center justify-between'>
+        <div className='bg-[#ffffff] h-[calc(100vh-70px)] w-[680px] rounded-md flex overflow-scroll no-scrollbar'>
+          <div className='h-[100%] w-[70%] flex-col items-center '>
+            <div className='flex m-auto w-[90%] h-[100px] items-center justify-between'>
               <Tag date={date} time={time} type={type} name={name}/>
               <div className='flex flex-col mt-[0px] '>
               <div className={'flex items-center justify-center gap-[10px] '}>
@@ -319,10 +319,13 @@ const CentralDisplay = (props) => {
               </div>
             </div>
 
+            
             <AssociatedLinks userEmail={props.userEmail} id={props.centralInfo.id} links={links} setLinks={setLinks}/>
-            <Description type={type} notes={notes} setNotes={setNotes} userEmail={props.userEmail} id={props.centralInfo.id}/>
+            
+            <div className='mt-[6px] w-[100%] mx-auto flex items-center justify-center'>
+            <Description type={type} notes={notes} setNotes={setNotes} userEmail={props.userEmail} id={props.centralInfo.id}/></div>
           </div>
-          <div className=' w-[200px] h-[100%] flex items-center justify-center mr-[10px]'>
+          <div className=' w-[200px]  mt-[10px] flex items-center justify-center mr-[10px]'>
             <Comments id={props.centralInfo.id} userEmail={props.userEmail} comments={comments} setComments={setComments}/>
           </div>
       </div>

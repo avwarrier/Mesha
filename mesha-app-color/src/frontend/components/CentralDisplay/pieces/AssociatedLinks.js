@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { auth, db } from '../../../../backend/firebase'
 import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc } from "firebase/firestore";
 import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
+import './styleOther.css'
 
 const AssociatedLinks = (props) => {
 
@@ -64,7 +65,7 @@ const AssociatedLinks = (props) => {
     }
 
   return (
-    <div className='h-[35%] w-[85%] mt-[1%] flex flex-col gap-[0px] overflow-auto'>
+    <div className='no-scrollbar  mt-[1%] gap-[0px] h-[calc(100%-280px)]  m-auto overflow-scroll '>
         {
             links.map(link => {
                 console.log(link);
@@ -73,7 +74,7 @@ const AssociatedLinks = (props) => {
         }
             {
             
-            <div onClick={() => addLink()} className='bg-[#ffffff] w-[10%] h-[30px] items-center px-[15px] rounded-md cursor-pointer border-[1.5px] flex  justify-center ml-[5px] mt-[2px]'>
+            <div onClick={() => addLink()} className='bg-[#ffffff] w-[10%] h-[30px] items-center px-[15px] rounded-md cursor-pointer border-[1.5px] flex  justify-center ml-[5px] mt-[2px] hover:border-[#c5c5c5]'>
                 <AddLinkOutlinedIcon  sx={{fontSize: '22px', color: "#3a4754"}}/>
         
             </div>

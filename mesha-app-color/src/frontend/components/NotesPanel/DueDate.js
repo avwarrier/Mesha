@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import CheckIcon from '@mui/icons-material/Check';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import {motion as m } from "framer-motion"
 
 const BootstrapTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -97,7 +98,7 @@ const DueDate = (props) => {
                     if(num <= 3) {
                         setDueLevel('#ffc670')
                     } else {
-                        setDueLevel("#f6f6f6")
+                        setDueLevel("#f4f4f4")
                     }
                 } else if (propAm == 'am' && am == 'pm') {
                     setDueLevel('#cc5e5e');
@@ -133,8 +134,8 @@ const DueDate = (props) => {
       
 
   return (
-    <BootstrapTooltip arrow  title={props.dueDate.date + " " +  props.dueDate.time} placement='left'><div style={{backgroundColor: dueLevel}} className=' w-[100%] h-[45px] flex items-center justify-between'>
-        <p className='ml-[10px] text-[15px] w-[60px]'>{dueLevel == '#cc5e5e' ? 'overdue' : dueIn}</p>
+    <BootstrapTooltip arrow  title={props.dueDate.date + " " +  props.dueDate.time} placement='left'><div  style={{backgroundColor: dueLevel}} className=' w-[100%] h-[45px] flex items-center justify-between'>
+        <p className='ml-[10px] mr-[5px] text-[15px] w-[60px]'>{dueLevel == '#cc5e5e' ? 'overdue' : dueIn}</p>
         <div className='flex items-center gap-[1px] w-[120px] justify-start'>
             {
                 props.dueDate.type == 'document' ?

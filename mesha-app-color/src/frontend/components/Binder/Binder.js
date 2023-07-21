@@ -15,6 +15,7 @@ import { collection, doc, updateDoc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import Skeleton from '@mui/material/Skeleton';
 import { v4 as uuid } from 'uuid';
+import '../CentralDisplay/pieces/styleOther.css'
 
 const Binder = (props) => {
 
@@ -336,7 +337,7 @@ const Binder = (props) => {
     
 
   return (
-    <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[300px] rounded-md flex flex-col overflow-auto pb-[20px]'>
+    <div className='bg-[#ffffff] no-scrollbar pb-[20px]  h-[calc(100vh-70px)] w-[300px] border-r-[1px] border-[#dbdbdb] flex-col overflow-scroll '>
         <div className='mt-[20px] h-[50px] ml-[25px]  w-[250px] flex items-center justify-between rounded-lg'>
             <p className='ml-[20px] text-[25px] font-thin'>Binder</p>
             <div onClick={handleClick} className='rounded-[3px] mr-[20px] h-[30px] w-[30px] flex justify-center items-center cursor-pointer  hover:bg-[#eaeaea] hover:shadow-sm'>

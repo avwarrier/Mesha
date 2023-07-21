@@ -47,6 +47,7 @@ const Note = (props) => {
         
             if (itemInput.current) {
             itemInput.current.focus();
+            itemInput.current.select();
         }
     }, [onEdit]);
 

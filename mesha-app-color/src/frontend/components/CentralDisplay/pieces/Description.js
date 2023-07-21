@@ -68,7 +68,7 @@ const Description = (props) => {
 
 
   return (
-      <div ref={divref} className=' w-[400px] h-[27vh] mt-[47vh] absolute'>
+      <div ref={divref} className=' w-[400px] h-[27vh] '>
         {
           quill == null && <p className='absolute ml-[14px] mt-[7px] z-50 font-light'>notes</p>
         }

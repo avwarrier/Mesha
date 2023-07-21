@@ -97,12 +97,12 @@ const NoteScreen = (props) => {
 
 
   return (
-    <div className='bg-[#ffffff] drop-shadow-md h-[80vh] w-[680px] rounded-md flex-col flex'>
+    <div className='bg-[#ffffff] h-[calc(100vh-70px)] pt-[10px] w-[680px] rounded-md flex-col flex'>
             <input  onKeyDown={props.handleEnter} value={props.name} onChange={(e) => {
               doSumn(e.target.value)
               props.setName(e.target.value)
             }} className='h-[40px] bg-[#ffffff] border-[#b8b8b8] border-[1px] w-[300px] outline-none rounded-md px-[15px] text-[23px] mt-[10px] mb-[10px] ml-[22.75px] font-light' />
-            <div className='w-[93%] h-[60vh] ml-[22.75px]'>
+            <div className='w-[93%] h-[65vh] ml-[22.75px]'>
               <div ref={wrapperRef} id='container' className='resize-none outline-none rounded-b-md ' />
             </div>
       </div>
