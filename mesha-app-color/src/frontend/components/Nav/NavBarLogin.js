@@ -14,7 +14,7 @@ const NavBarLogin = ({started}) => {
         </div>
         </Link>
         <div className='mr-[30px]'>
-            <Link to="/login"><div className=' cursor-pointer bg-[#4a6a8f] w-[80px] h-[5.5vh] rounded-md shadow-md flex justify-center items-center transition eas-in-out delay-90 hover:shadow-lg hover:bg-[#3a6391]'>
+            <Link to="/login"><div className=' cursor-pointer bg-[#4a6a8f] w-[80px] h-[5.5vh] rounded-md shadow-md flex justify-center items-center  hover:shadow-lg hover:bg-[#3a6391]'>
                 <p className='text-[#ffffff] text-[15px]'>login</p>
             </div></Link>
         </div>
@@ -27,7 +27,7 @@ const NavBarLogin = ({started}) => {
         </div>
         </Link>
         <div className='mr-[30px]'>
-            <Link to="/getstarted"><div className=' cursor-pointer bg-[#4a6a8f] w-[80px] h-[5.5vh] rounded-md shadow-md flex justify-center items-center transition eas-in-out delay-90 hover:shadow-lg hover:bg-[#3a6391]'>
+            <Link to="/getstarted"><div className=' cursor-pointer bg-[#4a6a8f] w-[80px] h-[5.5vh] rounded-md shadow-md flex justify-center items-center  hover:shadow-lg hover:bg-[#3a6391]'>
                 <p className='text-[#ffffff] text-[15px]'>sign up</p>
             </div></Link>
         </div>

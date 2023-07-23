@@ -1,4 +1,4 @@
-import {React, useState} from 'react'
+import {React, useEffect, useState} from 'react'
 import NoteStruct from './NoteStruct';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -8,11 +8,26 @@ import { motion as m, AnimatePresence } from 'framer-motion';
 
 const Notee = (props) => {
 
-    const [notes, setNotes] = useState([{
-        name: 'note1',
-        open: true
-    }]);
+    const [notes, setNotes] = useState([]);
     const [open, setOpen] = useState(true);
+
+    useEffect(() => {
+        const checkOpen = async () => {
+            console.log(props.userEmail == '')
+            if(props.userEmail == '') return;
+            //setLoading(true);
+            const colRef = collection(db, "users", props.userEmail, "openNotes");
+            const docsSnap = await getDocs(colRef);
+            let temp = [];
+            docsSnap.forEach(doc => {
+                temp.push(doc.data());
+            })
+            setNotes(temp);
+        }
+        
+
+        checkOpen();
+    }, [props.userEmail])
 
   return (
     <div className={open ? 'pb-[20px] w-[105%]' : 'w-[105%]'}>
@@ -63,7 +78,7 @@ const Notee = (props) => {
                              },
                   }}>
                 {notes.map((note) => {
-                    return <NoteStruct name={note.name} open={note.open}/>
+                    return <NoteStruct parentType={note.parentType} parentName={note.parentName} name={note.name} open={note.open}/>
                 })}
             </m.div>
         }

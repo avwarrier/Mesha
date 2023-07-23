@@ -25,7 +25,7 @@ const ClassProject = forwardRef((props, ref) => {
                 if(temp[i].num >= 40) {
                     props.setCentralInfo('yee', 'yee');
                     props.setDocOpen('none');
-                    delDoc(temp[i].id);
+                    delDoc(temp[i].id, temp[i].num);
                     removeDue(temp[i].id);
                 } else {
                     childRef.current.childFunction1(temp[i].id);
@@ -36,21 +36,6 @@ const ClassProject = forwardRef((props, ref) => {
     
     useEffect(() => {
         setItems(props.components);
-        const checkOpen = async () => {
-            const colRef = collection(db, "users", props.userEmail, "openItems");
-            const docsSnap = await getDocs(colRef);
-            let temp = props.components;
-            docsSnap.forEach(doc => {
-                console.log(doc.data());
-                //doc.data().open
-                
-                if(temp.indexOf(doc.data().id) != -1) {
-                    
-                    temp[temp.indexOf(doc.data().id)].open = doc.data().open;
-                }
-            })
-            setItems(temp);
-        }
         
         //checkOpen();
     }, [props.components])
@@ -419,10 +404,19 @@ const ClassProject = forwardRef((props, ref) => {
             id: id,
             dueDate: null
           });
-          switchOpen(id);
+          if(object.type == 'note') {
+            const noteRef = doc(db, "users", props.userEmail, "openNotes", id);
+        await setDoc(noteRef, {
+            name: object.name,
+            open: true,
+            parentName: props.name,
+            parentType: 'class'
+          });
+          }
+          switchOpen(id, object.type);
     }
 
-    const switchOpen = async (id) => {
+    const switchOpen = async (id, type) => {
         const colRef = collection(db, "users", props.userEmail, "openItems");
             const docsSnap = await getDocs(colRef);
             docsSnap.forEach(async dox => {
@@ -433,24 +427,48 @@ const ClassProject = forwardRef((props, ref) => {
                     });
                 }
             })
+            if(type == 60 || type == 'note') {
+                const anothaRef = collection(db, "users", props.userEmail, "openNotes");
+            const snape = await getDocs(anothaRef);
+            snape.forEach(async dox => {
+                if(id != dox.id) {
+                    const userRef = doc(db, "users", props.userEmail, "openNotes", dox.id);
+                    await updateDoc(userRef, {
+                        open: false,
+                    });
+                }
+            })
+            }
 
             props.setComponents(props.id, items);
     }
 
     
-    const changeName = async (paramName, id) => {
+    const changeName = async (paramName, id, type) => {
         const userRef = doc(db, "users", props.userEmail, "openItems", id);
         await updateDoc(userRef, {
             name: paramName,
           });
+          if(type == 60) {
+            const noteRef = doc(db, "users", props.userEmail, "openNotes", id);
+        await updateDoc(noteRef, {
+            name: paramName
+          });
+          }
     }
 
-    const changeOpen = async (id) => {
+    const changeOpen = async (id, type) => {
         const userRef = doc(db, "users", props.userEmail, "openItems", id);
         await updateDoc(userRef, {
             open: true,
           });
-          switchOpen(id);
+          if(type == 60) {
+            const noteRef = doc(db, "users", props.userEmail, "openNotes", id);
+        await updateDoc(noteRef, {
+            open: true
+          });
+          }
+          switchOpen(id, type);
     }
 
     const updateDue = async(name, id) => {
@@ -481,12 +499,12 @@ const ClassProject = forwardRef((props, ref) => {
                         props.setDocOpen(temp[i].id);
                         
                     } else {
-                        changeName(temp[i].name, temp[i].id);
+                        changeName(temp[i].name, temp[i].id, temp[i].num);
                         updateDue(temp[i].name, temp[i].id)
                         props.setCentralInfo(temp[i].id, temp[i].name);
                         localStorage.setItem("structId", JSON.stringify(temp[i].id));
                         props.setDocOpen(temp[i].id);
-                        switchOpen(temp[i].id);
+                        switchOpen(temp[i].id, temp[i].num);
                     }
                     
                 }
@@ -535,7 +553,7 @@ const ClassProject = forwardRef((props, ref) => {
         for(let i = 0; i < items.length; i++) {
             if(temp[i].id == id) {
                 temp[i].open = open;
-                changeOpen(temp[i].id)
+                changeOpen(temp[i].id, temp[i].num)
                 props.setCentralInfo(id, temp[i].name);
                 localStorage.setItem("structId", JSON.stringify(id));
                 props.setDocOpen(id);
@@ -561,8 +579,11 @@ const ClassProject = forwardRef((props, ref) => {
         props.setComponents(props.id, temp);
     }
 
-    const delDoc = async (id) => {
+    const delDoc = async (id, type) => {
         await deleteDoc(doc(db, "users", props.userEmail, "openItems", id));
+        if(type == 60) {
+            await deleteDoc(doc(db, "users", props.userEmail, "openNotes", id))
+          }
     }
     
     const removeDue = async(id) => {
@@ -571,14 +592,30 @@ const ClassProject = forwardRef((props, ref) => {
         props.updateDues(!props.dues);
     }
 
+    const removeNoteOpen = async(id) => {
+        const anothaRef = collection(db, "users", props.userEmail, "openNotes");
+            const snape = await getDocs(anothaRef);
+            snape.forEach(async dox => {
+                    const userRef = doc(db, "users", props.userEmail, "openNotes", dox.id);
+                    if(dox.data().open == true)
+                    await updateDoc(userRef, {
+                        open: false,
+                    });
+                
+            })
+    }
+
     const removeSubItem = (id) => {
         let temp = [...items];
         for(let i = 0; i < items.length; i++) {
             if(temp[i].id == id) {
                 props.setCentralInfo('yee', 'yee');
                 props.setDocOpen('none');
+                let numz = temp[i].num
                 temp.splice(i, 1);
-                delDoc(id);
+                
+                delDoc(id, numz);
+                //if(numz == 60) removeNoteOpen(id);
                 removeDue(id);
                 break;
             }
