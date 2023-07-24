@@ -98,27 +98,27 @@ const Note = (props) => {
     };
 
   return (
-    <div ref={ref}  className={onEdit ? 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px] ' : (!props.open ?  'w-[100%] rounded-xl h-[30px]  flex items-center justify-between p-[10px]  cursor-pointer  hover:bg-[#ececec]' : 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px]  cursor-pointer  bg-[#dadada]')}>
+    <div ref={ref} style={{'--hover-color': props.selectionColor, '--color': props.dropColor}}  className={onEdit ? 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px] ' : (!props.open ?  'w-[100%] rounded-xl h-[30px]  flex items-center justify-between p-[10px]  cursor-pointer  hover:!bg-[--hover-color]' : 'w-[100%] rounded-xl h-[30px] flex items-center justify-between p-[10px]  cursor-pointer  !bg-[--color]')}>
         <div className='flex items-center'>
         <NotesIcon onClick={() => props.setPropOpen(props.id, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#222"}}/>
             {
                 onEdit ? 
-                <input ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
+                <input style={{'--color': props.inputColor}} ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
                     setDisplayName(e.target.value)
-                }} className={!untitled ? 'bg-[#ffffff] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : 'bg-[#ffffff] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
+                }} className={!untitled ? '!bg-[--color] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : '!bg-[--color] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
                 :
                 <p onClick={() => props.setPropOpen(props.id, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  ' : ' flex items-center  ml-[5px]  '}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
             
-                <div onClick={() => setOnEdit(true)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+                <div style={{'--hover-color': props.selectionColor}} onClick={() => setOnEdit(true)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg'>
                     <EditSharpIcon sx={{fontSize: "15px"}} />
                 </div>
             
                 
 
-            <div onClick={() => props.removeItem(props.id)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+            <div style={{'--hover-color': props.selectionColor}} onClick={() => props.removeItem(props.id)} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg'>
                 <DeleteIcon sx={{fontSize: "15px"}}/>
             </div>
         </div>

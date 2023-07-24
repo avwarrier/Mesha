@@ -27,7 +27,7 @@ const Notee = (props) => {
         
 
         checkOpen();
-    }, [props.userEmail])
+    }, [props.userEmail, props.noteChange])
 
   return (
     <div className={open ? 'pb-[20px] w-[105%]' : 'w-[105%]'}>

@@ -14,6 +14,8 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import docsLogo from '../../../assets/docsLogo.png'
 import NotesIcon from '@mui/icons-material/Notes';
 import LinkIcon from '@mui/icons-material/Link';
+import Dialog from '@mui/material/Dialog';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
 
 const ClassProjectItem = (props) => {
     const [openAfterEdit, setOpenAfterEdit] = useState(false);
@@ -129,24 +131,108 @@ const ClassProjectItem = (props) => {
           setOnEdit(false);
     }
 
+    const [openDialog, setOpenDialog] = useState(false);
+    const [selectedColor, setSelectedColor] = useState('#f1f1f1');
+    const [dropColor, setDropColor] = useState('#dadada');
+    const [buttonColors, setButtonColors] = useState("#eaeaea")
+    const [inputColor, setInputColor] = useState("#ffffff")
+
+    const closeDialog = () => {
+        setOpenDialog(false)
+    }
+
+    const closeDialogColor = (color, dropColorr, otherColor, finalColor, inputColor) => {
+        props.setColor(color);
+        setSelectedColor(color);
+        props.setDropColor(dropColorr)
+        setDropColor(dropColorr);
+        setInputColor(inputColor)
+        props.setInputColor(inputColor)
+        props.setSelectionColor(finalColor)
+        setButtonColors(otherColor)
+        setOpenDialog(false)
+        //database
+    }
 
   return (
-    <div ref={ref} className={onEdit ? 'shadow-sm rounded-lg h-[40px] w-[250px]  flex items-center justify-between p-[10px] bg-[#f1f1f1]' : 'shadow-sm rounded-lg h-[40px] w-[250px] flex items-center justify-between p-[10px] bg-[#f1f1f1] cursor-pointer  hover:bg-[#dadada] '}>
+    <div ref={ref} style={{'--hover-color': dropColor}}  className={onEdit ? `bg-[${selectedColor}] shadow-sm rounded-lg h-[40px] w-[250px]  flex items-center justify-between p-[10px] hover:!bg-[--hover-color] ` : `bg-[${selectedColor}] shadow-sm rounded-lg h-[40px] w-[250px] flex items-center justify-between p-[10px]  cursor-pointer  hover:!bg-[--hover-color] `}>
+        <Dialog onClose={closeDialog} open={openDialog}>
+            <div className='w-[300px] h-[200px] bg-[#f1f1f1] flex flex-col justify-center items-center gap-[10px]'>
+                <div className='flex justify-center items-center gap-[10px]'>
+                    <div onClick={() => {
+                        closeDialogColor('#b8ebfc', '#a4d8eb', "#b8eafc", "#c1f5f2", "#cbecf7")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#b8ebfc] cursor-pointer'></div>
+                    <div onClick={() => {
+                        closeDialogColor('#bdfffb', '#a5e8e4', "#bdfffb", "#b8f5f1", "#d4fffc")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#bdfffb] cursor-pointer'></div>
+                    <div onClick={() => {
+                        closeDialogColor('#bdffd1', '#aae6bc', "#bdffd1", "#b3f2c6", "#d2fcde")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#bdffd1] cursor-pointer'></div>
+                    <div onClick={() => {
+                        closeDialogColor('#d2fca9', '#bbe096', "#d2fca9", "#caf2a2", "#e4fccc")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#d2fca9] cursor-pointer'></div>
+                    <div onClick={() => {
+                        closeDialogColor('#fcf8a9', '#e3df98', "#fcf8a9", "#f5f1a6", "#fcfacc")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#fcf8a9] cursor-pointer'></div>
+                </div>
+                <div className='flex justify-center items-center gap-[10px]'>
+                    <div onClick={() => {
+                        closeDialogColor('#ffdca3', '#e3c38f', "#ffdca3", "#f5d39d", "#ffe8c4")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#ffdca3] cursor-pointer'></div>
+                    <div onClick={() => {
+                        closeDialogColor('#ffbb8a', '#e6a87c', "#ffbb8a", "#f5b384", "#f7c8a6")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#ffbb8a] cursor-pointer'></div>
+                    <div onClick={() => {
+                        closeDialogColor('#ffb7ad', '#e3a198', "#ffb7ad", "#f5aea4", "#fac5be")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#ffb7ad] cursor-pointer'></div>
+                    <div onClick={() => {
+                        closeDialogColor('#ffccec', '#e6b8d4', "#ffccec", "#f2c2df", "#fae3f1")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#ffccec] cursor-pointer' ></div>
+                    <div onClick={() => {
+                        closeDialogColor('#f1ccff', '#d6b6e3', "#f1ccff", "#e7c4f5", "#f3e3fa")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#f1ccff] cursor-pointer'></div>
+                </div>
+                <div className='flex justify-center items-center gap-[10px]'>
+                    <div onClick={() => {
+                        closeDialogColor('#ffcccd', '#e0b4b4', "#ffcccd", "#f5c6c6", "#fae8e8")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#ffcccd] cursor-pointer'></div>
+                    <div onClick={() => {
+                        closeDialogColor('#85b4ff', '#76a0e3', "#85b4ff", "#7eabf2", "#b0cbf5")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#85b4ff] cursor-pointer'></div>
+                    <div onClick={() => {
+                        closeDialogColor('#d6fff5', '#bfe3da', "#d6fff5", "#cef5eb", "#ebfaf6")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#d6fff5] cursor-pointer'></div>
+                    <div onClick={() => {
+                        closeDialogColor('#f7ffba', '#dee6a8', "#f7ffba", "#ecf5b3", "#f7fcd4")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#f7ffba] cursor-pointer'></div>
+                    <div onClick={() => {
+                        closeDialogColor('#f1f1f1', '#dadada', "#eaeaea", "#ececec", "#fff")
+                        }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#fff] cursor-pointer'></div>
+                </div>
+                
+            </div>
+        </Dialog>
         <div className='flex items-center'>
             <SchoolIcon sx={{color: "#4a6a8f"}} onClick={() => props.setOpen(props.id, !props.open)}/>
             {
                 onEdit ? 
                 <input ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
-                    setDisplayName(e.target.value)
+                    setDisplayName(e.target.value) //cbecf7
                     if(untitled) setUntitled(false);
-                }} className={!untitled ? 'bg-[#ffffff] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]' : 'bg-[#ffffff] outline-none border-[1.5px] border-red-500 placeholder:text-red-700 rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]'}/>
+                }} style={{'--color': inputColor}} className={!untitled ? '!bg-[--color] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]' : '!bg-[--color] outline-none border-[1.5px] border-red-500 placeholder:text-red-700 rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]'}/>
                 :
                 <p onClick={() => props.setOpen(props.id, !props.open)} className={!props.open ? ' flex items-center  ml-[10px] w-[130px] select-none' : ' flex items-center ml-[10px] underline w-[130px] select-none'}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
 
-                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+                <div onClick={() => {
+                    setOpenDialog(true);
+                }} style={{'--hover-color': buttonColors}} className={`flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg`}>
+                    <ColorLensIcon sx={{fontSize: "15px"}} />
+                </div>
+
+                <div style={{'--hover-color': buttonColors}} onClick={handleClick} className={`flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg`}>
                     <MoreVertIcon sx={{fontSize: "15px"}} />
                 </div>
                 
@@ -160,9 +246,10 @@ const ClassProjectItem = (props) => {
                 onClose={handleClose}
                 onClick={handleClose}
                 TransitionComponent={Fade}
+                
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#ffffff", borderRadius: "10px", width: "110px", paddingX: "5px"}, 
+                      { backgroundColor: inputColor, borderRadius: "10px", width: "110px", paddingX: "5px"}, 
                       
                     }
                   }
@@ -186,7 +273,7 @@ const ClassProjectItem = (props) => {
             
             
             
-            <div onClick={handleClicks} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+            <div style={{'--hover-color': buttonColors}} onClick={handleClicks} className={`flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg`}>
                 <AddIcon sx={{fontSize: "15px"}}/>
             </div>
             <Menu
@@ -199,9 +286,10 @@ const ClassProjectItem = (props) => {
                 onClose={handleCloses}
                 onClick={handleCloses}
                 TransitionComponent={Fade}
+                style={{'--color': inputColor}}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#ffffff", borderRadius: "10px", width: "140px", paddingX: "5px"}, 
+                      { backgroundColor: inputColor, borderRadius: "10px", width: "140px", paddingX: "5px"}, 
                       
                     }
                   }

@@ -197,7 +197,7 @@ const Notebook = forwardRef((props, ref) => {
     const setName = (id, prevName, name) => {
         let temp = [...items];
         for(let i = 0; i < temp.length; i++) {
-            if(temp[i].name == prevName) {
+            if(temp[i].id == id) {
                 temp[i].name = name;
                     if(prevName == 'default') {
                         updateDB(temp[i].id, temp[i]);
@@ -258,8 +258,10 @@ const Notebook = forwardRef((props, ref) => {
         let temp = [...items];
         for(let i = 0; i < items.length; i++) {
             if(temp[i].id == id) {
-                props.setCentralInfo('yee', 'yee');
+                if(temp[i].name != 'default') {
+                    props.setCentralInfo('yee', 'yee');
                 props.setDocOpen('none');
+                }
                 let numz = temp[i].num
                 temp.splice(i, 1);
                 localStorage.setItem("descriptC", "blank");
@@ -274,12 +276,12 @@ const Notebook = forwardRef((props, ref) => {
 
   return (
     <div className='flex flex-col'>
-        <NotebookItem id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
+        <NotebookItem inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
         {props.open && 
             <div className={items.length > 0 ? 'ml-[20px] my-[5px]' : "ml-[20px]"}>
                 {
                     items.map((item) => {
-                        return <Note id={item.id} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} setName={setName} name={item.name}/>
+                        return <Note inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' id={item.id} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} setName={setName} name={item.name}/>
                     })
                 }
             </div>  

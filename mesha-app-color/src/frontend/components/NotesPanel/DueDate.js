@@ -149,7 +149,11 @@ const DueDate = (props) => {
             <p className=''>{displayName}</p>
             
         </div>
-        <div onClick={() => props.removeDueDate(props.dueDate.id)} className='mr-[8px] flex justify-center items-center w-[21px] h-[21px] shadow-md cursor-pointer rounded-xl'>
+        <div onClick={() => {
+            setDueLevel('#93ff91')
+            props.removeDueDate(props.dueDate.id)
+            
+        }} className='mr-[8px] flex justify-center items-center w-[21px] h-[21px] shadow-md cursor-pointer rounded-xl'>
             <CheckIcon sx={{fontSize: "17px"}}/>
         </div>
     </div></BootstrapTooltip>

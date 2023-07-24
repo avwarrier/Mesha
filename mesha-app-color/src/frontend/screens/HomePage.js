@@ -80,6 +80,7 @@ const [chan, setChan] = useState({});
 const [dues, updateDues] = useState(false);
 const [dueChange, setDueChange] = useState(false);
 const [menuOpen, setMenuOpen] = useState(false);
+const [noteChange, setNoteChange] = useState('');
 
   /*{
             menuOpen &&
@@ -91,10 +92,10 @@ const [menuOpen, setMenuOpen] = useState(false);
       <NavBar menuOpen={menuOpen} setMenuOpen={setMenuOpen} userEmail={userEmail}/>
       
       <div className="flex justify-center items-center gap-[5px]">
-          <Binder updateDues={updateDues} dues={dues} chan={chan} setCentralInfo={setCentralInfo}/>
+          <Binder setNoteChange={setNoteChange} updateDues={updateDues} dues={dues} chan={chan} setCentralInfo={setCentralInfo}/>
           
           <CentralDisplay dueChange={dueChange} dues={dues} updateDues={updateDues} setChan={setChan} centralInfo={centralInfo} userEmail={userEmail} setC={setC}/>
-          <NotesPanel dueChange={dueChange} setDueChange={setDueChange} updateDues={updateDues} userEmail={userEmail} dues={dues}/>
+          <NotesPanel noteChange={noteChange} dueChange={dueChange} setDueChange={setDueChange} updateDues={updateDues} userEmail={userEmail} dues={dues}/>
 
       </div>
       

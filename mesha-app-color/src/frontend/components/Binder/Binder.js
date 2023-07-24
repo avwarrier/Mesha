@@ -404,11 +404,11 @@ const Binder = (props) => {
             {
                 items.map((item) => {
                     if(item.type === 'class/project') {
-                        return <ClassProject ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <ClassProject setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else if (item.type === 'folder') {
-                        return <Folder ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <Folder inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else {
-                        return <Notebook ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <Notebook inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     }
                 })
             }

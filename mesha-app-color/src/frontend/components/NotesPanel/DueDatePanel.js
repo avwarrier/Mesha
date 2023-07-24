@@ -325,6 +325,7 @@ const DueDatePanel = (props) => {
         props.setDueChange(!props.dueChange)
       }
 
+
   return (
     <div className={open ? 'pb-[20px] w-[105%]' : 'w-[105%]'}>
         <div onClick={() => {
@@ -376,7 +377,7 @@ const DueDatePanel = (props) => {
          
                 
                     {dueDates.map((dueDate) => {
-                        return <DueDate removeDueDate={removeDueDate} dueDate={dueDate} />
+                        return <DueDate  removeDueDate={removeDueDate} dueDate={dueDate} />
                     })}
             
         

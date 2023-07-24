@@ -623,8 +623,10 @@ const Folder = forwardRef((props, ref) => {
         let temp = [...items];
         for(let i = 0; i < items.length; i++) {
             if(temp[i].id == id) {
-                props.setCentralInfo('yee', 'yee');
+                if(temp[i].name != 'default') {
+                    props.setCentralInfo('yee', 'yee');
                 props.setDocOpen('none');
+                }
                 let numz = temp[i].num
                 temp.splice(i, 1);
                 
@@ -641,21 +643,21 @@ const Folder = forwardRef((props, ref) => {
 
   return (
     <div className='flex flex-col'>
-        <FolderItem id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} name={props.name} setName={props.setName}/>
+        <FolderItem inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} name={props.name} setName={props.setName}/>
         {props.open && 
             <div className={items.length > 0 ? 'ml-[20px] my-[0px]' : "ml-[20px]"}>
                 {
                     items.map((item) => {
                         if (item.type === 'folder') {
-                            return <Folder ref={childRef} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Folder inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' ref={childRef} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'notebook') {
-                            return <Notebook ref={childRef} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Notebook inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' ref={childRef} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'document') {
-                            return <Document setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
+                            return <Document inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else if (item.type === 'link') {
-                            return <Link setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
+                            return <Link inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else {
-                            return <Note setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
+                            return <Note inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         }
                     })
                 }

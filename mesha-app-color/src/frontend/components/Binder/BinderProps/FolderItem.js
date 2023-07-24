@@ -127,21 +127,21 @@ const FolderItem = (props) => {
     }
 
   return (
-    <div ref={ref} style={{}}  className={onEdit ? 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px] ' : 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px]  cursor-pointer  hover:bg-[#ececec]'}>
+    <div ref={ref} style={{'--hover-color': props.selectionColor, '--color': props.dropColor}}  className={onEdit ? 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px] ' : 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px]  cursor-pointer  hover:!bg-[--hover-color]'}>
         <div className='flex items-center'>
             <FolderIcon onClick={() => props.setOpen(props.id, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#6a8099"}}/>
             {
                 onEdit ? 
-                <input ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
+                <input style={{'--color': props.inputColor}} ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
                     setDisplayName(e.target.value)
-                }} className={!untitled ? 'bg-[#ffffff] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : 'bg-[#ffffff] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
+                }} className={!untitled ? '!bg-[--color] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]' : '!bg-[--color] outline-none border-[1.5px] border-red-500 rounded-sm h-[25px] w-[110px] px-[3px] ml-[1px]'}/>
                 :
                 <p onClick={() => props.setOpen(props.id, !props.open)} className={!props.open ? ' flex items-center ml-[5px]  select-none' : ' flex items-center  ml-[5px] underline select-none'}>{displayName}</p>
             }
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
             
-                <div onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+                <div style={{'--hover-color': props.selectionColor}} onClick={handleClick} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg'>
                     <MoreVertIcon sx={{fontSize: "15px"}} />
                 </div>
             
@@ -157,7 +157,7 @@ const FolderItem = (props) => {
                 TransitionComponent={Fade}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#ffffff", borderRadius: "10px", width: "110px", paddingX: "5px"}, 
+                      { backgroundColor: props.inputColor, borderRadius: "10px", width: "110px", paddingX: "5px"}, 
                       
                     }
                   }
@@ -176,7 +176,7 @@ const FolderItem = (props) => {
                 
             </Menu>
 
-            <div onClick={handleClicks} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:bg-[#eaeaea] hover:drop-shadow-lg'>
+            <div style={{'--hover-color': props.selectionColor}} onClick={handleClicks} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg'>
                 <AddIcon sx={{fontSize: "15px"}}/>
             </div>
             <Menu
@@ -191,7 +191,7 @@ const FolderItem = (props) => {
                 TransitionComponent={Fade}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: "#ffffff", borderRadius: "10px", width: "140px", paddingX: "5px"}, 
+                      { backgroundColor: props.inputColor, borderRadius: "10px", width: "140px", paddingX: "5px"}, 
                       
                     }
                   }
