@@ -281,7 +281,7 @@ const Notebook = forwardRef((props, ref) => {
             <div className={items.length > 0 ? 'ml-[20px] my-[5px]' : "ml-[20px]"}>
                 {
                     items.map((item) => {
-                        return <Note inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' id={item.id} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} setName={setName} name={item.name}/>
+                        return <Note inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} id={item.id} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} setName={setName} name={item.name}/>
                     })
                 }
             </div>  

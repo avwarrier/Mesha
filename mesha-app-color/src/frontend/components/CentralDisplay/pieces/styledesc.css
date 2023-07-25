@@ -3,6 +3,7 @@
     overflow: scroll;
     border-radius: 8px;
     background-color: #eaeaea;
+    font-size: 15px;
 }
 #container2 .ql-editor {
     -ms-overflow-style: none;  /* Internet Explorer 10+ */

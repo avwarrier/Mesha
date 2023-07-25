@@ -80,7 +80,12 @@ const Binder = (props) => {
                     components: [],
                     num: num,
                     open: false,
-                    id: myId
+                    id: myId,
+                    color: "#f1f1f1",
+                    dropColor: "#dadada",
+                    selectionColor: "#ececec",
+                    inputColor: "#fff",
+                    buttonColors: "#eaeaea"
                 })
                 console.log(arr);
                 setItems(arr);
@@ -119,7 +124,12 @@ const Binder = (props) => {
                         components: [],
                     num: num,
                     open: false,
-                    id: myId
+                    id: myId,
+                    color: "#f1f1f1",
+                    dropColor: "#dadada",
+                    selectionColor: "#ececec",
+                    inputColor: "#fff",
+                    buttonColors: "#eaeaea"
                         
                     })
                 } else {
@@ -129,7 +139,12 @@ const Binder = (props) => {
                         components: [],
                     num: num,
                     open: false,
-                    id: myId
+                    id: myId,
+                    color: "#f1f1f1",
+                    dropColor: "#dadada",
+                    selectionColor: "#ececec",
+                    inputColor: "#fff",
+                    buttonColors: "#eaeaea"
 
                     })
                 }
@@ -196,7 +211,12 @@ const Binder = (props) => {
                     num: num,
                     components: [],
                     open: false,
-                    id: myId
+                    id: myId,
+                    color: "#f1f1f1",
+                    dropColor: "#dadada",
+                    selectionColor: "#ececec",
+                    inputColor: "#fff",
+                    buttonColors: "#eaeaea"
 
                     });
                     setItems(arr);
@@ -235,7 +255,12 @@ const Binder = (props) => {
                         components: [],
                     num: num,
                     open: false,
-                    id: myId
+                    id: myId,
+                    color: "#f1f1f1",
+                    dropColor: "#dadada",
+                    selectionColor: "#ececec",
+                    inputColor: "#fff",
+                    buttonColors: "#eaeaea"
 
                     });
                     setItems(arr);
@@ -324,6 +349,21 @@ const Binder = (props) => {
         updateDB(items);
     }
 
+    const setColors = (id, color, dropColorr, otherColor, finalColor, inputColor) => {
+        let temp = [...items];
+        for(let i = 0; i < temp.length; i++) {
+            if(id == temp[i].id) {
+                temp[i].color = color;
+                temp[i].dropColor = dropColorr;
+                temp[i].selectionColor = finalColor;
+                temp[i].buttonColors = otherColor;
+                temp[i].inputColor = inputColor
+            }
+        }
+        setItems(temp);
+        updateDB(items);
+    }
+
     const updateDB = async(items) => {
         console.log(userEmail)
         const userRef = doc(db, "users", userEmail);
@@ -404,7 +444,7 @@ const Binder = (props) => {
             {
                 items.map((item) => {
                     if(item.type === 'class/project') {
-                        return <ClassProject setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <ClassProject setColors={setColors} inputColor={item.inputColor} color={item.color} dropColor={item.dropColor} selectionColor={item.selectionColor} buttonColors={item.buttonColors} setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else if (item.type === 'folder') {
                         return <Folder inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else {

@@ -8,6 +8,8 @@ import Binder from "../components/Binder/Binder";
 import CentralDisplay from "../components/CentralDisplay/CentralDisplay";
 import NotesPanel from "../components/NotesPanel/NotesPanel";
 import Divider from '@mui/material/Divider';
+import { db } from '../../backend/firebase'
+import { collection, doc, updateDoc, getDoc } from "firebase/firestore";
 
 function HomePage() {
 
@@ -17,11 +19,9 @@ function HomePage() {
     name: ''
   });
 
-  
+  const [color, setColor] = useState('#fff');
 
-  useEffect(() => {
-    
-  }, [])
+  
 
   const setCentralInfo = (id, name) => {
     setC({
@@ -76,11 +76,34 @@ function HomePage() {
      
 }, [])
 
+useEffect(() => {
+  const doit = async () => {
+    if(userEmail == '' || userEmail == undefined || userEmail == '') return;
+    const docRef = doc(db, "users", userEmail);
+    const docSnap = await getDoc(docRef);
+              if (docSnap.exists()) {
+                  setColor(docSnap.data().color)
+              } else {
+                  // docSnap.data() will be undefined in this case
+                  console.log("No such document!");
+              }
+  }
+  doit();
+}, [userEmail])
+
 const [chan, setChan] = useState({});
 const [dues, updateDues] = useState(false);
 const [dueChange, setDueChange] = useState(false);
 const [menuOpen, setMenuOpen] = useState(false);
 const [noteChange, setNoteChange] = useState('');
+
+const setColors = async(color) => {
+  setColor(color);
+  const userRef = doc(db, "users", userEmail);
+    await updateDoc(userRef, {
+        color: color
+    })
+}
 
   /*{
             menuOpen &&
@@ -89,7 +112,7 @@ const [noteChange, setNoteChange] = useState('');
 
   return (
     <div className="h-[100vh] bg-[#ffffff]">
-      <NavBar menuOpen={menuOpen} setMenuOpen={setMenuOpen} userEmail={userEmail}/>
+      <NavBar setColors={setColors} color={color} menuOpen={menuOpen} setMenuOpen={setMenuOpen} userEmail={userEmail}/>
       
       <div className="flex justify-center items-center gap-[5px]">
           <Binder setNoteChange={setNoteChange} updateDues={updateDues} dues={dues} chan={chan} setCentralInfo={setCentralInfo}/>

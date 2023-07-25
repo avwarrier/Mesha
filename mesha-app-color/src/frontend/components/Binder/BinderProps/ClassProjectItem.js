@@ -132,35 +132,24 @@ const ClassProjectItem = (props) => {
     }
 
     const [openDialog, setOpenDialog] = useState(false);
-    const [selectedColor, setSelectedColor] = useState('#f1f1f1');
-    const [dropColor, setDropColor] = useState('#dadada');
-    const [buttonColors, setButtonColors] = useState("#eaeaea")
-    const [inputColor, setInputColor] = useState("#ffffff")
 
     const closeDialog = () => {
         setOpenDialog(false)
     }
 
     const closeDialogColor = (color, dropColorr, otherColor, finalColor, inputColor) => {
-        props.setColor(color);
-        setSelectedColor(color);
-        props.setDropColor(dropColorr)
-        setDropColor(dropColorr);
-        setInputColor(inputColor)
-        props.setInputColor(inputColor)
-        props.setSelectionColor(finalColor)
-        setButtonColors(otherColor)
+        props.setColors(props.id, color, dropColorr, otherColor, finalColor, inputColor);
         setOpenDialog(false)
         //database
     }
 
   return (
-    <div ref={ref} style={{'--hover-color': dropColor}}  className={onEdit ? `bg-[${selectedColor}] shadow-sm rounded-lg h-[40px] w-[250px]  flex items-center justify-between p-[10px] hover:!bg-[--hover-color] ` : `bg-[${selectedColor}] shadow-sm rounded-lg h-[40px] w-[250px] flex items-center justify-between p-[10px]  cursor-pointer  hover:!bg-[--hover-color] `}>
+    <div ref={ref} style={{'--hover-color': props.dropColor}}  className={onEdit ? `bg-[${props.color}] shadow-sm rounded-lg h-[40px] w-[250px]  flex items-center justify-between p-[10px] hover:!bg-[--hover-color] ` : `bg-[${props.color}] shadow-sm rounded-lg h-[40px] w-[250px] flex items-center justify-between p-[10px]  cursor-pointer  hover:!bg-[--hover-color] `}>
         <Dialog onClose={closeDialog} open={openDialog}>
             <div className='w-[300px] h-[200px] bg-[#f1f1f1] flex flex-col justify-center items-center gap-[10px]'>
                 <div className='flex justify-center items-center gap-[10px]'>
                     <div onClick={() => {
-                        closeDialogColor('#b8ebfc', '#a4d8eb', "#b8eafc", "#c1f5f2", "#cbecf7")
+                        closeDialogColor('#b8ebfc', '#a4d8eb', "#b8ebfc", "#b1e2f2", "#d0edf7")
                         }} className='rounded-3xl w-[40px] h-[40px] shadow-sm bg-[#b8ebfc] cursor-pointer'></div>
                     <div onClick={() => {
                         closeDialogColor('#bdfffb', '#a5e8e4', "#bdfffb", "#b8f5f1", "#d4fffc")
@@ -219,7 +208,7 @@ const ClassProjectItem = (props) => {
                 <input ref={itemInput} onKeyDown={handleKeyDown} value={categoryName} onChange={(e) => {setName(e.target.value)
                     setDisplayName(e.target.value) //cbecf7
                     if(untitled) setUntitled(false);
-                }} style={{'--color': inputColor}} className={!untitled ? '!bg-[--color] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]' : '!bg-[--color] outline-none border-[1.5px] border-red-500 placeholder:text-red-700 rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]'}/>
+                }} style={{'--color': props.inputColor}} className={!untitled ? '!bg-[--color] outline-none border-[1.3px] border-[#000] rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]' : '!bg-[--color] outline-none border-[1.5px] border-red-500 placeholder:text-red-700 rounded-sm h-[25px] w-[130px] px-[3px] ml-[6px]'}/>
                 :
                 <p onClick={() => props.setOpen(props.id, !props.open)} className={!props.open ? ' flex items-center  ml-[10px] w-[130px] select-none' : ' flex items-center ml-[10px] underline w-[130px] select-none'}>{displayName}</p>
             }
@@ -228,11 +217,11 @@ const ClassProjectItem = (props) => {
 
                 <div onClick={() => {
                     setOpenDialog(true);
-                }} style={{'--hover-color': buttonColors}} className={`flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg`}>
+                }} style={{'--hover-color': props.buttonColors}} className={`flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg`}>
                     <ColorLensIcon sx={{fontSize: "15px"}} />
                 </div>
 
-                <div style={{'--hover-color': buttonColors}} onClick={handleClick} className={`flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg`}>
+                <div style={{'--hover-color': props.buttonColors}} onClick={handleClick} className={`flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg`}>
                     <MoreVertIcon sx={{fontSize: "15px"}} />
                 </div>
                 
@@ -249,7 +238,7 @@ const ClassProjectItem = (props) => {
                 
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: inputColor, borderRadius: "10px", width: "110px", paddingX: "5px"}, 
+                      { backgroundColor: props.inputColor, borderRadius: "10px", width: "110px", paddingX: "5px"}, 
                       
                     }
                   }
@@ -273,7 +262,7 @@ const ClassProjectItem = (props) => {
             
             
             
-            <div style={{'--hover-color': buttonColors}} onClick={handleClicks} className={`flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg`}>
+            <div style={{'--hover-color': props.buttonColors}} onClick={handleClicks} className={`flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg`}>
                 <AddIcon sx={{fontSize: "15px"}}/>
             </div>
             <Menu
@@ -286,10 +275,10 @@ const ClassProjectItem = (props) => {
                 onClose={handleCloses}
                 onClick={handleCloses}
                 TransitionComponent={Fade}
-                style={{'--color': inputColor}}
+                style={{'--color': props.inputColor}}
                 sx={
                     { "& .MuiMenu-paper": 
-                      { backgroundColor: inputColor, borderRadius: "10px", width: "140px", paddingX: "5px"}, 
+                      { backgroundColor: props.inputColor, borderRadius: "10px", width: "140px", paddingX: "5px"}, 
                       
                     }
                   }

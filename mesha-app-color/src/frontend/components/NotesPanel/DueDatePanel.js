@@ -327,7 +327,7 @@ const DueDatePanel = (props) => {
 
 
   return (
-    <div className={open ? 'pb-[20px] w-[105%]' : 'w-[105%]'}>
+    <div className={open ? dueDates.length==0 ? 'w-[105%]' : 'pb-[20px] w-[105%]' : 'w-[105%]'}>
         <div onClick={() => {
             setOpen(!open);
             localStorage.setItem("dueOpen", !open);

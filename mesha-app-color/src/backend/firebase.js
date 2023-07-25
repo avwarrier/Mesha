@@ -43,7 +43,8 @@ const signInWithGoogle = async () => {
           authProvider: "google",
           email: user.email,
           level: 'default',
-          items: []
+          items: [],
+          color: "#4a6a8f"
         });
       }
     } catch (err) {
@@ -62,7 +63,8 @@ const signInWithGoogle = async () => {
         authProvider: "local",
         email,
         level: 'default',
-        items: []
+        items: [],
+        color: "#4a6a8f"
       });
       
       navigate('/completeprofile');

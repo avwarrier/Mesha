@@ -14,10 +14,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 const ClassProject = forwardRef((props, ref) => {
     const [items, setItems] = useState([]);
-    const [color, setColor] = useState('#f1f1f1');
-    const [dropColor, setDropColor] = useState('#dadada');
-    const [selectionColor, setSelectionColor] = useState('#ececec');
-    const [inputColor, setInputColor] = useState('#fff');
+    
 
     const childRef = useRef(null);
 
@@ -635,22 +632,22 @@ const ClassProject = forwardRef((props, ref) => {
     
 
   return (
-    <div style={{backgroundColor: color}} className={!props.open ? 'rounded-lg ' : 'rounded-lg  flex flex-col overflow-auto '}>
-        <ClassProjectItem setDropColor={setDropColor} setSelectionColor={setSelectionColor} color={color} setInputColor={setInputColor} setColor={setColor} id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
+    <div style={{backgroundColor: props.color}} className={!props.open ? 'rounded-lg ' : 'rounded-lg  flex flex-col overflow-auto '}>
+        <ClassProjectItem setColors={props.setColors} color={props.color} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} buttonColors={props.buttonColors} id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
         {props.open && 
             <div className={items.length > 0 ? 'ml-[20px] mt-[5px] mb-[10px]' : 'ml-[20px] '}>
                 {
                     items.map((item) => {
                         if (item.type === 'folder') {
-                            return <Folder inputColor={inputColor} dropColor={dropColor} selectionColor={selectionColor} dues={props.dues} updateDues={props.updateDues} ref={childRef} id={item.id} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Folder inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} dues={props.dues} updateDues={props.updateDues} ref={childRef} id={item.id} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'notebook') {
-                            return <Notebook inputColor={inputColor} dropColor={dropColor} selectionColor={selectionColor} ref={childRef} id={item.id} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Notebook inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} ref={childRef} id={item.id} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'document') {
-                            return <Document inputColor={inputColor} dropColor={dropColor} selectionColor={selectionColor}  setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
+                            return <Document inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor}  setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else if (item.type === 'link') {
-                            return <Link inputColor={inputColor} dropColor={dropColor} selectionColor={selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
+                            return <Link inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else {
-                            return <Note inputColor={inputColor} dropColor={dropColor} selectionColor={selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
+                            return <Note inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         }
                     })
                 }
