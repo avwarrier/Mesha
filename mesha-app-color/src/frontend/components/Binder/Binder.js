@@ -16,6 +16,15 @@ import { onAuthStateChanged } from "firebase/auth";
 import Skeleton from '@mui/material/Skeleton';
 import { v4 as uuid } from 'uuid';
 import '../CentralDisplay/pieces/styleOther.css'
+import {
+    DndContext,
+    closestCenter
+} from "@dnd-kit/core"
+import {
+    arrayMove,
+    SortableContext,
+    verticalListSortingStrategy
+} from "@dnd-kit/sortable"
 
 const Binder = (props) => {
 
@@ -374,6 +383,20 @@ const Binder = (props) => {
 
     const childRef = useRef(null);
 
+    const handleDragEnd = (event) => {
+        console.log("Drag end Called")
+        const {active, over} = event;
+        
+        if(active.id !== over.id) {
+            setItems((items) => {
+                const activeIndex = items.map(e => e.id).indexOf(active.id);
+                const overIndex = items.map(e => e.id).indexOf(over.id);
+
+                return arrayMove(items, activeIndex, overIndex);
+            })
+        }
+      }
+
     
 
   return (
@@ -441,21 +464,36 @@ const Binder = (props) => {
                 </div>
             :
             <div className='gap-[17px] flex flex-col ml-[25px] w-[250px]'>
+            <DndContext
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+            >
+            
+        <SortableContext
+            items={items}
+            strategy={verticalListSortingStrategy}
+        >
+            
             {
                 items.map((item) => {
                     if(item.type === 'class/project') {
-                        return <ClassProject setColors={setColors} inputColor={item.inputColor} color={item.color} dropColor={item.dropColor} selectionColor={item.selectionColor} buttonColors={item.buttonColors} setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <ClassProject centralInfo={props.centralInfo} setColors={setColors} inputColor={item.inputColor} color={item.color} dropColor={item.dropColor} selectionColor={item.selectionColor} buttonColors={item.buttonColors} setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else if (item.type === 'folder') {
-                        return <Folder inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <Folder centralInfo={props.centralInfo} inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     } else {
-                        return <Notebook inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
+                        return <Notebook centralInfo={props.centralInfo} inputColor='#fff' dropColor='#dadada' selectionColor='#ececec' setNoteChange={props.setNoteChange} ref={childRef} id={item.id} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={docOpen} setDocOpen={setDocOpen} userEmail={userEmail} setPropOpen={setPropOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} name={item.name} setName={setName} setCentralInfo={props.setCentralInfo}/>
                     }
                 })
             }
+        
+        </SortableContext>
+        </DndContext>
         </div>
         }
     </div>
   )
+
+  
 }
 
 export default Binder

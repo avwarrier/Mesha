@@ -29,6 +29,7 @@ const NoteScreen = (props) => {
     
 
     var Size = Quill.import('attributors/style/size');
+    Size.whitelist = ['14px', '16px', '18px'];
     Quill.register(Size, true);
     let Font = Quill.import('formats/font');
 // We do not add Sans Serif since it is the default
@@ -36,7 +37,7 @@ const NoteScreen = (props) => {
     Quill.register(Font, true);
 
     const TOOLBAR_OPTIONS = [
-        [{ 'size': ['12px', '13px', '14px', '15px', '16px', '17px', '18px','19px', '20px', '21px', '22px', '23px', '24px'] }],
+        [{ 'size': ['14px', '16px', '18px'] }],
         [{ font: ['calibri', 'futura', 'impact', 'courier', 'comic', 'times-new-roman', 'arial'] }],
         [{ list: "ordered" }, {list: "bullet" }],
         ["bold", "italic", "underline"],

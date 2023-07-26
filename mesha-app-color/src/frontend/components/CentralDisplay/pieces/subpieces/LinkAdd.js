@@ -61,7 +61,7 @@ const LinkAdd = (props) => {
     
 
   return (
-    <div ref={ref} className={edit ? 'bg-[#ffffff] w-[390px] h-[33px] flex items-center rounded-2xl px-[15px]  hover:border-b-2' : 'w-[390px] h-[33px] flex items-center rounded-2xl px-[15px]  hover:border-b-2'}>
+    <div ref={ref} className={edit ? 'bg-[#ffffff] w-[420px] h-[33px] flex items-center rounded-2xl px-[15px]  hover:border-b-2' : 'w-[420px] h-[33px] flex items-center rounded-2xl px-[15px]  hover:border-b-2'}>
         {edit ? <AddLinkOutlinedIcon  sx={{fontSize: '22px', marginRight: "10px", color: "#3a4754"}}/> : <LinkIcon  sx={{fontSize: '22px', marginRight: "10px", color: "#3a4754"}}/>}
         {edit ? 
             <input ref={itemInput} className='outline-none px-[5px] h-[25px] w-[100%] bg-[#ffffff] placeholder:text-[#6d6b69] placeholder:font-light border-b-[1.5px] border-[#4a6a8f]' onKeyDown={onEnter} value={link} onChange={(e) => {

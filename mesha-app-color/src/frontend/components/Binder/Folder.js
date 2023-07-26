@@ -624,8 +624,11 @@ const Folder = forwardRef((props, ref) => {
         for(let i = 0; i < items.length; i++) {
             if(temp[i].id == id) {
                 if(temp[i].name != 'default') {
+                    console.log(props.centralInfo + "   " + id)
+                    if(props.centralInfo.id == id) {
                     props.setCentralInfo('yee', 'yee');
                 props.setDocOpen('none');
+                    }
                 }
                 let numz = temp[i].num
                 temp.splice(i, 1);
@@ -649,15 +652,15 @@ const Folder = forwardRef((props, ref) => {
                 {
                     items.map((item) => {
                         if (item.type === 'folder') {
-                            return <Folder inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} ref={childRef} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Folder centralInfo={props.centralInfo} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} ref={childRef} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'notebook') {
-                            return <Notebook inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} ref={childRef} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Notebook centralInfo={props.centralInfo} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} ref={childRef} dues={props.dues} updateDues={props.updateDues} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'document') {
                             return <Document inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else if (item.type === 'link') {
                             return <Link inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else {
-                            return <Note iinputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
+                            return <Note inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         }
                     })
                 }

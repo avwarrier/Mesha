@@ -115,7 +115,7 @@ const setColors = async(color) => {
       <NavBar setColors={setColors} color={color} menuOpen={menuOpen} setMenuOpen={setMenuOpen} userEmail={userEmail}/>
       
       <div className="flex justify-center items-center gap-[5px]">
-          <Binder setNoteChange={setNoteChange} updateDues={updateDues} dues={dues} chan={chan} setCentralInfo={setCentralInfo}/>
+          <Binder centralInfo={centralInfo} setNoteChange={setNoteChange} updateDues={updateDues} dues={dues} chan={chan} setCentralInfo={setCentralInfo}/>
           
           <CentralDisplay dueChange={dueChange} dues={dues} updateDues={updateDues} setChan={setChan} centralInfo={centralInfo} userEmail={userEmail} setC={setC}/>
           <NotesPanel noteChange={noteChange} dueChange={dueChange} setDueChange={setDueChange} updateDues={updateDues} userEmail={userEmail} dues={dues}/>

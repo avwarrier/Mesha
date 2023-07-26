@@ -221,7 +221,7 @@ const ClassProjectItem = (props) => {
                     <ColorLensIcon sx={{fontSize: "15px"}} />
                 </div>
 
-                <div style={{'--hover-color': props.buttonColors}} onClick={handleClick} className={`flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg`}>
+                <div style={{'--hover-color': props.buttonColors}} onClick={handleClick} className={` flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg`}>
                     <MoreVertIcon sx={{fontSize: "15px"}} />
                 </div>
                 

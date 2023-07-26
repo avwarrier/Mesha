@@ -259,8 +259,11 @@ const Notebook = forwardRef((props, ref) => {
         for(let i = 0; i < items.length; i++) {
             if(temp[i].id == id) {
                 if(temp[i].name != 'default') {
+                    console.log(props.centralInfo + "   " + id)
+                    if(props.centralInfo.id == id) {
                     props.setCentralInfo('yee', 'yee');
                 props.setDocOpen('none');
+                    }
                 }
                 let numz = temp[i].num
                 temp.splice(i, 1);
