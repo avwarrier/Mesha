@@ -14,6 +14,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import docsLogo from '../../../assets/docsLogo.png'
 import NotesIcon from '@mui/icons-material/Notes';
 import LinkIcon from '@mui/icons-material/Link';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 const FolderItem = (props) => {
     const [openAfterEdit, setOpenAfterEdit] = useState(false);
@@ -235,6 +236,14 @@ const FolderItem = (props) => {
                     }}  className='flex items-center gap-[10px] h-[30px]'>
                 <NotesIcon sx={{color: "#222"}}/>
                   <p className=' font-light'>Note</p>
+                </MenuItem>
+                <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
+                    props.addFile()
+                        props.setOpen(props.id, true);
+                        returnEdit(false);
+                    }}  className='flex items-center gap-[10px] h-[30px]'>
+                <CloudDownloadIcon sx={{color: "#3a6391"}}/>
+                  <p className=' font-light'>File</p>
                 </MenuItem>
                 
             </Menu>

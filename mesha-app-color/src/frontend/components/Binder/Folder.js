@@ -8,11 +8,13 @@ import { v4 as uuid } from 'uuid';
 import { auth, db } from '../../../backend/firebase'
 import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import File from './BinderProps/DocItems/File'
 
 const Folder = forwardRef((props, ref) => {
 
     
     const [items, setItems] = useState([]);
+    
 
     const childRef = useRef(null);
 
@@ -24,7 +26,7 @@ const Folder = forwardRef((props, ref) => {
                 if(temp[i].num >= 40) {
                     props.setCentralInfo('yee', 'yee');
                     props.setDocOpen('none');
-                    delDoc(temp[i].id);
+                    delDoc(temp[i].id, temp[i].num);
                     removeDue(temp[i].id);
                 } else {
                     childRef.current.childFunction1(temp[i].id);
@@ -32,27 +34,13 @@ const Folder = forwardRef((props, ref) => {
             }
         },
       }));
-
+    
     useEffect(() => {
         setItems(props.components);
-        const checkOpen = async () => {
-            const colRef = collection(db, "users", props.userEmail, "openItems");
-            const docsSnap = await getDocs(colRef);
-            let temp = props.components;
-            docsSnap.forEach(doc => {
-                console.log(doc.data());
-                //doc.data().open
-                
-                if(temp.indexOf(doc.data().id) != -1) {
-                    
-                    temp[temp.indexOf(doc.data().id)].open = doc.data().open;
-                }
-            })
-            setItems(temp);
-        }
         
         //checkOpen();
     }, [props.components])
+
 
     useEffect(() => {
         let saved = localStorage.getItem("structId");
@@ -60,17 +48,16 @@ const Folder = forwardRef((props, ref) => {
             saved = saved.substring(1, saved.length-1)
         }
         let temp = [...props.components];
-        console.log(temp);
         for(let i = 0; i < temp.length; i++) {
             if(temp[i].num >= 40) {
                 if(temp[i].id != props.docOpen) {
                     if(temp[i].id != saved) {
                         temp[i].open = false;
                     }
+                    
                 }
             }
         }
-        
         setItems(temp);
         props.setComponents(props.id, temp);
     }, [props.docOpen])
@@ -222,7 +209,7 @@ const Folder = forwardRef((props, ref) => {
 
                     })
                 }
-            } else {
+            } else if (num == 60) {
                 const myId = uuid();
                 if(num < items[0].num) {
                     temp.unshift({
@@ -236,6 +223,27 @@ const Folder = forwardRef((props, ref) => {
                 } else {
                     temp.push({
                         type: 'note',
+                        name: 'default',
+                    num: num,
+                    open: false,
+                    id: myId
+
+                    })
+                }
+            } else {
+                const myId = uuid();
+                if(num < items[0].num) {
+                    temp.unshift({
+                        type: 'file',
+                        name: 'default',
+                    num: num,
+                    open: false,
+                    id: myId
+
+                    })
+                } else {
+                    temp.push({
+                        type: 'file',
                         name: 'default',
                     num: num,
                     open: false,
@@ -301,9 +309,20 @@ const Folder = forwardRef((props, ref) => {
                     });
                     setItems(arr);
                     return;
-                } else {
+                } else if (num == 60) {
                     arr.splice(i, 0, {
                         type: 'note',
+                        name: 'default',
+                    num: num,
+                    open: false,
+                    id: myId
+
+                    });
+                    setItems(arr);
+                    return;
+                } else {
+                    arr.splice(i, 0, {
+                        type: 'file',
                         name: 'default',
                     num: num,
                     open: false,
@@ -362,9 +381,20 @@ const Folder = forwardRef((props, ref) => {
                     });
                     setItems(arr);
                     return;
-                } else {
+                } else if (num == 60) {
                     arr.push({
                         type: 'note',
+                        name: 'default',
+                    num: num,
+                    open: false,
+                    id: myId
+
+                    });
+                    setItems(arr);
+                    return;
+                } else {
+                    arr.splice(i, 0, {
+                        type: 'file',
                         name: 'default',
                     num: num,
                     open: false,
@@ -455,6 +485,7 @@ const Folder = forwardRef((props, ref) => {
             }
 
             props.setComponents(props.id, items);
+            props.setNoteChange(id);
     }
 
     
@@ -644,6 +675,12 @@ const Folder = forwardRef((props, ref) => {
         props.setComponents(props.id, temp);
     }
 
+
+    const addFile = () => {
+        
+    }
+
+
   return (
     <div className='flex flex-col'>
         <FolderItem inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} name={props.name} setName={props.setName}/>
@@ -659,8 +696,10 @@ const Folder = forwardRef((props, ref) => {
                             return <Document inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else if (item.type === 'link') {
                             return <Link inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
-                        } else {
+                        } else if (item.type == 'note') {
                             return <Note inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
+                        } else {
+                            return <File inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         }
                     })
                 }

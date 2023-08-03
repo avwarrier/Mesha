@@ -18,7 +18,8 @@ import { v4 as uuid } from 'uuid';
 import '../CentralDisplay/pieces/styleOther.css'
 import {
     DndContext,
-    closestCenter
+    closestCenter,
+    KeyboardSensor, MouseSensor, useSensor, useSensors
 } from "@dnd-kit/core"
 import {
     arrayMove,
@@ -316,7 +317,7 @@ const Binder = (props) => {
         }
         setItems(temp);
         console.log('updated')
-        updateDB(items);
+        updateDB(temp);
 
         
     }
@@ -336,14 +337,15 @@ const Binder = (props) => {
 
     const setComponents = (id, comps) => {
         let temp = [...items];
+        console.log(comps);
         for(let i = 0; i < items.length; i++) {
             if(temp[i].id == id) {
                 temp[i].components = comps;
             }
         }
-        console.log(temp);
         setItems(temp);
-        updateDB(items);
+        console.log(temp);
+        updateDB(temp);
     }
 
     const setPropOpen = (id, open) => {
@@ -355,7 +357,7 @@ const Binder = (props) => {
         }
         console.log(temp);
         setItems(temp);
-        updateDB(items);
+        updateDB(temp);
     }
 
     const setColors = (id, color, dropColorr, otherColor, finalColor, inputColor) => {
@@ -370,11 +372,12 @@ const Binder = (props) => {
             }
         }
         setItems(temp);
-        updateDB(items);
+        updateDB(temp);
     }
 
     const updateDB = async(items) => {
         console.log(userEmail)
+        console.log(items);
         const userRef = doc(db, "users", userEmail);
         await updateDoc(userRef, {
             items: items
@@ -396,6 +399,14 @@ const Binder = (props) => {
             })
         }
       }
+
+      const mouseSensor = useSensor(MouseSensor, {
+        activationConstraint: {
+          distance: 10, // Enable sort function when dragging 10px   💡 here!!!
+        },
+      })
+    const keyboardSensor = useSensor(KeyboardSensor)
+    const sensors = useSensors(mouseSensor, keyboardSensor)
 
     
 
@@ -464,15 +475,6 @@ const Binder = (props) => {
                 </div>
             :
             <div className='gap-[17px] flex flex-col ml-[25px] w-[250px]'>
-            <DndContext
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-            >
-            
-        <SortableContext
-            items={items}
-            strategy={verticalListSortingStrategy}
-        >
             
             {
                 items.map((item) => {
@@ -486,8 +488,6 @@ const Binder = (props) => {
                 })
             }
         
-        </SortableContext>
-        </DndContext>
         </div>
         }
     </div>

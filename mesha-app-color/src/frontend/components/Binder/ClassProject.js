@@ -12,6 +12,7 @@ import { collection, doc, setDoc, getDocs, collectionGroup, updateDoc, deleteDoc
 import { onAuthStateChanged } from "firebase/auth";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import File from './BinderProps/DocItems/File'
 
 
 const ClassProject = forwardRef((props, ref) => {
@@ -63,9 +64,58 @@ const ClassProject = forwardRef((props, ref) => {
         setItems(temp);
         props.setComponents(props.id, temp);
     }, [props.docOpen])
+
+    const addFile = async (file, id, myurl) => {
+
+        alert(myurl);
+        let temp = addItem(70, file, file.name, id, myurl);
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+            ];
+            let today = new Date();
+            let date = monthNames[today.getMonth()] + " " + today.getDate() + ", " + today.getFullYear()
+            let hour = today.getHours();
+            let am = 'am';
+            if(hour > 12) {
+                am = 'pm';
+                hour -= 12;
+            } else if (hour == 0) {
+                hour = 12;
+            }
+            let minute = '';
+            if(today.getMinutes() < 10) {
+                minute = '0' + today.getMinutes();
+            } else {
+                minute = today.getMinutes();
+            }
+            let time = hour + ":" + minute + "" + am;
+            const userRef = doc(db, "users", props.userEmail, "openItems", id);
+        await setDoc(userRef, {
+            name: file.name,
+            date: date,
+            time: time,
+            links: [],
+            comments: [],
+            description: '',
+            type: 'file',
+            open: true,
+            id: id,
+            dueDate: null
+          });
+          
+          
+        switchOpen(id, 'file');
+        props.setCentralInfo(id, file.name)
+        localStorage.setItem("structId", JSON.stringify(id));
+        props.setDocOpen(id);
+        console.log(temp);
+        props.setComponents(props.id, temp);
+        
+    }
     
 
-    const addItem = (num) => {
+    const addItem = (num, file, fileName, fileId, myurl) => {
+        let aaa;
         let arr = [...items];
         if(items.length == 0) {
             const myId = uuid();
@@ -107,7 +157,7 @@ const ClassProject = forwardRef((props, ref) => {
                     open: false,
                     id: myId
                 }]);
-            } else {
+            } else if (num == 60) {
                 const myId = uuid();
                 setItems([{
                     type: 'note',
@@ -116,6 +166,25 @@ const ClassProject = forwardRef((props, ref) => {
                     open: false,
                     id: myId
                 }]);
+            } else {
+                setItems([{
+                    type: 'file',
+                    name: fileName,
+                    num: num,
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
+                }]);
+                arr.push({
+                    type: 'file',
+                    name: fileName,
+                    num: num,
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
+                })
+                return arr;
+
             }
 
             console.log(items);
@@ -211,7 +280,7 @@ const ClassProject = forwardRef((props, ref) => {
 
                     })
                 }
-            } else {
+            } else if (num == 60) {
                 const myId = uuid();
                 if(num < items[0].num) {
                     temp.unshift({
@@ -232,11 +301,34 @@ const ClassProject = forwardRef((props, ref) => {
 
                     })
                 }
+            } else {
+                const myId = uuid();
+                if(num < items[0].num) {
+                    temp.unshift({
+                        type: 'file',
+                    name: fileName,
+                    num: num,
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
+
+                    })
+                } else {
+                    temp.push({
+                        type: 'file',
+                    name: fileName,
+                    num: num,
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
+
+                    })
+                }
             }
 
             console.log("yee yee yee " + temp);
             setItems(temp);
-
+            if(num == 70) return temp;
             return;
     
         }
@@ -290,7 +382,7 @@ const ClassProject = forwardRef((props, ref) => {
                     });
                     setItems(arr);
                     return;
-                } else {
+                } else if (num == 60) {
                     arr.splice(i, 0, {
                         type: 'note',
                         name: 'default',
@@ -301,6 +393,18 @@ const ClassProject = forwardRef((props, ref) => {
                     });
                     setItems(arr);
                     return;
+                } else {
+                    arr.splice(i, 0, {
+                        type: 'file',
+                    name: fileName,
+                    num: num,
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
+
+                    });
+                    setItems(arr);
+                    return arr;
                 }
                 
             } else if(i == arr.length - 1) {
@@ -351,7 +455,7 @@ const ClassProject = forwardRef((props, ref) => {
                     });
                     setItems(arr);
                     return;
-                } else {
+                } else if (num == 60) {
                     arr.push({
                         type: 'note',
                         name: 'default',
@@ -362,6 +466,17 @@ const ClassProject = forwardRef((props, ref) => {
                     });
                     setItems(arr);
                     return;
+                } else {
+                    arr.splice(i, 0, {
+                        type: 'file',
+                    name: fileName,
+                    num: num,
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
+                    });
+                    setItems(arr);
+                    return arr;
                 }
             }
         }
@@ -443,7 +558,7 @@ const ClassProject = forwardRef((props, ref) => {
             })
             }
 
-            props.setComponents(props.id, items);
+            //props.setComponents(props.id, items);
             props.setNoteChange(id);
     }
 
@@ -545,7 +660,7 @@ const ClassProject = forwardRef((props, ref) => {
     const setPropOpen = (id, open) => {
         let temp = [...items];
         for(let j = 0; j < items.length; j++) {
-            if(temp[j].type == 'document' || temp[j].type == 'link' || temp[j].type == 'note') {
+            if(temp[j].type == 'document' || temp[j].type == 'link' || temp[j].type == 'note' || temp[j].type == 'file') {
                 if(temp[j].id == id && temp[j].open == true) {
                     return;
                 }
@@ -643,29 +758,31 @@ const ClassProject = forwardRef((props, ref) => {
     } = useSortable({id: props.id})
 
     const style = {
-        
         backgroundColor: props.color
     }
+    
 
     
 
   return (
     <div  style={style}  className={!props.open ? 'rounded-lg ' : 'rounded-lg  flex flex-col overflow-auto '}>
-        <ClassProjectItem setColors={props.setColors} color={props.color} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} buttonColors={props.buttonColors} id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
+        <ClassProjectItem userEmail={props.userEmail} addFile={addFile} setColors={props.setColors} color={props.color} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} buttonColors={props.buttonColors} id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} setName={props.setName} name={props.name}/>
         {props.open && 
             <div className={items.length > 0 ? 'ml-[20px] mt-[5px] mb-[10px]' : 'ml-[20px] '}>
                 {
                     items.map((item) => {
                         if (item.type === 'folder') {
-                            return <Folder centralInfo={props.centralInfo} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} dues={props.dues} updateDues={props.updateDues} ref={childRef} id={item.id} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Folder centralInfo={props.centralInfo} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setNoteChange={props.setNoteChange} dues={props.dues} updateDues={props.updateDues} ref={childRef} id={item.id} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'notebook') {
-                            return <Notebook centralInfo={props.centralInfo} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} ref={childRef} id={item.id} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
+                            return <Notebook setNoteChange={props.setNoteChange} centralInfo={props.centralInfo} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} ref={childRef} id={item.id} chan={props.chan} docOpen={props.docOpen} setDocOpen={props.setDocOpen} userEmail={props.userEmail} setPropOpen={setOgOpen} open={item.open} components={item.components} setComponents={setComponents} removeItem={removeItem} setName={setName} name={item.name} setCentralInfo={props.setCentralInfo}/>
                         } else if (item.type === 'document') {
                             return <Document inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor}  setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else if (item.type === 'link') {
                             return <Link inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
-                        } else {
+                        } else if (item.type == 'note') {
                             return <Note inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
+                        } else {
+                            return <File fileUrl={item.fileUrl} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         }
                     })
                 }

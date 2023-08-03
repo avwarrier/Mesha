@@ -11,15 +11,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import docsLogo from '../../../../assets/docsLogo.png'
-import {
-    DndContext,
-    closestCenter
-} from "@dnd-kit/core"
-import {
-    arrayMove,
-    SortableContext,
-    verticalListSortingStrategy
-} from "@dnd-kit/sortable"
+
  
 const Document = (props) => {
     const [onEdit, setOnEdit] = useState(false);
