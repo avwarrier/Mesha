@@ -50,19 +50,11 @@ const Link = (props) => {
         </div>
         <div className='gap-[0px] flex justify-center items-center'>
             
-                <div style={{'--hover-color': props.selectionColor}} onClick={() => {
-                    alert(props.fileUrl);
-                    const xhr = new XMLHttpRequest();
-                    xhr.responseType = 'blob';
-                    xhr.onload = (event) => {
-                    const blob = xhr.response;
-                    };
-                    xhr.open('GET', props.fileUrl);
-                    xhr.send();
+                <a target='_blank' href={props.fileUrl} download><div style={{'--hover-color': props.selectionColor}} onClick={() => {
                     
                 }} className='flex justify-center items-center h-[20px] w-[20px] p-[5px] rounded-sm cursor-pointer  hover:!bg-[--hover-color] hover:drop-shadow-lg'>
                     <FileDownloadIcon sx={{fontSize: "17px", marginTop: "2px"}} />
-                </div>
+                </div></a>
             
                 
 

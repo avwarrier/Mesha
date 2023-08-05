@@ -67,7 +67,6 @@ const ClassProject = forwardRef((props, ref) => {
 
     const addFile = async (file, id, myurl) => {
 
-        alert(myurl);
         let temp = addItem(70, file, file.name, id, myurl);
         const monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"

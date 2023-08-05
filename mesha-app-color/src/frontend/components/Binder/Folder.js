@@ -61,9 +61,57 @@ const Folder = forwardRef((props, ref) => {
         setItems(temp);
         props.setComponents(props.id, temp);
     }, [props.docOpen])
+
+    const addFile = async (file, id, myurl) => {
+
+        let temp = addItem(70, file, file.name, id, myurl);
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+            ];
+            let today = new Date();
+            let date = monthNames[today.getMonth()] + " " + today.getDate() + ", " + today.getFullYear()
+            let hour = today.getHours();
+            let am = 'am';
+            if(hour > 12) {
+                am = 'pm';
+                hour -= 12;
+            } else if (hour == 0) {
+                hour = 12;
+            }
+            let minute = '';
+            if(today.getMinutes() < 10) {
+                minute = '0' + today.getMinutes();
+            } else {
+                minute = today.getMinutes();
+            }
+            let time = hour + ":" + minute + "" + am;
+            const userRef = doc(db, "users", props.userEmail, "openItems", id);
+        await setDoc(userRef, {
+            name: file.name,
+            date: date,
+            time: time,
+            links: [],
+            comments: [],
+            description: '',
+            type: 'file',
+            open: true,
+            id: id,
+            dueDate: null
+          });
+          
+          
+        switchOpen(id, 'file');
+        props.setCentralInfo(id, file.name)
+        localStorage.setItem("structId", JSON.stringify(id));
+        props.setDocOpen(id);
+        console.log(temp);
+        props.setComponents(props.id, temp);
+        
+    }
     
 
-    const addItem = (num) => {
+    const addItem = (num, file, fileName, fileId, myurl) => {
+        let aaa;
         let arr = [...items];
         if(items.length == 0) {
             const myId = uuid();
@@ -105,7 +153,7 @@ const Folder = forwardRef((props, ref) => {
                     open: false,
                     id: myId
                 }]);
-            } else {
+            } else if (num == 60) {
                 const myId = uuid();
                 setItems([{
                     type: 'note',
@@ -114,6 +162,25 @@ const Folder = forwardRef((props, ref) => {
                     open: false,
                     id: myId
                 }]);
+            } else {
+                setItems([{
+                    type: 'file',
+                    name: fileName,
+                    num: num,
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
+                }]);
+                arr.push({
+                    type: 'file',
+                    name: fileName,
+                    num: num,
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
+                })
+                return arr;
+
             }
 
             console.log(items);
@@ -235,19 +302,21 @@ const Folder = forwardRef((props, ref) => {
                 if(num < items[0].num) {
                     temp.unshift({
                         type: 'file',
-                        name: 'default',
+                    name: fileName,
                     num: num,
-                    open: false,
-                    id: myId
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
 
                     })
                 } else {
                     temp.push({
                         type: 'file',
-                        name: 'default',
+                    name: fileName,
                     num: num,
-                    open: false,
-                    id: myId
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
 
                     })
                 }
@@ -255,7 +324,7 @@ const Folder = forwardRef((props, ref) => {
 
             console.log("yee yee yee " + temp);
             setItems(temp);
-
+            if(num == 70) return temp;
             return;
     
         }
@@ -323,14 +392,15 @@ const Folder = forwardRef((props, ref) => {
                 } else {
                     arr.splice(i, 0, {
                         type: 'file',
-                        name: 'default',
+                    name: fileName,
                     num: num,
-                    open: false,
-                    id: myId
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
 
                     });
                     setItems(arr);
-                    return;
+                    return arr;
                 }
                 
             } else if(i == arr.length - 1) {
@@ -395,14 +465,14 @@ const Folder = forwardRef((props, ref) => {
                 } else {
                     arr.splice(i, 0, {
                         type: 'file',
-                        name: 'default',
+                    name: fileName,
                     num: num,
-                    open: false,
-                    id: myId
-
+                    open: true,
+                    id: fileId,
+                    fileUrl: myurl
                     });
                     setItems(arr);
-                    return;
+                    return arr;
                 }
             }
         }
@@ -484,7 +554,7 @@ const Folder = forwardRef((props, ref) => {
             })
             }
 
-            props.setComponents(props.id, items);
+            //props.setComponents(props.id, items);
             props.setNoteChange(id);
     }
 
@@ -586,7 +656,7 @@ const Folder = forwardRef((props, ref) => {
     const setPropOpen = (id, open) => {
         let temp = [...items];
         for(let j = 0; j < items.length; j++) {
-            if(temp[j].type == 'document' || temp[j].type == 'link' || temp[j].type == 'note') {
+            if(temp[j].type == 'document' || temp[j].type == 'link' || temp[j].type == 'note' || temp[j].type == 'file') {
                 if(temp[j].id == id && temp[j].open == true) {
                     return;
                 }
@@ -676,14 +746,9 @@ const Folder = forwardRef((props, ref) => {
     }
 
 
-    const addFile = () => {
-        
-    }
-
-
   return (
     <div className='flex flex-col'>
-        <FolderItem inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} name={props.name} setName={props.setName}/>
+        <FolderItem userEmail={props.userEmail} addFile={addFile} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} id={props.id} open={props.open} setOpen={props.setPropOpen} addItem={addItem} removeItem={props.removeItem} name={props.name} setName={props.setName}/>
         {props.open && 
             <div className={items.length > 0 ? 'ml-[20px] my-[0px]' : "ml-[20px]"}>
                 {
@@ -699,7 +764,7 @@ const Folder = forwardRef((props, ref) => {
                         } else if (item.type == 'note') {
                             return <Note inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         } else {
-                            return <File inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
+                            return <File fileUrl={item.fileUrl} inputColor={props.inputColor} dropColor={props.dropColor} selectionColor={props.selectionColor} setPropOpen={setPropOpen} open={item.open} removeItem={removeSubItem} id={item.id} setName={setName} name={item.name}/>
                         }
                     })
                 }

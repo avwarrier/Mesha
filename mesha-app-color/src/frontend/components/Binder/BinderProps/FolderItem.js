@@ -15,6 +15,13 @@ import docsLogo from '../../../assets/docsLogo.png'
 import NotesIcon from '@mui/icons-material/Notes';
 import LinkIcon from '@mui/icons-material/Link';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import Dialog from '@mui/material/Dialog';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
+import CloudIcon from '@mui/icons-material/Cloud';
+import {storage} from '../../../../backend/firebase'
+import {getDownloadURL, ref, uploadBytes} from 'firebase/storage'
+import { v4 as uuid } from 'uuid';
+import ReactLoading from "react-loading";
 
 const FolderItem = (props) => {
     const [openAfterEdit, setOpenAfterEdit] = useState(false);
@@ -25,12 +32,12 @@ const FolderItem = (props) => {
     const [prevName, setPrevName] = useState('default');
     const [displayName, setDisplayName] = useState('');
 
-    const ref = useRef(null);
+    const reff = useRef(null);
     const { onClickOutside } = props;
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-        if (ref.current && !ref.current.contains(event.target)) {
+        if (reff.current && !reff.current.contains(event.target)) {
             onClickOutside && onClickOutside();
             if(onEdit) {
                 if(categoryName != '') {
@@ -127,8 +134,62 @@ const FolderItem = (props) => {
       setOnEdit(false);
     }
 
+    const [openFileDialog, setOpenFileDialog] = useState(false);
+    const closeFileDialog = () => {
+        setOpenFileDialog(false)
+    }
+
+    const [file, setFile] = useState();
+    const [file_name, setfile_name] = useState('Select File');
+    const [fileLoading, setFileLoading] = useState(false);
+
+    const uploadFile = async(id) => {
+        setFileLoading(true);
+        if(file == null) return;
+        const fileRef = ref(storage, `${props.userEmail}/${id}`)
+        await uploadBytes(fileRef, file)
+        let fileUrl = await getDownloadURL(fileRef);
+        
+        return fileUrl;
+    }
+
   return (
-    <div ref={ref} style={{'--hover-color': props.selectionColor, '--color': props.dropColor}}  className={onEdit ? 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px] ' : 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px]  cursor-pointer  hover:!bg-[--hover-color]'}>
+    <div ref={reff} style={{'--hover-color': props.selectionColor, '--color': props.dropColor}}  className={onEdit ? 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px] ' : 'my-[0px] rounded-lg h-[35px]  flex items-center justify-between px-[10px]  cursor-pointer  hover:!bg-[--hover-color]'}>
+        <Dialog onClose={closeFileDialog} open={openFileDialog}>
+            <div className='w-[380px] h-[280px] bg-[#f1f1f1] flex flex-col justify-center items-center gap-[20px]'>
+                {
+                    fileLoading ? 
+                    <ReactLoading type="bubbles" color="#4a6a8f" />
+                    :
+                    <>
+                    <label onChange={(event) => {
+                    setFile(event.target.files[0]);
+                    setfile_name(event.target.files[0].name)
+                }}>
+            <input type='file' hidden/>
+            <div className='w-[300px] h-[150px] rounded-lg border-dashed border-[#72b6e1] cursor-pointer hover:border-[#5593b9] border-[2px] flex flex-col justify-center items-center'>
+                <CloudIcon sx={{fontSize: 70, color: "#bfd2de", "&:hover": {
+      color: "#b0c6d4"
+    }}}/>
+                <p className='text-[#49596b]'>{file_name}</p>
+            </div>
+            </label>
+                
+                <div onClick={async() => {
+                    if(file == null) return;
+                    const id = uuid();
+                    let myurl = await uploadFile(id);
+                    props.addFile(file, id, myurl)
+                    setFileLoading(false);
+                    
+                    setfile_name('Select File');
+                    setOpenFileDialog(false);
+                    }} className='h-[30px] w-[200px] rounded-sm  bg-[#4a6a8f] cursor-pointer  text-[#fff] shadow-md hover:bg-[#425c7a] items-center justify-center flex font-light'>upload</div></>
+                }
+            
+                
+            </div>
+        </Dialog>
         <div className='flex items-center'>
             <FolderIcon onClick={() => props.setOpen(props.id, !props.open)} sx={{fontSize: '20px', marginRight: '2px', color: "#6a8099"}}/>
             {
@@ -238,7 +299,7 @@ const FolderItem = (props) => {
                   <p className=' font-light'>Note</p>
                 </MenuItem>
                 <MenuItem sx={{borderRadius: "5px"}} onClick={() => {
-                    props.addFile()
+                        setOpenFileDialog(true);
                         props.setOpen(props.id, true);
                         returnEdit(false);
                     }}  className='flex items-center gap-[10px] h-[30px]'>

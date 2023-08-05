@@ -163,7 +163,6 @@ const ClassProjectItem = (props) => {
         if(file == null) return;
         const fileRef = ref(storage, `${props.userEmail}/${id}`)
         await uploadBytes(fileRef, file)
-        alert("uploaded")
         let fileUrl = await getDownloadURL(fileRef);
         
         return fileUrl;
