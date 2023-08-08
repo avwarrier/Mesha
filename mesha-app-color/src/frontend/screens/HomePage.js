@@ -60,10 +60,12 @@ function HomePage() {
           const saved = localStorage.getItem("name");
           const otherSaved = localStorage.getItem("id");
           console.log(otherSaved, "   ", saved);
-          setC({
-            id: otherSaved.substring(1, otherSaved.length-1),
-            name: saved.substring(1, saved.length-1)
-          })
+          if(saved != null && otherSaved != null && saved != undefined && otherSaved != undefined) {
+            setC({
+              id: otherSaved.substring(1, otherSaved.length-1),
+              name: saved.substring(1, saved.length-1)
+            })
+          }
           console.log("uid", user.uid)
         } else {
           // User is signed out
